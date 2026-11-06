@@ -61,4 +61,18 @@ describe("B3", () => {
     ])
     expect(queue[0]?.label).toMatchObject({ cause: "failed_transaction", moneyInvolved: true })
   })
+
+  it("b3_a_review_the_model_couldnt_sort_waits_in_the_queue_whatever_its_stars", async () => {
+    const db = openDb(":memory:")
+    const clock = new FixedClock(new Date("2026-11-02T01:00:00Z"))
+    saveReviews(db, clock, [review("unsure", 3, "2026-10-05T00:00:00.000Z", "money deducted? not sure")])
+    await sortPending(
+      db,
+      clock,
+      new FakeSorter(() => JSON.stringify({ ...JSON.parse(confident("other")), confidence: 0.3 })),
+      { appId: APP, causes: FINANCE_CAUSES, threshold: 0.6 },
+    )
+
+    expect(replyQueue(db, APP).map((entry) => entry.review.storeReviewId)).toEqual(["unsure"])
+  })
 })

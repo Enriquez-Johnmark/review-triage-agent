@@ -3,7 +3,7 @@ import type { Label, Outcome } from "../core/label.ts"
 import type { Review, Store } from "../core/review.ts"
 import { audit } from "./audit.ts"
 import type { Db } from "./db.ts"
-import { listReviews } from "./reviews.ts"
+import { reviewFromRow, type ReviewRow } from "./reviews.ts"
 
 /** Which review: its store and the store's ID for it. */
 export interface ReviewKey {
@@ -80,7 +80,7 @@ export interface StoredLabel extends Partial<Omit<Label, "cause">> {
   setBy: "model" | "person"
 }
 
-interface LabelRow {
+export interface LabelRow {
   cause: string | null
   language: Label["language"] | null
   money_involved: number | null
@@ -89,7 +89,8 @@ interface LabelRow {
   set_by: "model" | "person"
 }
 
-function fromRow(row: LabelRow): StoredLabel {
+/** A stored row as a label. */
+export function labelFromRow(row: LabelRow): StoredLabel {
   return {
     cause: row.cause,
     needsPersonReason: row.needs_person_reason,
@@ -107,20 +108,19 @@ export function labelFor(db: Db, key: ReviewKey): StoredLabel | undefined {
        where store = ? and store_review_id = ?`,
     )
     .get(key.store, key.storeReviewId) as LabelRow | undefined
-  return row ? fromRow(row) : undefined
+  return row ? labelFromRow(row) : undefined
 }
 
-/** `appId`'s reviews no sorting run has handled yet. */
+/** `appId`'s reviews no sorting run has handled yet, oldest first. */
 export function unsortedReviews(db: Db, appId: string): Review[] {
-  const sorted = new Set(
-    (
-      db
-        .prepare(
-          `select l.store || ':' || l.store_review_id as k from labels l
-           join reviews r on r.store = l.store and r.store_review_id = l.store_review_id where r.app_id = ?`,
-        )
-        .all(appId) as { k: string }[]
-    ).map((row) => row.k),
-  )
-  return listReviews(db, appId).filter((review) => !sorted.has(`${review.store}:${review.storeReviewId}`))
+  const rows = db
+    .prepare(
+      `select r.store, r.store_review_id, r.app_id, r.at, r.stars, r.text, r.app_version, r.company_replied
+       from reviews r
+       left join labels l on l.store = r.store and l.store_review_id = r.store_review_id
+       where r.app_id = ? and l.store is null
+       order by r.at, r.store_review_id`,
+    )
+    .all(appId) as ReviewRow[]
+  return rows.map(reviewFromRow)
 }

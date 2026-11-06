@@ -31,7 +31,7 @@ export function saveReviews(db: Db, clock: Clock, reviews: readonly Review[]): S
   return { added, alreadyThere: reviews.length - added }
 }
 
-interface ReviewRow {
+export interface ReviewRow {
   store: Review["store"]
   store_review_id: string
   app_id: string
@@ -50,16 +50,19 @@ export function listReviews(db: Db, appId: string): Review[] {
        from reviews where app_id = ? order by at desc, store_review_id`,
     )
     .all(appId) as ReviewRow[]
-  return rows.map((row) =>
-    Review.parse({
-      store: row.store,
-      storeReviewId: row.store_review_id,
-      appId: row.app_id,
-      at: row.at,
-      stars: row.stars,
-      text: row.text,
-      appVersion: row.app_version,
-      companyReplied: row.company_replied === null ? null : row.company_replied === 1,
-    }),
-  )
+  return rows.map(reviewFromRow)
+}
+
+/** A stored row as a review. */
+export function reviewFromRow(row: ReviewRow): Review {
+  return Review.parse({
+    store: row.store,
+    storeReviewId: row.store_review_id,
+    appId: row.app_id,
+    at: row.at,
+    stars: row.stars,
+    text: row.text,
+    appVersion: row.app_version,
+    companyReplied: row.company_replied === null ? null : row.company_replied === 1,
+  })
 }
