@@ -1,0 +1,2042 @@
+[
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-001",
+      "appId": "com.example.wallet",
+      "at": "2026-10-02T01:00:00.000Z",
+      "stars": 1,
+      "text": "Ayaw mag open ng app after ng update, laging crash sa loading screen.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-002",
+      "appId": "com.example.wallet",
+      "at": "2026-10-03T02:00:00.000Z",
+      "stars": 1,
+      "text": "Crashes every time I tap Send. Started after the latest update.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-003",
+      "appId": "com.example.wallet",
+      "at": "2026-10-04T03:00:00.000Z",
+      "stars": 1,
+      "text": "Hindi bumubukas ang app. Puting screen lang palagi.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-004",
+      "appId": "com.example.wallet",
+      "at": "2026-10-05T04:00:00.000Z",
+      "stars": 2,
+      "text": "Force close agad pag binubuksan ko, Android 10 phone ko.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-005",
+      "appId": "com.example.wallet",
+      "at": "2026-10-06T05:00:00.000Z",
+      "stars": 1,
+      "text": "The app freezes on the splash screen and never loads.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-006",
+      "appId": "com.example.wallet",
+      "at": "2026-10-07T06:00:00.000Z",
+      "stars": 1,
+      "text": "Puro update na lang, tapos hindi pa rin gumagana sa phone ko.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-007",
+      "appId": "com.example.wallet",
+      "at": "2026-10-08T07:00:00.000Z",
+      "stars": 2,
+      "text": "Keeps asking me to update but the update fails to install.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-008",
+      "appId": "com.example.wallet",
+      "at": "2026-10-09T08:00:00.000Z",
+      "stars": 1,
+      "text": "Nag hahang yung app pag nasa dashboard na, kailangan ko pa i-restart.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-009",
+      "appId": "com.example.wallet",
+      "at": "2026-10-10T09:00:00.000Z",
+      "stars": 1,
+      "text": "Black screen after login. Reinstalled twice, same thing.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-010",
+      "appId": "com.example.wallet",
+      "at": "2026-10-11T10:00:00.000Z",
+      "stars": 2,
+      "text": "Laging nagsasara ang app kapag binubuksan ang history.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-011",
+      "appId": "com.example.wallet",
+      "at": "2026-10-12T11:00:00.000Z",
+      "stars": 1,
+      "text": "Bakit ayaw na gumana sa lumang phone? Dati okay naman.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-012",
+      "appId": "com.example.wallet",
+      "at": "2026-10-13T12:00:00.000Z",
+      "stars": 2,
+      "text": "App crashed while I was paying, and now there's a fee on my statement too.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "crash",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-013",
+      "appId": "com.example.wallet",
+      "at": "2026-10-14T13:00:00.000Z",
+      "stars": 1,
+      "text": "Hindi ako maka sign up, walang register button sa app.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-014",
+      "appId": "com.example.wallet",
+      "at": "2026-10-15T14:00:00.000Z",
+      "stars": 1,
+      "text": "Can't create an account. It says something went wrong at the last step.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-015",
+      "appId": "com.example.wallet",
+      "at": "2026-10-16T15:00:00.000Z",
+      "stars": 2,
+      "text": "Hindi matapos ang pagrehistro, bumabalik lang sa umpisa.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-016",
+      "appId": "com.example.wallet",
+      "at": "2026-10-17T16:00:00.000Z",
+      "stars": 1,
+      "text": "Registration form won't accept my birthday, so I can't sign up.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-017",
+      "appId": "com.example.wallet",
+      "at": "2026-10-18T17:00:00.000Z",
+      "stars": 1,
+      "text": "Paano mag create ng account? Walang lumalabas na option.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-018",
+      "appId": "com.example.wallet",
+      "at": "2026-10-19T18:00:00.000Z",
+      "stars": 2,
+      "text": "Stuck on create account for two days now.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-019",
+      "appId": "com.example.wallet",
+      "at": "2026-10-20T19:00:00.000Z",
+      "stars": 1,
+      "text": "Ayaw tanggapin yung number ko sa pag register, invalid daw.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-020",
+      "appId": "com.example.wallet",
+      "at": "2026-10-21T20:00:00.000Z",
+      "stars": 1,
+      "text": "Sign up keeps failing with error code 500.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-021",
+      "appId": "com.example.wallet",
+      "at": "2026-10-22T21:00:00.000Z",
+      "stars": 1,
+      "text": "Walang paraan para gumawa ng bagong account.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-022",
+      "appId": "com.example.wallet",
+      "at": "2026-10-23T22:00:00.000Z",
+      "stars": 2,
+      "text": "Gusto ko sana mag open ng account pero laging error sa sign up.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-023",
+      "appId": "com.example.wallet",
+      "at": "2026-10-24T23:00:00.000Z",
+      "stars": 1,
+      "text": "The sign-up page loops back to the start every time.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-024",
+      "appId": "com.example.wallet",
+      "at": "2026-10-25T00:00:00.000Z",
+      "stars": 2,
+      "text": "Na-stuck ako sa registration, di ko matapos.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "sign_up",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-025",
+      "appId": "com.example.wallet",
+      "at": "2026-10-26T01:00:00.000Z",
+      "stars": 1,
+      "text": "Hindi dumadating yung OTP kaya hindi ako maka login.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-026",
+      "appId": "com.example.wallet",
+      "at": "2026-10-27T02:00:00.000Z",
+      "stars": 2,
+      "text": "Forgot my PIN and the reset link never arrives.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-027",
+      "appId": "com.example.wallet",
+      "at": "2026-10-28T03:00:00.000Z",
+      "stars": 1,
+      "text": "Ayaw tanggapin ang password ko kahit tama naman.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-028",
+      "appId": "com.example.wallet",
+      "at": "2026-10-01T04:00:00.000Z",
+      "stars": 1,
+      "text": "Fingerprint login stopped working, I have to type my PIN every time.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-029",
+      "appId": "com.example.wallet",
+      "at": "2026-10-02T05:00:00.000Z",
+      "stars": 1,
+      "text": "Na-lock yung account ko after 3 tries ng PIN, paano i-unlock?",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-030",
+      "appId": "com.example.wallet",
+      "at": "2026-10-03T06:00:00.000Z",
+      "stars": 1,
+      "text": "OTP expires before it even arrives.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-031",
+      "appId": "com.example.wallet",
+      "at": "2026-10-04T07:00:00.000Z",
+      "stars": 2,
+      "text": "Laging logged out ako tapos ang tagal ng OTP.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-032",
+      "appId": "com.example.wallet",
+      "at": "2026-10-05T08:00:00.000Z",
+      "stars": 1,
+      "text": "Cannot log in since I changed phones.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-033",
+      "appId": "com.example.wallet",
+      "at": "2026-10-06T09:00:00.000Z",
+      "stars": 2,
+      "text": "Hindi ako makapasok sa account ko, mali daw ang PIN.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-034",
+      "appId": "com.example.wallet",
+      "at": "2026-10-07T10:00:00.000Z",
+      "stars": 1,
+      "text": "Wrong OTP daw kahit kakadating lang.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-035",
+      "appId": "com.example.wallet",
+      "at": "2026-10-08T11:00:00.000Z",
+      "stars": 2,
+      "text": "Login says please wait forever.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-036",
+      "appId": "com.example.wallet",
+      "at": "2026-10-09T12:00:00.000Z",
+      "stars": 1,
+      "text": "Paano mag reset ng PIN? Walang lumalabas na option.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "login",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-037",
+      "appId": "com.example.wallet",
+      "at": "2026-10-10T13:00:00.000Z",
+      "stars": 1,
+      "text": "Laging failed yung ID verification, malinaw naman picture ko.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-038",
+      "appId": "com.example.wallet",
+      "at": "2026-10-11T14:00:00.000Z",
+      "stars": 1,
+      "text": "Selfie verification won't detect my face no matter what.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-039",
+      "appId": "com.example.wallet",
+      "at": "2026-10-12T15:00:00.000Z",
+      "stars": 2,
+      "text": "Hindi tinatanggap ang aking national ID.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-040",
+      "appId": "com.example.wallet",
+      "at": "2026-10-13T16:00:00.000Z",
+      "stars": 1,
+      "text": "Verification rejected three times, no reason given.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-041",
+      "appId": "com.example.wallet",
+      "at": "2026-10-14T17:00:00.000Z",
+      "stars": 1,
+      "text": "Ayaw ma-scan yung UMID ko, blurry daw lagi.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-042",
+      "appId": "com.example.wallet",
+      "at": "2026-10-15T18:00:00.000Z",
+      "stars": 2,
+      "text": "Stuck on pending verification for a week.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-043",
+      "appId": "com.example.wallet",
+      "at": "2026-10-16T19:00:00.000Z",
+      "stars": 1,
+      "text": "Camera hindi gumagana sa face scan part ng verification.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-044",
+      "appId": "com.example.wallet",
+      "at": "2026-10-17T20:00:00.000Z",
+      "stars": 1,
+      "text": "Which IDs are accepted? Mine keeps getting rejected.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-045",
+      "appId": "com.example.wallet",
+      "at": "2026-10-18T21:00:00.000Z",
+      "stars": 1,
+      "text": "Paulit-ulit akong pinapa-verify ng ID.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-046",
+      "appId": "com.example.wallet",
+      "at": "2026-10-19T22:00:00.000Z",
+      "stars": 2,
+      "text": "Hindi ma-verify account ko kaya limited lang.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-047",
+      "appId": "com.example.wallet",
+      "at": "2026-10-20T23:00:00.000Z",
+      "stars": 1,
+      "text": "The ID upload fails at the last step every time.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-048",
+      "appId": "com.example.wallet",
+      "at": "2026-10-21T00:00:00.000Z",
+      "stars": 1,
+      "text": "Bakit kailangan pa ulit mag verify, verified na ako dati.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "id_verification",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-049",
+      "appId": "com.example.wallet",
+      "at": "2026-10-22T01:00:00.000Z",
+      "stars": 1,
+      "text": "Na-deduct na yung pera ko pero failed daw yung transaction. Wala pang refund.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "taglish",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-050",
+      "appId": "com.example.wallet",
+      "at": "2026-10-23T02:00:00.000Z",
+      "stars": 1,
+      "text": "Sent money to my sister, still pending since yesterday and already deducted.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "english",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-051",
+      "appId": "com.example.wallet",
+      "at": "2026-10-24T03:00:00.000Z",
+      "stars": 2,
+      "text": "Nagbayad ako ng kuryente pero hindi pumasok sa biller. Nasaan ang pera ko?",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "tagalog",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-052",
+      "appId": "com.example.wallet",
+      "at": "2026-10-25T04:00:00.000Z",
+      "stars": 1,
+      "text": "Payment failed but my balance went down by 2,000.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "english",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-053",
+      "appId": "com.example.wallet",
+      "at": "2026-10-26T05:00:00.000Z",
+      "stars": 1,
+      "text": "Nag padala ako pero hindi natanggap ng receiver, bawas na sa balance ko.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "taglish",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-054",
+      "appId": "com.example.wallet",
+      "at": "2026-10-27T06:00:00.000Z",
+      "stars": 1,
+      "text": "Bills payment says successful but the biller didn't receive it.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "english",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-055",
+      "appId": "com.example.wallet",
+      "at": "2026-10-28T07:00:00.000Z",
+      "stars": 2,
+      "text": "Yung load na binili ko hindi pumasok pero bawas na.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "taglish",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-056",
+      "appId": "com.example.wallet",
+      "at": "2026-10-01T08:00:00.000Z",
+      "stars": 1,
+      "text": "Transaction stuck in processing for three days with my money.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "english",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-057",
+      "appId": "com.example.wallet",
+      "at": "2026-10-02T09:00:00.000Z",
+      "stars": 1,
+      "text": "Nawala ang pera ko pagkatapos ng nabigong transaksyon.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "tagalog",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-058",
+      "appId": "com.example.wallet",
+      "at": "2026-10-03T10:00:00.000Z",
+      "stars": 2,
+      "text": "Double deduction! Isang beses lang ako nagbayad.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "taglish",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-059",
+      "appId": "com.example.wallet",
+      "at": "2026-10-04T11:00:00.000Z",
+      "stars": 1,
+      "text": "Refund for a failed transfer still not credited after a week.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "english",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-060",
+      "appId": "com.example.wallet",
+      "at": "2026-10-05T12:00:00.000Z",
+      "stars": 1,
+      "text": "Failed yung transfer tapos may fee pa rin na kinaltas, nasaan ang refund?",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "failed_transaction",
+      "language": "taglish",
+      "moneyInvolved": true
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-061",
+      "appId": "com.example.wallet",
+      "at": "2026-10-06T13:00:00.000Z",
+      "stars": 2,
+      "text": "Cash out to my bank takes 2 to 3 business days. Too slow.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-062",
+      "appId": "com.example.wallet",
+      "at": "2026-10-07T14:00:00.000Z",
+      "stars": 3,
+      "text": "Okay naman pero matagal ang transfer sa bank, ilang araw bago dumating.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-063",
+      "appId": "com.example.wallet",
+      "at": "2026-10-08T15:00:00.000Z",
+      "stars": 2,
+      "text": "Napakatagal bago pumasok sa bangko ang cash out.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-064",
+      "appId": "com.example.wallet",
+      "at": "2026-10-09T16:00:00.000Z",
+      "stars": 2,
+      "text": "Why does withdrawing to my bank take a week?",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-065",
+      "appId": "com.example.wallet",
+      "at": "2026-10-10T17:00:00.000Z",
+      "stars": 2,
+      "text": "Sana instant na yung cash out, ang tagal kasi.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-066",
+      "appId": "com.example.wallet",
+      "at": "2026-10-11T18:00:00.000Z",
+      "stars": 3,
+      "text": "Bank transfer is slower than other wallets.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-067",
+      "appId": "com.example.wallet",
+      "at": "2026-10-12T19:00:00.000Z",
+      "stars": 2,
+      "text": "Yung cash out sa branch ang haba ng pila tapos offline pa system.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-068",
+      "appId": "com.example.wallet",
+      "at": "2026-10-13T20:00:00.000Z",
+      "stars": 2,
+      "text": "Cash out request is still processing after two days.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-069",
+      "appId": "com.example.wallet",
+      "at": "2026-10-14T21:00:00.000Z",
+      "stars": 3,
+      "text": "Matagal ang paglipat ng pera sa aking account sa bangko.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-070",
+      "appId": "com.example.wallet",
+      "at": "2026-10-15T22:00:00.000Z",
+      "stars": 2,
+      "text": "Delayed lagi ang withdraw papunta sa bank ko.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-071",
+      "appId": "com.example.wallet",
+      "at": "2026-10-16T23:00:00.000Z",
+      "stars": 2,
+      "text": "Transfers to bank only arrive the next business day.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-072",
+      "appId": "com.example.wallet",
+      "at": "2026-10-17T00:00:00.000Z",
+      "stars": 3,
+      "text": "Ang bagal ng cash out pag weekend, Monday na dumadating.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "cash_out",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-073",
+      "appId": "com.example.wallet",
+      "at": "2026-10-18T01:00:00.000Z",
+      "stars": 2,
+      "text": "Why is there a 25 peso fee for cash out? It used to be free.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-074",
+      "appId": "com.example.wallet",
+      "at": "2026-10-19T02:00:00.000Z",
+      "stars": 3,
+      "text": "May bawas na fee kahit maliit lang yung pinadala. Sana libre na lang.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-075",
+      "appId": "com.example.wallet",
+      "at": "2026-10-20T03:00:00.000Z",
+      "stars": 2,
+      "text": "Masyadong mahal ang singil sa bawat padala.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-076",
+      "appId": "com.example.wallet",
+      "at": "2026-10-21T04:00:00.000Z",
+      "stars": 2,
+      "text": "The convenience fee on bills payment is too high.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-077",
+      "appId": "com.example.wallet",
+      "at": "2026-10-22T05:00:00.000Z",
+      "stars": 2,
+      "text": "Bakit may dormancy fee? Hindi ko naman alam yun.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-078",
+      "appId": "com.example.wallet",
+      "at": "2026-10-23T06:00:00.000Z",
+      "stars": 3,
+      "text": "Fees keep going up every few months.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-079",
+      "appId": "com.example.wallet",
+      "at": "2026-10-24T07:00:00.000Z",
+      "stars": 2,
+      "text": "Ang laki ng charge sa padala abroad.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-080",
+      "appId": "com.example.wallet",
+      "at": "2026-10-25T08:00:00.000Z",
+      "stars": 2,
+      "text": "Hidden charges on every transfer.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-081",
+      "appId": "com.example.wallet",
+      "at": "2026-10-26T09:00:00.000Z",
+      "stars": 3,
+      "text": "Sana mas mababa ang bayad sa serbisyo.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-082",
+      "appId": "com.example.wallet",
+      "at": "2026-10-27T10:00:00.000Z",
+      "stars": 2,
+      "text": "May fee pa rin kahit promo daw na libre.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-083",
+      "appId": "com.example.wallet",
+      "at": "2026-10-28T11:00:00.000Z",
+      "stars": 2,
+      "text": "Charged a fee just to check my balance at the kiosk.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-084",
+      "appId": "com.example.wallet",
+      "at": "2026-10-01T12:00:00.000Z",
+      "stars": 3,
+      "text": "Okay ang app pero ang mahal ng fees compared sa iba.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "fees",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-085",
+      "appId": "com.example.wallet",
+      "at": "2026-10-02T13:00:00.000Z",
+      "stars": 1,
+      "text": "Customer service never answers. Emailed three times, no reply.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-086",
+      "appId": "com.example.wallet",
+      "at": "2026-10-03T14:00:00.000Z",
+      "stars": 2,
+      "text": "Walang support. Sabi sa branch tumawag sa hotline, busy naman palagi.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-087",
+      "appId": "com.example.wallet",
+      "at": "2026-10-04T15:00:00.000Z",
+      "stars": 1,
+      "text": "Walang sumasagot sa customer service.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-088",
+      "appId": "com.example.wallet",
+      "at": "2026-10-05T16:00:00.000Z",
+      "stars": 1,
+      "text": "The chat bot just loops and never connects me to a person.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-089",
+      "appId": "com.example.wallet",
+      "at": "2026-10-06T17:00:00.000Z",
+      "stars": 2,
+      "text": "Nag message ako sa page nila, seen lang.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-090",
+      "appId": "com.example.wallet",
+      "at": "2026-10-07T18:00:00.000Z",
+      "stars": 1,
+      "text": "Support closed my ticket without solving anything.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-091",
+      "appId": "com.example.wallet",
+      "at": "2026-10-08T19:00:00.000Z",
+      "stars": 1,
+      "text": "Ilang araw na walang reply sa complaint ko.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-092",
+      "appId": "com.example.wallet",
+      "at": "2026-10-09T20:00:00.000Z",
+      "stars": 2,
+      "text": "Hotline wait time is over an hour.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-093",
+      "appId": "com.example.wallet",
+      "at": "2026-10-10T21:00:00.000Z",
+      "stars": 1,
+      "text": "Hindi nakakatulong ang mga staff sa sangay.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-094",
+      "appId": "com.example.wallet",
+      "at": "2026-10-11T22:00:00.000Z",
+      "stars": 1,
+      "text": "Paano ba makausap ang tao, puro automated reply.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-095",
+      "appId": "com.example.wallet",
+      "at": "2026-10-12T23:00:00.000Z",
+      "stars": 2,
+      "text": "No way to contact support inside the app.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-096",
+      "appId": "com.example.wallet",
+      "at": "2026-10-13T00:00:00.000Z",
+      "stars": 1,
+      "text": "Pinapasa-pasa lang ako ng support, walang solusyon.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "support",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-097",
+      "appId": "com.example.wallet",
+      "at": "2026-10-14T01:00:00.000Z",
+      "stars": 5,
+      "text": "Mabilis at madaling gamitin. Salamat po!",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-098",
+      "appId": "com.example.wallet",
+      "at": "2026-10-15T02:00:00.000Z",
+      "stars": 5,
+      "text": "Fast padala, received in minutes. Great app.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-099",
+      "appId": "com.example.wallet",
+      "at": "2026-10-16T03:00:00.000Z",
+      "stars": 5,
+      "text": "Napakagandang app, maaasahan.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-100",
+      "appId": "com.example.wallet",
+      "at": "2026-10-17T04:00:00.000Z",
+      "stars": 4,
+      "text": "Smooth bills payment, never had a problem.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-101",
+      "appId": "com.example.wallet",
+      "at": "2026-10-18T05:00:00.000Z",
+      "stars": 5,
+      "text": "Sobrang convenient, hindi na ako pumipila sa branch.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-102",
+      "appId": "com.example.wallet",
+      "at": "2026-10-19T06:00:00.000Z",
+      "stars": 5,
+      "text": "Best wallet for sending money home.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-103",
+      "appId": "com.example.wallet",
+      "at": "2026-10-20T07:00:00.000Z",
+      "stars": 4,
+      "text": "Ganda ng bagong design, mas madali na.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-104",
+      "appId": "com.example.wallet",
+      "at": "2026-10-21T08:00:00.000Z",
+      "stars": 5,
+      "text": "Reliable and quick, thank you.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-105",
+      "appId": "com.example.wallet",
+      "at": "2026-10-22T09:00:00.000Z",
+      "stars": 5,
+      "text": "Salamat sa mabilis na serbisyo.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-106",
+      "appId": "com.example.wallet",
+      "at": "2026-10-23T10:00:00.000Z",
+      "stars": 4,
+      "text": "Okay na okay, legit at mabilis.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-107",
+      "appId": "com.example.wallet",
+      "at": "2026-10-24T11:00:00.000Z",
+      "stars": 5,
+      "text": "Love the cashback promos.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-108",
+      "appId": "com.example.wallet",
+      "at": "2026-10-25T12:00:00.000Z",
+      "stars": 4,
+      "text": "Solid app, sana may dark mode na next update.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "praise",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-109",
+      "appId": "com.example.wallet",
+      "at": "2026-10-26T13:00:00.000Z",
+      "stars": 3,
+      "text": "Please add a dark mode.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-110",
+      "appId": "com.example.wallet",
+      "at": "2026-10-27T14:00:00.000Z",
+      "stars": 3,
+      "text": "Sana may option na mag schedule ng payment.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-111",
+      "appId": "com.example.wallet",
+      "at": "2026-10-28T15:00:00.000Z",
+      "stars": 3,
+      "text": "Sana magkaroon ng mas maraming biller.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-112",
+      "appId": "com.example.wallet",
+      "at": "2026-10-01T16:00:00.000Z",
+      "stars": 3,
+      "text": "Would be nice to export my transaction history to PDF.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-113",
+      "appId": "com.example.wallet",
+      "at": "2026-10-02T17:00:00.000Z",
+      "stars": 3,
+      "text": "Pwede ba lagyan ng widget sa home screen?",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-114",
+      "appId": "com.example.wallet",
+      "at": "2026-10-03T18:00:00.000Z",
+      "stars": 2,
+      "text": "The font is too small for older users.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-115",
+      "appId": "com.example.wallet",
+      "at": "2026-10-04T19:00:00.000Z",
+      "stars": 3,
+      "text": "Sana English and Tagalog ang language option.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-116",
+      "appId": "com.example.wallet",
+      "at": "2026-10-05T20:00:00.000Z",
+      "stars": 3,
+      "text": "Add support for QR payments at more stores.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-117",
+      "appId": "com.example.wallet",
+      "at": "2026-10-06T21:00:00.000Z",
+      "stars": 3,
+      "text": "Gusto ko sanang makita ang mga promo sa isang lugar.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "tagalog",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-118",
+      "appId": "com.example.wallet",
+      "at": "2026-10-07T22:00:00.000Z",
+      "stars": 3,
+      "text": "Pwede ba mag add ng nickname sa saved recipients?",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-119",
+      "appId": "com.example.wallet",
+      "at": "2026-10-08T23:00:00.000Z",
+      "stars": 3,
+      "text": "Wish the app had a budget tracker.",
+      "appVersion": "4.2.0",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "english",
+      "moneyInvolved": false
+    }
+  },
+  {
+    "review": {
+      "store": "google_play",
+      "storeReviewId": "labelled-120",
+      "appId": "com.example.wallet",
+      "at": "2026-10-09T00:00:00.000Z",
+      "stars": 2,
+      "text": "Masyadong maraming notifications, sana pwede i-off.",
+      "appVersion": "4.1.9",
+      "companyReplied": false
+    },
+    "expected": {
+      "cause": "other",
+      "language": "taglish",
+      "moneyInvolved": false
+    }
+  }
+]
