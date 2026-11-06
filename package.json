@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "cli": "tsx src/cli.ts"
+    "cli": "tsx src/cli.ts",
+    "check:data": "tsx scripts/check-no-review-data.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
