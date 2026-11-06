@@ -8,8 +8,8 @@ Each gate needs the owner's explicit "yes"; an approval for one phase never carr
 
 | Phase | Status |
 |---|---|
-| 1. Brief | **draft** (`docs/product/brief.md`) |
-| 2. Spec & acceptance criteria | not started |
+| 1. Brief | done, approved 2026-11-06 (`docs/product/brief.md`) |
+| 2. Spec & acceptance criteria | **in progress** (`docs/product/spec.md`) |
 | 3. Architecture | not started |
 | 4. Build | not started |
 

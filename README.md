@@ -6,4 +6,4 @@ It works for any app on Google Play or the App Store. It uses public reviews onl
 
 Status: the brief is drafted (`docs/product/brief.md`); no code yet.
 
-All rights reserved ([LICENSE](LICENSE)).
+MIT ([LICENSE](LICENSE)).

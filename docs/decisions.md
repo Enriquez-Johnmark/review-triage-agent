@@ -10,3 +10,5 @@ Every decision the owner made, dated.
 - **Scope:** sorting by cause, spikes by week and app version, replies approved by a person; a dashboard, an MCP server and one n8n workflow.
 - **Technology:** TypeScript, SQLite, Claude via API key, tests.
 - **Repository:** public, saying it uses public reviews and is not affiliated with any app's maker.
+- **Brief:** approved (`docs/product/brief.md`).
+- **Licence:** MIT, so anyone can clone and run it.

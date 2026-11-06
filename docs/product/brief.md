@@ -1,6 +1,6 @@
 # Brief: Review Triage Agent
 
-Status: **draft for the owner's approval** (2026-11-06). Once approved, the spec (`spec.md`) is decided round by round from it.
+Status: **approved by the owner** (2026-11-06). Once approved, the spec (`spec.md`) is decided round by round from it.
 
 ## In one sentence
 
@@ -63,4 +63,4 @@ Posting to a real app (needs its owner's access), other review sources (social m
 
 ## Licence
 
-All rights reserved, as for the owner's other products (source readable, not reusable).
+MIT, so anyone, recruiters included, can clone and run it (owner's decision, 2026-11-06).
