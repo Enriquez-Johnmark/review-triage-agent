@@ -49,12 +49,18 @@ export function parseFeedPage(body: unknown, appId: string): Fetched {
 }
 
 /** The most recent reviews Apple's feed offers for `appId` (up to 10 pages). */
-export async function fetchAppStore(appId: string, pages = 10): Promise<Fetched> {
+export async function fetchAppStore(
+  appId: string,
+  pages = 10,
+  get: (url: string) => Promise<Response> = (url) => fetch(url),
+): Promise<Fetched> {
   const all: Fetched = { reviews: [], skipped: 0 }
   for (let page = 1; page <= pages; page++) {
     const url = `https://itunes.apple.com/ph/rss/customerreviews/page=${String(page)}/id=${appId}/sortby=mostrecent/json`
-    const response = await fetch(url)
-    if (!response.ok) break
+    const response = await get(url)
+    // A failed request is an error, never "no more reviews".
+    if (!response.ok)
+      throw new Error(`the App Store answered ${String(response.status)} for page ${String(page)}`)
     const found = parseFeedPage(await response.json(), appId)
     if (found.reviews.length === 0 && found.skipped === 0) break
     all.reviews.push(...found.reviews)
