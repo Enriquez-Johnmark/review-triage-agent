@@ -23,10 +23,17 @@ const { positionals, values } = parseArgs({
   },
 })
 
+const COMMANDS = ["fetch", "load-sample"]
+const command = positionals[0] ?? ""
+if (!COMMANDS.includes(command)) {
+  console.error(`commands: ${COMMANDS.join(", ")}`)
+  process.exit(1)
+}
+
 mkdirSync(dirname(values.db), { recursive: true })
 const db = openDb(values.db)
 
-switch (positionals[0]) {
+switch (command) {
   case "fetch": {
     if (!values.play && !values.apple) throw new Error("give --play and/or --apple with the app's store ID")
     const saved = await fetchNew(
@@ -50,7 +57,4 @@ switch (positionals[0]) {
     console.log(`${String(saved.added)} sample reviews loaded, ${String(saved.alreadyThere)} already there`)
     break
   }
-  default:
-    console.error("commands: fetch, load-sample")
-    process.exitCode = 1
 }
