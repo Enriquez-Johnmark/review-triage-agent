@@ -3,6 +3,7 @@ import type { Cause } from "../core/causes.ts"
 import { parseLabel } from "../core/label.ts"
 import type { Review } from "../core/review.ts"
 import type { SortInput, Sorter } from "../model/sorter.ts"
+import { inPool } from "../pool.ts"
 import type { Db } from "../store/db.ts"
 import { saveModelOutcome, unsortedReviews } from "../store/labels.ts"
 
@@ -39,22 +40,18 @@ export async function sortPending(
 ): Promise<SortReport> {
   const report: SortReport = { sorted: 0, needsPerson: 0, failed: 0 }
   const causeIds = settings.causes.map((cause) => cause.id)
-  const queue = unsortedReviews(db, settings.appId)
-  const worker = async () => {
-    for (let review = queue.shift(); review; review = queue.shift()) {
-      let raw: string
-      try {
-        raw = await sorter.sort(sortInput(review), settings.causes)
-      } catch {
-        report.failed += 1
-        continue
-      }
-      const outcome = parseLabel(raw, causeIds, settings.threshold)
-      saveModelOutcome(db, clock, review, outcome, sorter.model)
-      if (outcome.kind === "sorted") report.sorted += 1
-      else report.needsPerson += 1
+  await inPool(unsortedReviews(db, settings.appId), inParallel, async (review) => {
+    let raw: string
+    try {
+      raw = await sorter.sort(sortInput(review), settings.causes)
+    } catch {
+      report.failed += 1
+      return
     }
-  }
-  await Promise.all(Array.from({ length: inParallel }, worker))
+    const outcome = parseLabel(raw, causeIds, settings.threshold)
+    saveModelOutcome(db, clock, review, outcome, sorter.model)
+    if (outcome.kind === "sorted") report.sorted += 1
+    else report.needsPerson += 1
+  })
   return report
 }

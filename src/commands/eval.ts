@@ -7,6 +7,7 @@ import { Language } from "../core/causes.ts"
 import { parseLabel } from "../core/label.ts"
 import { Review } from "../core/review.ts"
 import type { Sorter } from "../model/sorter.ts"
+import { inPool } from "../pool.ts"
 import { sortInput } from "./sort.ts"
 
 /** A review with the sorting a person decided is right. */
@@ -42,6 +43,7 @@ export async function evaluate(
   sorter: Sorter,
   causes: readonly Cause[],
   threshold: number,
+  inParallel = 4,
 ): Promise<EvalReport> {
   const causeIds = causes.map((cause) => cause.id)
   const perCause: EvalReport["perCause"] = Object.fromEntries(
@@ -54,13 +56,19 @@ export async function evaluate(
   let sorted = 0
   let languageRight = 0
   let moneyRight = 0
-  for (const { review, expected } of set) {
+  // The model calls run a few at a time; the tallying below is in order.
+  const answers = await inPool(set, inParallel, async ({ review }) => {
+    try {
+      return await sorter.sort(sortInput(review), causes)
+    } catch {
+      return null
+    }
+  })
+  for (const [index, { review, expected }] of set.entries()) {
     const tally = (perCause[expected.cause] ??= { total: 0, right: 0 })
     tally.total += 1
-    let raw: string
-    try {
-      raw = await sorter.sort(sortInput(review), causes)
-    } catch {
+    const raw = answers[index]
+    if (raw === null || raw === undefined) {
       failed += 1
       mistakes.push({ id: review.storeReviewId, expected: expected.cause, got: "(no answer)" })
       continue
