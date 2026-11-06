@@ -10,10 +10,10 @@ Each gate needs the owner's explicit "yes"; an approval for one phase never carr
 |---|---|
 | 1. Brief | done, approved 2026-11-06 (`docs/product/brief.md`) |
 | 2. Spec & acceptance criteria | done, approved 2026-11-06 (`docs/product/spec.md`, 25 criteria) |
-| 3. Architecture | **next** |
-| 4. Build | not started |
+| 3. Architecture | done, approved 2026-11-06 (`docs/architecture.md`) |
+| 4. Build | **in progress**: M1 next (`docs/architecture.md`) |
 
-No application code is written until the spec and architecture are approved.
+Code follows the build order in `docs/architecture.md`, one milestone at a time; each ends with a code review.
 
 ## Owner decisions
 
@@ -27,5 +27,6 @@ Every decision needing the owner's judgement is put as numbered rounds of questi
 - **Model output is untrusted.** Sorting results and drafts are parsed into strict types and checked by rules (no promises of refunds or dates, no requests for account numbers, PINs or OTPs, the right language) before a person sees them.
 - **API key only.** The Claude API through the owner's key, never a Claude subscription; no review data to free model tiers that train on inputs.
 - **Tests:** every acceptance criterion has a test whose name starts with its ID, e.g. `e3_posting_twice_posts_once`.
+- **Before every commit:** `pnpm lint`, `pnpm typecheck` and `pnpm test` pass (and for `web/`, its own checks).
 - **Report test results only from commands actually run.**
 - **Small commits** on `main`, each one behaviour or one doc change; messages imperative; no AI attribution trailers (owner's choice). Commits are signed.
