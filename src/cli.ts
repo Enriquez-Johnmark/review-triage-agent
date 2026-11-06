@@ -41,6 +41,8 @@ switch (positionals[0]) {
     console.log(
       `${String(saved.added)} new reviews, ${String(saved.alreadyThere)} already there, ${String(saved.skipped)} unreadable`,
     )
+    for (const failure of saved.failed) console.error(`Failed: ${failure}`)
+    if (saved.failed.length > 0) process.exitCode = 1
     break
   }
   case "load-sample": {

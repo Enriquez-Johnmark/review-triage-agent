@@ -45,8 +45,8 @@ describe("fetchNew", () => {
     const first = await fetchNew(db, clock, app, fetchers)
     const second = await fetchNew(db, clock, app, fetchers)
 
-    expect(first).toEqual({ added: 4, alreadyThere: 0, skipped: 0 })
-    expect(second).toEqual({ added: 0, alreadyThere: 4, skipped: 0 })
+    expect(first).toEqual({ added: 4, alreadyThere: 0, skipped: 0, failed: [] })
+    expect(second).toEqual({ added: 0, alreadyThere: 4, skipped: 0, failed: [] })
   })
 })
 
@@ -73,5 +73,21 @@ describe("fetching again", () => {
     )
 
     expect(listReviews(db, APPLE_APP)[0]?.companyReplied).toBeNull()
+  })
+})
+
+describe("one store failing", () => {
+  it("a2_keeps_the_other_stores_reviews_and_says_which_failed", async () => {
+    const db = openDb(":memory:")
+    const clock = new FixedClock(new Date("2026-11-02T01:00:00Z"))
+    const fetchers = {
+      googlePlay: () => Promise.reject(new Error("Google Play refused the request")),
+      appStore: (id: string) => Promise.resolve(parseFeedPage(applePage, id)),
+    }
+
+    const report = await fetchNew(db, clock, { googlePlay: PLAY_APP, appStore: APPLE_APP }, fetchers)
+
+    expect(report).toMatchObject({ added: 1, failed: ["Google Play: Google Play refused the request"] })
+    expect(listReviews(db, APPLE_APP)).toHaveLength(1)
   })
 })
