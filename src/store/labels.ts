@@ -55,6 +55,10 @@ export function setCauseByHand(
   by: string,
 ): void {
   if (!causeIds.includes(cause)) throw new Error(`"${cause}" isn't one of this app's causes`)
+  const exists = db
+    .prepare("select 1 from reviews where store = ? and store_review_id = ?")
+    .get(key.store, key.storeReviewId)
+  if (!exists) throw new Error(`no such review: ${key.store} ${key.storeReviewId}`)
   const before = labelFor(db, key)
   db.transaction(() => {
     db.prepare(

@@ -89,6 +89,15 @@ describe("B5", () => {
     }).toThrow(/isn't one of this app's causes/)
   })
 
+  it("b5_setting_a_cause_on_a_review_that_isnt_there_says_so", () => {
+    const { db, clock } = world()
+
+    expect(() => {
+      setCauseByHand(db, clock, { store: "google_play", storeReviewId: "gone" }, "crash", ids, "ana")
+    }).toThrow("no such review: google_play gone")
+    expect(auditLog(db)).toEqual([])
+  })
+
   it("b5_the_audit_log_cannot_be_changed", () => {
     const { db, clock } = world()
     setCauseByHand(db, clock, { store: "google_play", storeReviewId: "sample-001" }, "crash", ids, "ana")
