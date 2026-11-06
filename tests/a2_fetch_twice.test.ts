@@ -48,3 +48,25 @@ describe("fetchNew", () => {
     expect(second).toEqual({ added: 0, alreadyThere: 4 })
   })
 })
+
+describe("fetching again", () => {
+  it("a2_a_reply_the_company_made_later_is_recorded", () => {
+    const db = openDb(":memory:")
+    const clock = new FixedClock(new Date("2026-11-02T01:00:00Z"))
+    const [unanswered] = playReviews
+    if (!unanswered) throw new Error("the fixture has no reviews")
+    saveReviews(db, clock, [fromGooglePlay(unanswered, PLAY_APP)])
+
+    const again = saveReviews(db, clock, [fromGooglePlay({ ...unanswered, replyText: "Sorry!" }, PLAY_APP)])
+
+    expect(again).toEqual({ added: 0, alreadyThere: 1 })
+    expect(listReviews(db, PLAY_APP)[0]?.companyReplied).toBe(true)
+  })
+
+  it("a2_app_store_replies_are_unknown_not_missing", () => {
+    const db = openDb(":memory:")
+    saveReviews(db, new FixedClock(new Date("2026-11-02T01:00:00Z")), parseFeedPage(applePage, APPLE_APP))
+
+    expect(listReviews(db, APPLE_APP)[0]?.companyReplied).toBeNull()
+  })
+})

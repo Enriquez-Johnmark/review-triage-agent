@@ -31,7 +31,8 @@ export function fromAppStore(entry: FeedEntry, appId: string): Review {
     stars: Number(entry["im:rating"].label),
     text: title ? `${title}\n\n${body}` : body,
     appVersion: entry["im:version"]?.label ?? null,
-    companyReplied: false,
+    // Apple's public feed carries no developer replies: unknown, not unanswered.
+    companyReplied: null,
   })
 }
 

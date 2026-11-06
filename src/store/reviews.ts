@@ -8,20 +8,24 @@ export interface Saved {
   alreadyThere: number
 }
 
-/** Saves `reviews`; one already stored (the same store and review ID) is left
- *  as it is, so fetching again adds nothing new (A2). */
+/** Saves `reviews`. One already stored (the same store and review ID) isn't
+ *  added again (A2); only a reply the company has made since is recorded. */
 export function saveReviews(db: Db, clock: Clock, reviews: readonly Review[]): Saved {
   const insert = db.prepare(
     `insert into reviews (store, store_review_id, app_id, at, stars, text, app_version, company_replied, fetched_at)
      values (@store, @storeReviewId, @appId, @at, @stars, @text, @appVersion, @companyReplied, @fetchedAt)
-     on conflict (store, store_review_id) do nothing`,
+     on conflict (store, store_review_id) do update
+       set company_replied = coalesce(excluded.company_replied, reviews.company_replied)`,
   )
   const fetchedAt = clock.now().toISOString()
+  const exists = db.prepare("select 1 from reviews where store = ? and store_review_id = ?")
   let added = 0
   db.transaction(() => {
     for (const review of reviews) {
       const checked = Review.parse(review)
-      added += insert.run({ ...checked, companyReplied: checked.companyReplied ? 1 : 0, fetchedAt }).changes
+      if (!exists.get(checked.store, checked.storeReviewId)) added += 1
+      const replied = checked.companyReplied === null ? null : Number(checked.companyReplied)
+      insert.run({ ...checked, companyReplied: replied, fetchedAt })
     }
   })()
   return { added, alreadyThere: reviews.length - added }
@@ -35,7 +39,7 @@ interface ReviewRow {
   stars: number
   text: string
   app_version: string | null
-  company_replied: number
+  company_replied: number | null
 }
 
 /** Every stored review of `appId`, newest first. */
@@ -55,7 +59,7 @@ export function listReviews(db: Db, appId: string): Review[] {
       stars: row.stars,
       text: row.text,
       appVersion: row.app_version,
-      companyReplied: row.company_replied === 1,
+      companyReplied: row.company_replied === null ? null : row.company_replied === 1,
     }),
   )
 }

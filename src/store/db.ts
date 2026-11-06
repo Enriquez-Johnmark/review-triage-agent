@@ -10,7 +10,8 @@ const MIGRATIONS: readonly string[] = [
      stars integer not null check (stars between 1 and 5),
      text text not null,
      app_version text,
-     company_replied integer not null check (company_replied in (0, 1)),
+     -- 1 or 0, or null when the store doesn't say (Apple's public feed).
+     company_replied integer check (company_replied in (0, 1)),
      fetched_at text not null,
      primary key (store, store_review_id)
    );

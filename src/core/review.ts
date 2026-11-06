@@ -18,7 +18,8 @@ export const Review = z
     stars: z.number().int().min(1).max(5),
     text: z.string(),
     appVersion: z.string().min(1).nullable(),
-    companyReplied: z.boolean(),
+    /** Whether the app's maker replied; `null` when the store doesn't say (Apple's feed). */
+    companyReplied: z.boolean().nullable(),
   })
   .strict()
 export type Review = z.infer<typeof Review>
