@@ -38,7 +38,9 @@ switch (positionals[0]) {
       },
       { googlePlay: (id) => fetchGooglePlay(id), appStore: (id) => fetchAppStore(id) },
     )
-    console.log(`${String(saved.added)} new reviews, ${String(saved.alreadyThere)} already there`)
+    console.log(
+      `${String(saved.added)} new reviews, ${String(saved.alreadyThere)} already there, ${String(saved.skipped)} unreadable`,
+    )
     break
   }
   case "load-sample": {

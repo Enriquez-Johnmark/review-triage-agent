@@ -24,7 +24,7 @@ describe("A2", () => {
   })
 
   it("a2_the_app_entry_in_apples_feed_is_not_a_review", () => {
-    const reviews = parseFeedPage(applePage, APPLE_APP)
+    const { reviews } = parseFeedPage(applePage, APPLE_APP)
 
     expect(reviews.map((review) => review.storeReviewId)).toEqual(["as-1"])
     expect(reviews[0]).toMatchObject({ stars: 1, appVersion: "4.1.9", at: "2026-10-30T03:34:03.000Z" })
@@ -36,7 +36,8 @@ describe("fetchNew", () => {
     const db = openDb(":memory:")
     const clock = new FixedClock(new Date("2026-11-02T01:00:00Z"))
     const fetchers = {
-      googlePlay: (id: string) => Promise.resolve(playReviews.map((raw) => fromGooglePlay(raw, id))),
+      googlePlay: (id: string) =>
+        Promise.resolve({ reviews: playReviews.map((raw) => fromGooglePlay(raw, id)), skipped: 0 }),
       appStore: (id: string) => Promise.resolve(parseFeedPage(applePage, id)),
     }
     const app = { googlePlay: PLAY_APP, appStore: APPLE_APP }
@@ -44,8 +45,8 @@ describe("fetchNew", () => {
     const first = await fetchNew(db, clock, app, fetchers)
     const second = await fetchNew(db, clock, app, fetchers)
 
-    expect(first).toEqual({ added: 4, alreadyThere: 0 })
-    expect(second).toEqual({ added: 0, alreadyThere: 4 })
+    expect(first).toEqual({ added: 4, alreadyThere: 0, skipped: 0 })
+    expect(second).toEqual({ added: 0, alreadyThere: 4, skipped: 0 })
   })
 })
 
@@ -65,7 +66,11 @@ describe("fetching again", () => {
 
   it("a2_app_store_replies_are_unknown_not_missing", () => {
     const db = openDb(":memory:")
-    saveReviews(db, new FixedClock(new Date("2026-11-02T01:00:00Z")), parseFeedPage(applePage, APPLE_APP))
+    saveReviews(
+      db,
+      new FixedClock(new Date("2026-11-02T01:00:00Z")),
+      parseFeedPage(applePage, APPLE_APP).reviews,
+    )
 
     expect(listReviews(db, APPLE_APP)[0]?.companyReplied).toBeNull()
   })

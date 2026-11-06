@@ -27,13 +27,13 @@ describe("fetching Google Play", () => {
 
     const found = await fetchGooglePlay(PLAY_APP, 4, request)
 
-    expect(found.map((r) => r.storeReviewId)).toEqual(["p1", "p2", "p3", "p4"])
+    expect(found.reviews.map((r) => r.storeReviewId)).toEqual(["p1", "p2", "p3", "p4"])
     expect(asked).toEqual([undefined, "t2"])
   })
 
   it("a2_stops_when_there_are_no_more_pages", async () => {
     const { request } = store([{ data: [review("p1")], nextPaginationToken: null }])
 
-    expect(await fetchGooglePlay(PLAY_APP, 500, request)).toHaveLength(1)
+    expect((await fetchGooglePlay(PLAY_APP, 500, request)).reviews).toHaveLength(1)
   })
 })

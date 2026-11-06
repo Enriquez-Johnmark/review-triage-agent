@@ -1,6 +1,7 @@
 import gplay from "google-play-scraper"
 
 import { Review } from "../core/review.ts"
+import { convertEach, type Fetched } from "./fetched.ts"
 
 /** What google-play-scraper returns for one review (the fields we read). */
 export interface GooglePlayReview {
@@ -17,11 +18,13 @@ export interface GooglePlayReview {
 /** One store review as kept: the reviewer's name and picture are dropped here,
  *  before anything else sees them (A1). */
 export function fromGooglePlay(raw: GooglePlayReview, appId: string): Review {
+  const at = new Date(raw.date)
+  if (Number.isNaN(at.getTime())) throw new Error(`review ${raw.id} has no valid date`)
   return Review.parse({
     store: "google_play",
     storeReviewId: raw.id,
     appId,
-    at: new Date(raw.date).toISOString(),
+    at: at.toISOString(),
     stars: raw.score,
     text: raw.text ?? "",
     appVersion: raw.version ?? null,
@@ -63,7 +66,7 @@ export async function fetchGooglePlay(
   appId: string,
   count = 200,
   request: PageRequest = requestFrom(appId),
-): Promise<Review[]> {
+): Promise<Fetched> {
   const found: GooglePlayReview[] = []
   let token: string | undefined
   do {
@@ -71,5 +74,5 @@ export async function fetchGooglePlay(
     found.push(...page.data)
     token = page.nextPaginationToken ?? undefined
   } while (token && found.length < count)
-  return found.slice(0, count).map((raw) => fromGooglePlay(raw, appId))
+  return convertEach(found.slice(0, count), (raw) => fromGooglePlay(raw, appId))
 }

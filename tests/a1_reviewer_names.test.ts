@@ -21,7 +21,7 @@ describe("A1", () => {
     const db = openDb(":memory:")
     const reviews = [
       ...playReviews.map((raw) => fromGooglePlay(raw, PLAY_APP)),
-      ...parseFeedPage(applePage, APPLE_APP),
+      ...parseFeedPage(applePage, APPLE_APP).reviews,
     ]
 
     saveReviews(db, clock, reviews)
