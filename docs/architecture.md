@@ -6,18 +6,18 @@ Status: **approved by the owner** (2026-11-06). The spec is `product/spec.md`; t
 
 One TypeScript package, with the dashboard in `web/`:
 
-| Folder | Holds |
-|---|---|
-| `src/core/` | The rules, with no input or output: causes, spike detection, the reply checker, approval fingerprints |
-| `src/store/` | The SQLite database and its migrations |
-| `src/fetch/` | Reading reviews from Google Play and the App Store |
-| `src/model/` | The model client: live (Claude) and recorded (for tests) |
-| `src/api/` | The web API the dashboard and n8n use |
-| `src/mcp/` | The MCP server |
-| `src/cli.ts` | The commands: `fetch`, `sort`, `eval`, `serve`, `mcp` |
-| `web/` | The React dashboard |
-| `samples/` | The made-up reviews used by tests and the demo |
-| `data/` | The real database and fetched reviews: **ignored by git** |
+| Folder       | Holds                                                                                                 |
+| ------------ | ----------------------------------------------------------------------------------------------------- |
+| `src/core/`  | The rules, with no input or output: causes, spike detection, the reply checker, approval fingerprints |
+| `src/store/` | The SQLite database and its migrations                                                                |
+| `src/fetch/` | Reading reviews from Google Play and the App Store                                                    |
+| `src/model/` | The model client: live (Claude) and recorded (for tests)                                              |
+| `src/api/`   | The web API the dashboard and n8n use                                                                 |
+| `src/mcp/`   | The MCP server                                                                                        |
+| `src/cli.ts` | The commands: `fetch`, `sort`, `eval`, `serve`, `mcp`                                                 |
+| `web/`       | The React dashboard                                                                                   |
+| `samples/`   | The made-up reviews used by tests and the demo                                                        |
+| `data/`      | The real database and fetched reviews: **ignored by git**                                             |
 
 The safety rules live in `src/core/` and are used by every way in (the API, the commands and MCP), so none of them can skip a rule.
 
@@ -29,15 +29,15 @@ Node 22 and pnpm; strict TypeScript; **zod** for every input and every model ans
 
 SQLite through `better-sqlite3`, one file in `data/`, with numbered migrations.
 
-| Table | Holds |
-|---|---|
-| `reviews` | One per store review: store, store review ID, app ID, date, stars, text, app version, whether the company replied. **No reviewer names.** Unique on (store, store review ID) |
-| `labels` | A review's cause, language, money flag, confidence, and whether a person set it |
-| `drafts` | Reply drafts and their rule-check results |
-| `approvals` | An approval with the fingerprint (SHA-256) of the exact text approved |
-| `posts` | Each post, with a unique key recorded **before** the poster is called |
-| `audit_log` | Every draft, edit, approval, refusal, post and hand-set cause: when, who, what. Append-only |
-| `settings` | The app's store IDs, the causes, the support channel text, the confidence threshold |
+| Table       | Holds                                                                                                                                                                        |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reviews`   | One per store review: store, store review ID, app ID, date, stars, text, app version, whether the company replied. **No reviewer names.** Unique on (store, store review ID) |
+| `labels`    | A review's cause, language, money flag, confidence, and whether a person set it                                                                                              |
+| `drafts`    | Reply drafts and their rule-check results                                                                                                                                    |
+| `approvals` | An approval with the fingerprint (SHA-256) of the exact text approved                                                                                                        |
+| `posts`     | Each post, with a unique key recorded **before** the poster is called                                                                                                        |
+| `audit_log` | Every draft, edit, approval, refusal, post and hand-set cause: when, who, what. Append-only                                                                                  |
+| `settings`  | The app's store IDs, the causes, the support channel text, the confidence threshold                                                                                          |
 
 ## The model
 
@@ -77,14 +77,14 @@ GitHub Actions: lint, typecheck, unit tests, a browser test, and the A3 check th
 
 ## Build order
 
-| Milestone | Delivers | Criteria |
-|---|---|---|
-| M1 | Repository setup, database, fetching, the made-up sample | A1–A3 |
-| M2 | Sorting with recorded answers, the `eval` command, accuracy report | B1–B5 |
-| M3 | Spikes and the summary numbers | C1–C2, F1 |
-| M4 | Replies, rule checker, approval, posting, audit log | D1–D4, E1–E5 |
-| M5 | The dashboard | F5, G1 |
-| M6 | MCP server and the n8n daily summary | F2–F4 |
-| M7 | Real-data evaluation, README, screenshots, walkthrough video | — |
+| Milestone | Delivers                                                           | Criteria     |
+| --------- | ------------------------------------------------------------------ | ------------ |
+| M1        | Repository setup, database, fetching, the made-up sample           | A1–A3        |
+| M2        | Sorting with recorded answers, the `eval` command, accuracy report | B1–B5        |
+| M3        | Spikes and the summary numbers                                     | C1–C2, F1    |
+| M4        | Replies, rule checker, approval, posting, audit log                | D1–D4, E1–E5 |
+| M5        | The dashboard                                                      | F5, G1       |
+| M6        | MCP server and the n8n daily summary                               | F2–F4        |
+| M7        | Real-data evaluation, README, screenshots, walkthrough video       | —            |
 
 Each milestone ends with a code review. Live sorting and the real-data evaluation need the owner's API key, run on the owner's machine; everything else runs without one.

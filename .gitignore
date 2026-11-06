@@ -1,0 +1,5 @@
+node_modules
+# Real reviews and the database never leave the owner's machine (A3).
+data/
+.env
+coverage

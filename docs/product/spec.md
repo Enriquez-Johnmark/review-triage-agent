@@ -83,11 +83,13 @@ Decided round by round with the owner; the single source for spec decisions. The
 Each has a test whose name starts with its ID.
 
 **A. Fetching and privacy**
+
 - **A1.** Fetched reviews are stored without reviewer names, even when the store returns them.
 - **A2.** Running `fetch` twice adds nothing new.
 - **A3.** No raw review data can be committed: real data lives in an ignored folder, and CI fails if review files appear anywhere but the made-up sample.
 
 **B. Sorting**
+
 - **B1.** Every sorted review has one cause from the app's list, a language, a money flag and a confidence.
 - **B2.** A low-confidence or unreadable model answer sends the review to needs a person, never to a guessed cause.
 - **B3.** Money-involved reviews come first in the queue.
@@ -95,16 +97,19 @@ Each has a test whose name starts with its ID.
 - **B5.** A cause changed by hand is kept on later sorting runs, and the change is logged.
 
 **C. Spikes**
+
 - **C1.** A cause's week is a spike when it is at least double the previous four weeks' average and at least 5 reviews.
 - **C2.** An app version is a spike when its crash share is at least double the previous version's.
 
 **D. Replies**
+
 - **D1.** A draft is at most 350 characters, in the reviewer's language, and ends with the support channel from the settings.
 - **D2.** The rule checker catches promised refunds, outcomes or dates; requests for account numbers, PINs, OTPs, passwords or ID numbers; and blaming the customer, in English, Tagalog and Taglish.
 - **D3.** A draft that breaks a rule is redrafted once; if it breaks one again, it is flagged for a person.
 - **D4.** The model receives only the review's text, stars, app version and cause: no names and nothing else.
 
 **E. Approval, posting and the log**
+
 - **E1.** Nothing is posted without a person's approval.
 - **E2.** Editing an approved reply cancels the approval; posting checks the text still matches what was approved.
 - **E3.** Posting the same approved reply twice, or after a crash, posts it once.
@@ -112,6 +117,7 @@ Each has a test whose name starts with its ID.
 - **E5.** Without the app owner's Google credentials, replies go only to the stand-in; the real connection is used only when credentials are set.
 
 **F. Dashboard, MCP and the daily summary**
+
 - **F1.** The overview's numbers (reviews this week, share answered, top causes) match the stored reviews.
 - **F2.** The MCP server offers exactly its five tools; `draft_reply` creates a draft that still needs approval, and no tool can approve or post.
 - **F3.** MCP tool inputs are checked strictly; bad input is refused with a clear message.
@@ -119,4 +125,5 @@ Each has a test whose name starts with its ID.
 - **F5.** The API key never appears in a page, an API answer or a log.
 
 **G. Presentation**
+
 - **G1.** The app shows no app maker's logo or styling; the README and the dashboard footer say it uses public reviews and is not affiliated with any app's maker.
