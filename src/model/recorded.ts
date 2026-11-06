@@ -10,25 +10,36 @@ import type { SortInput, Sorter } from "./sorter.ts"
 const Recordings = z.object({ model: z.string(), answers: z.record(z.string(), z.string()) })
 type Recordings = z.infer<typeof Recordings>
 
-/** The same question always gives the same key: the review and the causes. */
-export function recordingKey(input: SortInput, causes: readonly Cause[]): string {
-  const question = JSON.stringify({ input, causes: causes.map((cause) => [cause.id, cause.description]) })
-  return createHash("sha256").update(question).digest("hex").slice(0, 16)
+/** The same question always gives the same key; any change to what would be
+ *  sent (the model, the instructions, the causes, the review) gives another. */
+export function recordingKey(question: unknown): string {
+  return createHash("sha256").update(JSON.stringify(question)).digest("hex").slice(0, 16)
 }
+
+/** Builds the question a sorter would send for a review. */
+export type Question = (input: SortInput, causes: readonly Cause[]) => unknown
 
 export function loadRecordings(file: string): Recordings | undefined {
   return existsSync(file) ? Recordings.parse(JSON.parse(readFileSync(file, "utf8"))) : undefined
 }
 
-/** Replays recorded answers, so tests and CI run without an API key. A
- *  question never recorded is an error, like a failed call. */
+/** Replays recorded answers, so tests and CI run without an API key. The
+ *  key is today's question (`ask`), so answers to an older prompt or another
+ *  model aren't replayed: a question never recorded is an error, like a
+ *  failed call. */
 export class RecordedSorter implements Sorter {
   readonly model: string
-  constructor(private readonly recordings: Recordings) {
+  constructor(
+    private readonly recordings: Recordings,
+    private readonly ask: Question,
+  ) {
     this.model = recordings.model
   }
+  question(input: SortInput, causes: readonly Cause[]): unknown {
+    return this.ask(input, causes)
+  }
   sort(input: SortInput, causes: readonly Cause[]): Promise<string> {
-    const answer = this.recordings.answers[recordingKey(input, causes)]
+    const answer = this.recordings.answers[recordingKey(this.ask(input, causes))]
     return answer === undefined
       ? Promise.reject(new Error("no recorded answer for this review"))
       : Promise.resolve(answer)
@@ -45,12 +56,16 @@ export class RecordingSorter implements Sorter {
     private readonly file: string,
   ) {
     this.model = live.model
-    this.recordings = loadRecordings(file) ?? { model: live.model, answers: {} }
-    this.recordings.model = live.model
+    // Answers from another model are dropped, never relabelled as this one's.
+    const earlier = loadRecordings(file)
+    this.recordings = earlier?.model === live.model ? earlier : { model: live.model, answers: {} }
+  }
+  question(input: SortInput, causes: readonly Cause[]): unknown {
+    return this.live.question(input, causes)
   }
   async sort(input: SortInput, causes: readonly Cause[]): Promise<string> {
     const answer = await this.live.sort(input, causes)
-    this.recordings.answers[recordingKey(input, causes)] = answer
+    this.recordings.answers[recordingKey(this.live.question(input, causes))] = answer
     writeFileSync(this.file, `${JSON.stringify(this.recordings, null, 2)}\n`)
     return answer
   }

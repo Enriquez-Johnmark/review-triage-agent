@@ -16,7 +16,7 @@ import { sortPending } from "./commands/sort.ts"
 import { FINANCE_CAUSES } from "./core/causes.ts"
 import { fetchAppStore } from "./fetch/appStore.ts"
 import { fetchGooglePlay } from "./fetch/googlePlay.ts"
-import { ClaudeSorter } from "./model/claude.ts"
+import { ClaudeSorter, sortQuestion } from "./model/claude.ts"
 import { loadRecordings, RecordedSorter, RecordingSorter } from "./model/recorded.ts"
 import { sampleReviews } from "./samples.ts"
 import { openDb } from "./store/db.ts"
@@ -96,7 +96,7 @@ switch (command) {
     const recordings = loadRecordings(RECORDINGS)
     const sorter = values.record
       ? new RecordingSorter(claude(), RECORDINGS)
-      : recordings && new RecordedSorter(recordings)
+      : recordings && new RecordedSorter(recordings, sortQuestion)
     if (!sorter) fail("no recorded answers yet: run `pnpm cli eval --record` with your API key in .env")
     const report = await evaluate(loadLabelled("samples/labelled.json"), sorter, FINANCE_CAUSES, threshold)
     console.log(formatReport(report))

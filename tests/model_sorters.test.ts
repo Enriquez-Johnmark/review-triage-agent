@@ -6,7 +6,7 @@ import type Anthropic from "@anthropic-ai/sdk"
 import { describe, expect, it } from "vitest"
 
 import { FINANCE_CAUSES } from "../src/core/causes.ts"
-import { ClaudeSorter, SORT_MODEL } from "../src/model/claude.ts"
+import { ClaudeSorter, SORT_MODEL, sortQuestion } from "../src/model/claude.ts"
 import { loadRecordings, RecordedSorter, RecordingSorter } from "../src/model/recorded.ts"
 import { confident, FakeSorter } from "./fixtures/sorters.ts"
 
@@ -54,13 +54,37 @@ describe("ClaudeSorter", () => {
 })
 
 describe("recorded answers", () => {
+  it("b4_answers_recorded_for_other_instructions_or_another_model_are_not_replayed", async () => {
+    const file = join(mkdtempSync(join(tmpdir(), "rta-")), "recorded.json")
+    await new RecordingSorter(new ClaudeSorter(stubClient(confident("crash")).client), file).sort(
+      input,
+      FINANCE_CAUSES,
+    )
+    const recordings = loadRecordings(file)
+    if (!recordings) throw new Error("nothing was recorded")
+
+    const sameQuestion = new RecordedSorter(recordings, sortQuestion)
+    const newInstructions = new RecordedSorter(recordings, (i, c) => ({
+      ...sortQuestion(i, c),
+      system: "changed",
+    }))
+    const otherModel = new RecordedSorter(recordings, (i, c) => ({
+      ...sortQuestion(i, c),
+      model: "claude-x",
+    }))
+
+    expect(await sameQuestion.sort(input, FINANCE_CAUSES)).toBe(confident("crash"))
+    await expect(newInstructions.sort(input, FINANCE_CAUSES)).rejects.toThrow(/no recorded/)
+    await expect(otherModel.sort(input, FINANCE_CAUSES)).rejects.toThrow(/no recorded/)
+  })
+
   it("b4_answers_recorded_from_one_sorter_replay_without_it", async () => {
     const file = join(mkdtempSync(join(tmpdir(), "rta-")), "recorded.json")
     await new RecordingSorter(new FakeSorter(() => confident("crash")), file).sort(input, FINANCE_CAUSES)
     const recordings = loadRecordings(file)
     if (!recordings) throw new Error("nothing was recorded")
 
-    const replayed = new RecordedSorter(recordings)
+    const replayed = new RecordedSorter(recordings, (i) => ({ fake: i }))
 
     expect(await replayed.sort(input, FINANCE_CAUSES)).toBe(confident("crash"))
     expect(replayed.model).toBe("fake-sorter")

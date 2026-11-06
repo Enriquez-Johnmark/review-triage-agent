@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { evaluate, loadLabelled } from "../src/commands/eval.ts"
 import { FINANCE_CAUSES } from "../src/core/causes.ts"
+import { sortQuestion } from "../src/model/claude.ts"
 import { loadRecordings, RecordedSorter } from "../src/model/recorded.ts"
 import { confident, FakeSorter } from "./fixtures/sorters.ts"
 
@@ -51,7 +52,12 @@ describe("B4", () => {
     "b4_sorting_gets_the_right_cause_for_at_least_85_percent_of_the_made_up_set",
     async () => {
       if (!recordings) return
-      const report = await evaluate(labelled, new RecordedSorter(recordings), FINANCE_CAUSES, 0.6)
+      const report = await evaluate(
+        labelled,
+        new RecordedSorter(recordings, sortQuestion),
+        FINANCE_CAUSES,
+        0.6,
+      )
 
       expect(report.failed, "every labelled review has a recorded answer").toBe(0)
       expect(report.accuracy).toBeGreaterThanOrEqual(0.85)

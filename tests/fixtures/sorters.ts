@@ -7,6 +7,9 @@ export class FakeSorter implements Sorter {
   readonly model = "fake-sorter"
   readonly seen: SortInput[] = []
   constructor(private readonly answer: (input: SortInput) => string) {}
+  question(input: SortInput): unknown {
+    return { fake: input }
+  }
   sort(input: SortInput): Promise<string> {
     this.seen.push(input)
     return Promise.resolve(this.answer(input))

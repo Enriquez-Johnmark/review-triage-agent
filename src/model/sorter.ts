@@ -13,5 +13,8 @@ export interface SortInput {
 export interface Sorter {
   /** Which model answered, kept with each label. */
   readonly model: string
+  /** Exactly what would be sent for this review: recorded answers are keyed
+   *  by it, so changing the model or the instructions makes them stale. */
+  question(input: SortInput, causes: readonly Cause[]): unknown
   sort(input: SortInput, causes: readonly Cause[]): Promise<string>
 }
