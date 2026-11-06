@@ -14,6 +14,7 @@ import { evaluate, formatReport, loadLabelled } from "./commands/eval.ts"
 import { fetchNew } from "./commands/fetch.ts"
 import { sortPending } from "./commands/sort.ts"
 import { FINANCE_CAUSES } from "./core/causes.ts"
+import { parseThreshold } from "./core/label.ts"
 import { fetchAppStore } from "./fetch/appStore.ts"
 import { fetchGooglePlay } from "./fetch/googlePlay.ts"
 import { ClaudeSorter, sortQuestion } from "./model/claude.ts"
@@ -37,7 +38,6 @@ const { positionals, values } = parseArgs({
 // The owner's API key, kept out of git in `.env` (never a Claude subscription).
 if (existsSync(".env")) process.loadEnvFile(".env")
 
-const threshold = Number(values.threshold)
 const RECORDINGS = "samples/recorded-labels.json"
 
 /** Claude through the owner's API key only: no other credential is used. */
@@ -49,6 +49,13 @@ function claude(): ClaudeSorter {
 function fail(message: string): never {
   console.error(message)
   process.exit(1)
+}
+
+let threshold: number
+try {
+  threshold = parseThreshold(values.threshold)
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error))
 }
 
 const COMMANDS = ["fetch", "load-sample", "sort", "eval"]

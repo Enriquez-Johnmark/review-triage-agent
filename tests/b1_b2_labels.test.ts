@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { FINANCE_CAUSES } from "../src/core/causes.ts"
-import { parseLabel } from "../src/core/label.ts"
+import { parseLabel, parseThreshold } from "../src/core/label.ts"
 
 const ids = FINANCE_CAUSES.map((cause) => cause.id)
 const answer = (fields: Record<string, unknown>) =>
@@ -53,5 +53,12 @@ describe("B2", () => {
     ]) {
       expect(parseLabel(raw, ids, 0.6).kind, raw).toBe("needs_person")
     }
+  })
+})
+
+describe("the confidence threshold", () => {
+  it("b2_a_threshold_that_isnt_a_number_from_0_to_1_is_refused", () => {
+    expect(parseThreshold("0.6")).toBe(0.6)
+    for (const text of ["0,7", "", "abc", "1.5", "-0.1"]) expect(() => parseThreshold(text), text).toThrow()
   })
 })

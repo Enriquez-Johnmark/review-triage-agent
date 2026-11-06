@@ -47,3 +47,13 @@ export function parseLabel(raw: string, causeIds: readonly string[], threshold: 
   }
   return { kind: "sorted", label: { cause, language, moneyInvolved: money_involved, confidence } }
 }
+
+/** A confidence threshold as typed: a number from 0 to 1. Anything else is
+ *  refused, never taken as "no threshold" (B2). */
+export function parseThreshold(text: string): number {
+  const value = Number(text.trim())
+  if (text.trim() === "" || !Number.isFinite(value) || value < 0 || value > 1) {
+    throw new Error(`the threshold must be a number from 0 to 1, like 0.6 (got "${text}")`)
+  }
+  return value
+}
