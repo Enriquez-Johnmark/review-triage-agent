@@ -1,6 +1,6 @@
 # Spec: Review Triage Agent
 
-Decided round by round with the owner; the single source for spec decisions. The brief is `brief.md`. Status: **in progress** (Round 1 decided 2026-11-06).
+Decided round by round with the owner; the single source for spec decisions. The brief is `brief.md`. Status: **in progress** (Rounds 1–2 decided 2026-11-06).
 
 ## Words
 
@@ -48,7 +48,31 @@ Decided round by round with the owner; the single source for spec decisions. The
 
 - **One local user**, with no sign-up or accounts: a tool that runs on the owner's machine or a recruiter's.
 
+## Dashboard (Round 2, 2026-11-06)
+
+- **Overview:** reviews this week, share answered, top causes, and spikes, each linked to the reviews behind it.
+- **Queue:** reviews waiting for a reply; money-involved first, then the newest one- and two-star reviews. Each shows cause, language and confidence; the cause can be changed by hand.
+- **Review:** one review with its draft; edit, approve, refuse, or write a reply by hand. The rule checks show beside the draft.
+- **Settings:** the app to watch, the support channel text, the confidence threshold, and whether the API key is set (never the key itself).
+- **Charts:** causes by week (stacked bars) and crash share by app version (a line). Counts and shares only.
+
+## MCP server (Round 2, 2026-11-06)
+
+- Five tools: `search_reviews` (by cause, stars, date, version or words), `summarise_issues` (top causes and spikes for a period), `get_review`, `draft_reply` (creates a draft that still waits for a person) and `list_spikes`.
+- **No tool approves or posts.** Only a person in the dashboard can, enforced in code, not in the tools' descriptions.
+
+## Fetching (Round 2, 2026-11-06)
+
+- A `fetch` command pulls new Google Play and App Store reviews and sorts them; run by hand, from the dashboard, or on a schedule. Reviews already fetched are skipped, so running it twice adds nothing.
+
+## Daily summary (Round 2, 2026-11-06)
+
+- An **n8n workflow**, committed so anyone can import it: each morning it asks the agent to fetch and sort, then emails a short summary (new reviews, share answered, top 3 causes, spikes, money-involved reviews still waiting) to a chosen inbox, Mailpit in the demo.
+
+## Demo data (Round 2, 2026-11-06)
+
+- Screenshots and the video use real reviews of two or three popular Philippine finance apps, fetched on the owner's machine, without reviewer names. Replies are never posted to the real app, and screenshots avoid reviews that mention personal details.
+
 ## Open
 
-- Round 2: the dashboard, the MCP tools and the n8n daily summary.
 - Round 3: acceptance criteria.
