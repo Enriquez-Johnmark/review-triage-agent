@@ -1,0 +1,242 @@
+[
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-001",
+    "appId": "com.example.wallet",
+    "at": "2026-10-08T03:00:00.000Z",
+    "stars": 1,
+    "text": "Ayaw mag open ng app after ng update. Laging nag cecrash sa splash screen.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-002",
+    "appId": "com.example.wallet",
+    "at": "2026-10-15T06:00:00.000Z",
+    "stars": 1,
+    "text": "App crashes every time I open it since the latest update. Samsung A12.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-003",
+    "appId": "com.example.wallet",
+    "at": "2026-10-22T09:00:00.000Z",
+    "stars": 2,
+    "text": "Force close agad pag binuksan. Paki ayos naman po.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "app_store",
+    "storeReviewId": "sample-004",
+    "appId": "com.example.wallet",
+    "at": "2026-10-01T12:00:00.000Z",
+    "stars": 1,
+    "text": "Hindi ako maka sign up. Walang lumalabas na register button.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-005",
+    "appId": "com.example.wallet",
+    "at": "2026-10-08T15:00:00.000Z",
+    "stars": 2,
+    "text": "Can't create an account, it keeps saying something went wrong at the last step.",
+    "appVersion": "4.1.9",
+    "companyReplied": true
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-006",
+    "appId": "com.example.wallet",
+    "at": "2026-10-15T18:00:00.000Z",
+    "stars": 1,
+    "text": "Hindi dumadating yung OTP kaya di ako maka login.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-007",
+    "appId": "com.example.wallet",
+    "at": "2026-10-22T21:00:00.000Z",
+    "stars": 2,
+    "text": "Forgot my PIN and the reset link never works.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "app_store",
+    "storeReviewId": "sample-008",
+    "appId": "com.example.wallet",
+    "at": "2026-10-01T00:00:00.000Z",
+    "stars": 1,
+    "text": "ID verification keeps failing. Malinaw naman yung picture ng ID ko.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-009",
+    "appId": "com.example.wallet",
+    "at": "2026-10-08T03:00:00.000Z",
+    "stars": 2,
+    "text": "Selfie verification won't detect my face no matter what I do.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-010",
+    "appId": "com.example.wallet",
+    "at": "2026-10-15T06:00:00.000Z",
+    "stars": 1,
+    "text": "Na-deduct na yung pera ko pero failed daw yung transaction. Wala pang refund after 3 days!",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-011",
+    "appId": "com.example.wallet",
+    "at": "2026-10-22T09:00:00.000Z",
+    "stars": 1,
+    "text": "Sent money to my sister, status is still pending since yesterday. Money already deducted.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "app_store",
+    "storeReviewId": "sample-012",
+    "appId": "com.example.wallet",
+    "at": "2026-10-01T12:00:00.000Z",
+    "stars": 2,
+    "text": "Nagbayad ako ng bills pero hindi pumasok sa biller. Nasaan na yung pera ko?",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-013",
+    "appId": "com.example.wallet",
+    "at": "2026-10-08T15:00:00.000Z",
+    "stars": 2,
+    "text": "Cash out to my bank takes 2 to 3 business days. Too slow.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-014",
+    "appId": "com.example.wallet",
+    "at": "2026-10-15T18:00:00.000Z",
+    "stars": 3,
+    "text": "Okay naman pero matagal ang transfer sa bank, umaabot ng ilang araw.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-015",
+    "appId": "com.example.wallet",
+    "at": "2026-10-22T21:00:00.000Z",
+    "stars": 2,
+    "text": "Why is there a 25 peso fee for cash out? Hindi naman ganito dati.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "app_store",
+    "storeReviewId": "sample-016",
+    "appId": "com.example.wallet",
+    "at": "2026-10-01T00:00:00.000Z",
+    "stars": 3,
+    "text": "May bawas na fee kahit maliit lang yung pinadala. Sana libre na lang.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-017",
+    "appId": "com.example.wallet",
+    "at": "2026-10-08T03:00:00.000Z",
+    "stars": 1,
+    "text": "Customer service never answers. I've emailed three times, walang sagot.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-018",
+    "appId": "com.example.wallet",
+    "at": "2026-10-15T06:00:00.000Z",
+    "stars": 2,
+    "text": "Walang support. Sabi sa branch tawag daw sa hotline, hotline naman busy palagi.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-019",
+    "appId": "com.example.wallet",
+    "at": "2026-10-22T09:00:00.000Z",
+    "stars": 5,
+    "text": "Mabilis at madaling gamitin. Salamat po!",
+    "appVersion": "4.2.0",
+    "companyReplied": true
+  },
+  {
+    "store": "app_store",
+    "storeReviewId": "sample-020",
+    "appId": "com.example.wallet",
+    "at": "2026-10-01T12:00:00.000Z",
+    "stars": 5,
+    "text": "Fast padala, received in minutes. Great app.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-021",
+    "appId": "com.example.wallet",
+    "at": "2026-10-08T15:00:00.000Z",
+    "stars": 4,
+    "text": "Ganda ng bagong design. Sana may dark mode na.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-022",
+    "appId": "com.example.wallet",
+    "at": "2026-10-15T18:00:00.000Z",
+    "stars": 3,
+    "text": "Okay lang. Sana may option na mag schedule ng payment.",
+    "appVersion": "4.1.9",
+    "companyReplied": false
+  },
+  {
+    "store": "google_play",
+    "storeReviewId": "sample-023",
+    "appId": "com.example.wallet",
+    "at": "2026-10-22T21:00:00.000Z",
+    "stars": 1,
+    "text": "Puro update tapos hindi pa rin gumagana sa phone ko na Android 9.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  },
+  {
+    "store": "app_store",
+    "storeReviewId": "sample-024",
+    "appId": "com.example.wallet",
+    "at": "2026-10-01T00:00:00.000Z",
+    "stars": 2,
+    "text": "Login keeps failing with my fingerprint, I have to type my password every time.",
+    "appVersion": "4.2.0",
+    "companyReplied": false
+  }
+]
