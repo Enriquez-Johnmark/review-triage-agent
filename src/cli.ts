@@ -13,12 +13,15 @@
 //   pnpm cli post --draft 3 --by ana                           post an approved reply (the stand-in unless
 //                                                              GOOGLE_PLAY_CREDENTIALS is set)
 //   pnpm cli serve                                             the dashboard, at http://127.0.0.1:4317
+//   pnpm cli mcp                                               the MCP server, over stdio, for Claude
 //   pnpm cli eval                                              score the recorded answers on the labelled set
 //   pnpm cli eval --record                                     ask Claude, and record its answers (needs the API key)
 
 import { existsSync, mkdirSync } from "node:fs"
 import { dirname } from "node:path"
 import { parseArgs } from "node:util"
+
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 
 import { buildServer } from "./api/server.ts"
 import { buildSummaryServer } from "./api/summaryServer.ts"
@@ -39,6 +42,7 @@ import { ClaudeDrafter } from "./model/claudeDrafter.ts"
 import { loadRecordings, RecordedSorter, RecordingSorter } from "./model/recorded.ts"
 import { choosePoster } from "./post/googlePlay.ts"
 import { loadDemo } from "./demo.ts"
+import { buildMcpServer } from "./mcp/server.ts"
 import { sampleReviews } from "./samples.ts"
 import { openDb } from "./store/db.ts"
 import { listDrafts } from "./store/drafts.ts"
@@ -143,6 +147,7 @@ const COMMANDS = [
   "refuse",
   "post",
   "serve",
+  "mcp",
   "eval",
 ]
 const command = positionals[0] ?? ""
@@ -283,6 +288,16 @@ try {
         await summary.listen({ host: process.env.SUMMARY_HOST ?? "0.0.0.0", port: summaryPort })
         console.log(`The summary for n8n is on port ${String(summaryPort)}, with SUMMARY_TOKEN`)
       }
+      break
+    }
+    case "mcp": {
+      // Stdio carries the protocol: nothing else may be printed.
+      const server = buildMcpServer({
+        db,
+        clock: systemClock,
+        drafter: process.env.ANTHROPIC_API_KEY ? new ClaudeDrafter() : undefined,
+      })
+      await server.connect(new StdioServerTransport())
       break
     }
     case "eval": {
