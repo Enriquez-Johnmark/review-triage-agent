@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest"
 
-import { draftReply } from "../src/commands/draft.ts"
+import { draftReply, draftWaiting } from "../src/commands/draft.ts"
 import { auditLog } from "../src/store/audit.ts"
+import { listDrafts } from "../src/store/drafts.ts"
 import { FakeDrafter, GOOD, KEY, PROMISE, settings, SUPPORT, world } from "./fixtures/replies.ts"
 
 describe("D3", () => {
@@ -71,5 +72,35 @@ describe("D4", () => {
       appVersion: "4.2.0",
       cause: "Crash or won't open",
     })
+  })
+})
+
+describe("drafting the queue", () => {
+  it("drafts each sorted review waiting for a reply once, and lists the drafts", async () => {
+    const { db, clock } = world()
+    const drafter = new FakeDrafter([GOOD])
+
+    expect(await draftWaiting(db, clock, drafter, settings, ["com.example.wallet"], 10)).toEqual({
+      ready: 1,
+      flagged: 0,
+      failed: 0,
+    })
+    expect(await draftWaiting(db, clock, drafter, settings, ["com.example.wallet"], 10)).toEqual({
+      ready: 0,
+      flagged: 0,
+      failed: 0,
+    })
+    expect(listDrafts(db, ["com.example.wallet"]).map((draft) => draft.review)).toEqual([KEY])
+  })
+
+  it("a failed model call drafts nothing and is tried again next run", async () => {
+    const { db, clock } = world()
+    const failing = new FakeDrafter([])
+    failing.draft = () => Promise.reject(new Error("overloaded"))
+
+    expect(await draftWaiting(db, clock, failing, settings, ["com.example.wallet"], 10)).toMatchObject({
+      failed: 1,
+    })
+    expect(listDrafts(db, ["com.example.wallet"])).toEqual([])
   })
 })

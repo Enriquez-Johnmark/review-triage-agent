@@ -3,9 +3,11 @@ import type { Cause } from "../core/causes.ts"
 import { type Broken, checkReply, MAX_REPLY, replyLength, withSupport } from "../core/reply-rules.ts"
 import { parseDraft } from "../model/claudeDrafter.ts"
 import type { Drafter } from "../model/drafter.ts"
+import { inPool } from "../pool.ts"
 import type { Db } from "../store/db.ts"
 import { type Draft, draftFor, saveDraft } from "../store/drafts.ts"
 import { labelFor, type ReviewKey } from "../store/labels.ts"
+import { replyQueue } from "../store/queue.ts"
 import { reviewFromRow, type ReviewRow } from "../store/reviews.ts"
 
 /** What replies are written with. */
@@ -64,4 +66,40 @@ export async function draftReply(
     action: "reply.drafted",
     details: { model: drafter.model },
   })
+}
+
+/** What a drafting run did. */
+export interface DraftReport {
+  ready: number
+  flagged: number
+  /** Model calls that failed; those reviews are tried again next run. */
+  failed: number
+}
+
+/** Drafts replies to the queue's sorted reviews that have none yet, at most
+ *  `limit`, a few at a time, money-involved reviews first. */
+export async function draftWaiting(
+  db: Db,
+  clock: Clock,
+  drafter: Drafter,
+  settings: ReplySettings,
+  appIds: readonly string[],
+  limit: number,
+  inParallel = 2,
+): Promise<DraftReport> {
+  const waiting = appIds
+    .flatMap((appId) => replyQueue(db, appId))
+    .filter((entry) => entry.label?.cause && !draftFor(db, entry.review))
+    .slice(0, limit)
+  const outcomes = await inPool(waiting, inParallel, (entry) =>
+    draftReply(db, clock, drafter, settings, entry.review).then(
+      (draft) => draft.status,
+      () => "failed" as const,
+    ),
+  )
+  return {
+    ready: outcomes.filter((status) => status === "ready").length,
+    flagged: outcomes.filter((status) => status === "flagged").length,
+    failed: outcomes.filter((status) => status === "failed").length,
+  }
 }

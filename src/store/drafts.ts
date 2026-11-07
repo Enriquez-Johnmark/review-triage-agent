@@ -107,3 +107,18 @@ export function saveDraft(
     return saved
   })()
 }
+
+/** An app's replies (under any of its store IDs), newest change first. */
+export function listDrafts(db: Db, appIds: readonly string[]): Draft[] {
+  const rows = db
+    .prepare(
+      `select ${COLUMNS.split(", ")
+        .map((column) => `d.${column}`)
+        .join(", ")}
+       from drafts d join reviews r on r.store = d.store and r.store_review_id = d.store_review_id
+       where r.app_id in (select value from json_each(?))
+       order by d.updated_at desc, d.id desc`,
+    )
+    .all(JSON.stringify(appIds)) as DraftRow[]
+  return rows.map(fromRow)
+}
