@@ -56,7 +56,7 @@ export function ReviewTable({
               </Link>
             </TableCell>
             <TableCell>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap items-center gap-1">
                 <Badge variant={label?.cause ? "secondary" : "warning"}>
                   {label ? causeName(causes, label.cause) : "Not sorted yet"}
                 </Badge>
