@@ -7,12 +7,11 @@ import Fastify, { type FastifyInstance } from "fastify"
 import { z } from "zod"
 
 import type { Clock } from "../clock.ts"
-import { dailySummary, formatDaily } from "../commands/daily.ts"
+import { dailyAnswer } from "../commands/daily.ts"
 import { draftReply } from "../commands/draft.ts"
-import { type Fetchers, fetchNew } from "../commands/fetch.ts"
+import { type Fetchers, fetchAndSort } from "../commands/fetch.ts"
 import { postReply } from "../commands/post.ts"
 import { approveReply, refuseReply, writeReply } from "../commands/replies.ts"
-import { sortPending } from "../commands/sort.ts"
 import { sortedRows, summariseRows, versionRows } from "../commands/summary.ts"
 import { causesByWeek, crashShareByVersion } from "../core/charts.ts"
 import { type Cause, FINANCE_CAUSES } from "../core/causes.ts"
@@ -115,10 +114,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
   })
 
   // The daily summary, for n8n's morning email (F4).
-  app.get("/api/summary", () => {
-    const summary = dailySummary(db, clock, ids(), causes)
-    return { ...summary, text: formatDaily(summary, causes) }
-  })
+  app.get("/api/summary", () => dailyAnswer(db, clock, ids(), causes))
 
   app.get("/api/queue", () =>
     replyQueue(db, ids()).map((entry) => ({
@@ -220,32 +216,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     return act(() => saveSettings(db, clock, change, by))
   })
 
-  app.post("/api/fetch", async () => {
-    const settings = loadSettings(db)
-    const fetched = await fetchNew(
-      db,
-      clock,
-      {
-        ...(settings.googlePlayId ? { googlePlay: settings.googlePlayId } : {}),
-        ...(settings.appStoreId ? { appStore: settings.appStoreId } : {}),
-      },
-      deps.fetchers,
-    )
-    const sorter = deps.sorter
-    const sorted = sorter
-      ? await Promise.all(
-          appIds(settings).map((appId) =>
-            sortPending(db, clock, sorter, { appId, causes, threshold: settings.threshold }),
-          ),
-        )
-      : []
-    return {
-      fetched,
-      sorted: sorted.reduce((total, report) => total + report.sorted, 0),
-      needsPerson: sorted.reduce((total, report) => total + report.needsPerson, 0),
-      sortingSkipped: !sorter,
-    }
-  })
+  app.post("/api/fetch", () => fetchAndSort(db, clock, deps.sorter, deps.fetchers, causes))
 
   const replySettings = () => {
     const { supportChannel } = loadSettings(db)

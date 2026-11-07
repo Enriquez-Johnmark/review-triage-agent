@@ -21,6 +21,7 @@ import { dirname } from "node:path"
 import { parseArgs } from "node:util"
 
 import { buildServer } from "./api/server.ts"
+import { buildSummaryServer } from "./api/summaryServer.ts"
 import { systemClock } from "./clock.ts"
 import { evaluate, formatReport, loadLabelled } from "./commands/eval.ts"
 import { fetchNew } from "./commands/fetch.ts"
@@ -267,6 +268,21 @@ try {
       console.log(
         `The dashboard is at http://127.0.0.1:${String(port)}${hasKey ? "" : " (no API key: sorting and drafting are off)"}`,
       )
+      const token = process.env.SUMMARY_TOKEN?.trim()
+      if (token) {
+        const summary = buildSummaryServer({
+          db,
+          clock: systemClock,
+          sorter: hasKey ? new ClaudeSorter() : undefined,
+          fetchers: { googlePlay: (id) => fetchGooglePlay(id), appStore: (id) => fetchAppStore(id) },
+          token,
+        })
+        const summaryPort = Number(process.env.SUMMARY_PORT ?? 4318)
+        // n8n in Docker reaches it from outside this computer's loopback;
+        // only the summary and a fetch are there, behind the token.
+        await summary.listen({ host: process.env.SUMMARY_HOST ?? "0.0.0.0", port: summaryPort })
+        console.log(`The summary for n8n is on port ${String(summaryPort)}, with SUMMARY_TOKEN`)
+      }
       break
     }
     case "eval": {

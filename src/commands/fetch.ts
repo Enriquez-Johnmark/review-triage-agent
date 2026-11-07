@@ -1,4 +1,8 @@
 import type { Clock } from "../clock.ts"
+import type { Cause } from "../core/causes.ts"
+import type { Sorter } from "../model/sorter.ts"
+import { appIds, loadSettings } from "../store/settings.ts"
+import { sortPending } from "./sort.ts"
 import type { Fetched } from "../fetch/fetched.ts"
 import type { Db } from "../store/db.ts"
 import { type Saved, saveReviews } from "../store/reviews.ts"
@@ -49,4 +53,44 @@ export async function fetchNew(db: Db, clock: Clock, app: AppIds, fetchers: Fetc
     total.skipped += batch.skipped
   }
   return total
+}
+
+/** What fetching and sorting did, for the dashboard and n8n. */
+export interface FetchAndSortReport {
+  fetched: FetchReport
+  sorted: number
+  needsPerson: number
+  /** True when the API key isn't set: the new reviews wait unsorted. */
+  sortingSkipped: boolean
+}
+
+/** Fetches the new reviews of the app chosen in the settings, then sorts
+ *  them with `sorter` when there is one (the API key is set). */
+export async function fetchAndSort(
+  db: Db,
+  clock: Clock,
+  sorter: Sorter | undefined,
+  fetchers: Fetchers,
+  causes: readonly Cause[],
+): Promise<FetchAndSortReport> {
+  const settings = loadSettings(db)
+  const fetched = await fetchNew(
+    db,
+    clock,
+    {
+      ...(settings.googlePlayId ? { googlePlay: settings.googlePlayId } : {}),
+      ...(settings.appStoreId ? { appStore: settings.appStoreId } : {}),
+    },
+    fetchers,
+  )
+  const sorted = []
+  if (sorter)
+    for (const appId of appIds(settings))
+      sorted.push(await sortPending(db, clock, sorter, { appId, causes, threshold: settings.threshold }))
+  return {
+    fetched,
+    sorted: sorted.reduce((total, report) => total + report.sorted, 0),
+    needsPerson: sorted.reduce((total, report) => total + report.needsPerson, 0),
+    sortingSkipped: !sorter,
+  }
 }

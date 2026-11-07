@@ -119,3 +119,9 @@ export function formatDaily(summary: DailySummary, causes: readonly Cause[]): st
     ),
   ].join("\n")
 }
+
+/** The summary with its email text, as `/api/summary` and n8n get it. */
+export function dailyAnswer(db: Db, clock: Clock, appIds: readonly string[], causes: readonly Cause[]) {
+  const summary = dailySummary(db, clock, appIds, causes)
+  return { ...summary, text: formatDaily(summary, causes) }
+}
