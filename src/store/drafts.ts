@@ -71,6 +71,10 @@ export function saveDraft(
   return db.transaction(() => {
     const before = draftFor(db, key)
     if (before?.status === "posted") throw new Error(`draft ${String(before.id)} is already posted`)
+    if (before && db.prepare("select 1 from posts where draft_id = ?").get(before.id))
+      throw new Error(
+        `draft ${String(before.id)} is being posted; post it again to finish before changing it`,
+      )
     const at = clock.now().toISOString()
     db.prepare(
       `insert into drafts (store, store_review_id, text, written_by, status, broken, created_at, updated_at)

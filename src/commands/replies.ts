@@ -77,6 +77,8 @@ export function refuseReply(db: Db, clock: Clock, id: number, by: string, reason
   return db.transaction(() => {
     const draft = mustFind(db, id)
     if (draft.status === "posted") throw new Error(`draft ${String(id)} is already posted`)
+    if (db.prepare("select 1 from posts where draft_id = ?").get(id))
+      throw new Error(`draft ${String(id)} is being posted; post it again to finish`)
     db.prepare(
       `update drafts set status = 'refused', approved_fingerprint = null, approved_by = null, approved_at = null,
          updated_at = ? where id = ?`,

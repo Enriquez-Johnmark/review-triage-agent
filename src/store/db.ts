@@ -67,6 +67,26 @@ const MIGRATIONS: readonly string[] = [
      foreign key (store, store_review_id) references reviews (store, store_review_id) on delete cascade,
      check ((status in ('approved', 'posted')) = (approved_fingerprint is not null))
    );`,
+  // A post's key is recorded before the poster is called, so a post cut off
+  // by a crash is finished with the same key, never sent as a new one (E3).
+  `create table posts (
+     key text primary key,
+     draft_id integer not null unique references drafts (id),
+     fingerprint text not null,
+     poster text not null,
+     status text not null check (status in ('sending', 'posted')),
+     started_at text not null,
+     posted_at text
+   );
+   -- What the stand-in poster would have posted (E5); one row per key.
+   create table stub_posts (
+     key text primary key,
+     app_id text not null,
+     store text not null,
+     store_review_id text not null,
+     text text not null,
+     at text not null
+   );`,
 ]
 
 export type Db = Database.Database
