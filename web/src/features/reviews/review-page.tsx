@@ -65,7 +65,9 @@ function ReviewCard({ answer, path }: { answer: ReviewAnswer; path: string }) {
               onChange={(event) => setCause.mutate(event.target.value)}
             >
               {!label?.cause && (
-                <NativeSelectOption value="">{causeName(causes, null)}</NativeSelectOption>
+                <NativeSelectOption value="" disabled>
+                  {causeName(causes, null)}
+                </NativeSelectOption>
               )}
               {causes.map((cause) => (
                 <NativeSelectOption key={cause.id} value={cause.id}>

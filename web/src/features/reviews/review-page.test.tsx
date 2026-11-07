@@ -31,6 +31,18 @@ describe("the review page", () => {
     )
   })
 
+  it("offers only real causes for a review left for a person", async () => {
+    fakeApi({
+      "GET /api/reviews/google_play/gp-1": reviewAnswer({
+        label: { cause: null, needsPersonReason: "the model wasn't sure", setBy: "model" },
+        draft: null,
+      }),
+    })
+    renderPage(<ReviewPage />, PATH, ROUTE)
+
+    expect(await screen.findByRole("option", { name: "Needs a person" })).toBeDisabled()
+  })
+
   it("shows the rules a draft broke and offers no approval", async () => {
     fakeApi({
       "GET /api/reviews/google_play/gp-1": reviewAnswer({
