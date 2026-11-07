@@ -11,7 +11,8 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "showcase": "playwright test --config showcase/playwright.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",
