@@ -2,6 +2,7 @@
 //   pnpm cli fetch --play com.example.app --apple 123456789   new reviews of an app
 //   pnpm cli load-sample                                       the made-up reviews, for the demo
 //   pnpm cli sort --app com.example.app                        sort new reviews with Claude (needs the API key)
+//   pnpm cli summary --app com.example.app                     this week's numbers and the spikes
 //   pnpm cli eval                                              score the recorded answers on the labelled set
 //   pnpm cli eval --record                                     ask Claude, and record its answers (needs the API key)
 
@@ -13,6 +14,7 @@ import { systemClock } from "./clock.ts"
 import { evaluate, formatReport, loadLabelled } from "./commands/eval.ts"
 import { fetchNew } from "./commands/fetch.ts"
 import { sortPending } from "./commands/sort.ts"
+import { formatSummary, summarise } from "./commands/summary.ts"
 import { FINANCE_CAUSES } from "./core/causes.ts"
 import { parseThreshold } from "./core/label.ts"
 import { fetchAppStore } from "./fetch/appStore.ts"
@@ -58,7 +60,7 @@ try {
   fail(error instanceof Error ? error.message : String(error))
 }
 
-const COMMANDS = ["fetch", "load-sample", "sort", "eval"]
+const COMMANDS = ["fetch", "load-sample", "sort", "summary", "eval"]
 const command = positionals[0] ?? ""
 if (!COMMANDS.includes(command)) {
   console.error(`commands: ${COMMANDS.join(", ")}`)
@@ -97,6 +99,11 @@ switch (command) {
     console.log(
       `${String(report.sorted)} sorted, ${String(report.needsPerson)} for a person, ${String(report.failed)} failed (tried again next run)`,
     )
+    break
+  }
+  case "summary": {
+    if (!values.app) fail("give --app with the app's ID")
+    console.log(formatSummary(summarise(db, systemClock, values.app, FINANCE_CAUSES), FINANCE_CAUSES))
     break
   }
   case "eval": {

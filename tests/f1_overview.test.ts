@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { FixedClock } from "../src/clock.ts"
 import { sortPending } from "../src/commands/sort.ts"
-import { summarise } from "../src/commands/summary.ts"
+import { formatSummary, summarise } from "../src/commands/summary.ts"
 import { FINANCE_CAUSES } from "../src/core/causes.ts"
 import type { Review } from "../src/core/review.ts"
 import { openDb } from "../src/store/db.ts"
@@ -101,5 +101,18 @@ describe("F1", () => {
     ])
     const { weeklySpikes } = summarise(db, clock, APP, FINANCE_CAUSES)
     expect(weeklySpikes).toEqual([{ cause: "crash", week: "2026-11-02", count: 5, previousAverage: 1 }])
+  })
+})
+
+describe("the summary command", () => {
+  it("prints the numbers with the causes' names", async () => {
+    const { db, clock } = await world([
+      review("2026-11-03T00:00:00.000Z", "crash", true),
+      review("2026-11-03T01:00:00.000Z", "crash", false),
+    ])
+    const text = formatSummary(summarise(db, clock, APP, FINANCE_CAUSES), FINANCE_CAUSES)
+    expect(text).toContain("Week of 2026-11-02: 2 reviews, 0 waiting for a person")
+    expect(text).toContain("Answered: 50% (1 of 2)")
+    expect(text).toContain("Top causes: Crash or won't open 2")
   })
 })

@@ -27,3 +27,29 @@ export function summarise(db: Db, clock: Clock, appId: string, causes: readonly 
     ),
   }
 }
+
+const percent = (share: number) => `${(share * 100).toFixed(0)}%`
+
+/** The summary as text, for the `summary` command. */
+export function formatSummary(summary: Summary, causes: readonly Cause[]): string {
+  const name = (id: string) => causes.find((cause) => cause.id === id)?.label ?? id
+  const { overview: week } = summary
+  return [
+    `Week of ${week.week}: ${String(week.reviews)} reviews, ${String(week.needsPerson)} waiting for a person`,
+    `Answered: ${week.shareAnswered === null ? "not known" : `${percent(week.shareAnswered)} (${String(week.answered)} of ${String(week.replyKnown)})`}`,
+    `Top causes: ${week.topCauses.map((top) => `${name(top.cause)} ${String(top.count)}`).join(", ") || "none yet"}`,
+    "",
+    "Spikes by week:",
+    ...(summary.weeklySpikes.length === 0 ? ["  none"] : []),
+    ...summary.weeklySpikes.map(
+      (spike) =>
+        `  ${spike.week}  ${name(spike.cause)}: ${String(spike.count)} (four-week average ${spike.previousAverage.toFixed(1)})`,
+    ),
+    "Spikes by app version:",
+    ...(summary.versionSpikes.length === 0 ? ["  none"] : []),
+    ...summary.versionSpikes.map(
+      (spike) =>
+        `  ${spike.version}  crashes ${percent(spike.crashShare)} (${spike.previousVersion}: ${percent(spike.previousCrashShare)})`,
+    ),
+  ].join("\n")
+}
