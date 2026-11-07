@@ -5,6 +5,11 @@ import { choosePoster, GooglePlayPoster } from "../src/post/googlePlay.ts"
 import type { PostRequest } from "../src/post/poster.ts"
 import { StubPoster } from "../src/post/stub.ts"
 import { openDb } from "../src/store/db.ts"
+import { saveReviews } from "../src/store/reviews.ts"
+import { postReply } from "../src/commands/post.ts"
+import { approveReply, refuseReply, writeReply } from "../src/commands/replies.ts"
+import { withSupport } from "../src/core/reply-rules.ts"
+import { GOOD, settings, SUPPORT, world } from "./fixtures/replies.ts"
 
 const db = openDb(":memory:")
 const clock = new FixedClock(new Date("2026-11-04T02:00:00Z"))
@@ -43,6 +48,18 @@ describe("E5", () => {
         body: { replyText: request.text },
       },
     ])
+  })
+
+  it("e5_an_app_store_reply_refused_by_the_google_poster_stays_free_to_change", async () => {
+    const w = world()
+    saveReviews(w.db, w.clock, [{ ...w.review, store: "app_store", storeReviewId: "as-1", appId: "123" }])
+    const key = { store: "app_store", storeReviewId: "as-1" } as const
+    const draft = writeReply(w.db, w.clock, key, withSupport(GOOD, SUPPORT), "ana", settings)
+    approveReply(w.db, w.clock, draft.id, "ben", settings)
+    const google = new GooglePlayPoster(() => Promise.reject(new Error("must not be called")))
+
+    await expect(postReply(w.db, w.clock, google, draft.id, "ben")).rejects.toThrow("post this one by hand")
+    expect(refuseReply(w.db, w.clock, draft.id, "ben", "posted by hand").status).toBe("refused")
   })
 
   it("e5_app_store_replies_are_never_sent_to_google", async () => {

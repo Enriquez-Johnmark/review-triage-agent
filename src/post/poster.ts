@@ -14,5 +14,8 @@ export interface PostRequest {
  *  first (E1). Posting again with the same key must not post twice. */
 export interface Poster {
   readonly name: string
+  /** Whether it can post replies to this store at all; asked before a post's
+   *  key is recorded, so a post that can never succeed doesn't lock the reply. */
+  accepts(store: Store): boolean
   post(request: PostRequest): Promise<void>
 }

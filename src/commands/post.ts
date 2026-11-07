@@ -27,6 +27,12 @@ export async function postReply(
     if (existing?.status === "posted") return { done: true as const, key: existing.key }
     if (draft.status !== "approved")
       throw new Error(`draft ${String(id)} isn't approved, so it can't be posted`)
+    if (!poster.accepts(draft.review.store))
+      throw new Error(
+        draft.review.store === "app_store"
+          ? "App Store replies need App Store Connect access: post this one by hand"
+          : `${poster.name} can't post to ${draft.review.store}`,
+      )
     const print = fingerprint(draft.text)
     if (draft.approvedFingerprint !== print)
       throw new Error(`draft ${String(id)} changed after it was approved; approve it again`)

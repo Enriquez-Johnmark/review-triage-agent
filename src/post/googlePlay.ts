@@ -1,6 +1,7 @@
 import { GoogleAuth } from "google-auth-library"
 
 import type { Clock } from "../clock.ts"
+import type { Store } from "../core/review.ts"
 import type { Db } from "../store/db.ts"
 import type { PostRequest, Poster } from "./poster.ts"
 import { StubPoster } from "./stub.ts"
@@ -16,8 +17,12 @@ export class GooglePlayPoster implements Poster {
   readonly name = "google_play"
   constructor(private readonly request: GoogleRequest) {}
 
+  accepts(store: Store): boolean {
+    return store === "google_play"
+  }
+
   async post(request: PostRequest): Promise<void> {
-    if (request.store !== "google_play")
+    if (!this.accepts(request.store))
       throw new Error("App Store replies need App Store Connect access: post this one by hand")
     const app = encodeURIComponent(request.appId)
     const review = encodeURIComponent(request.storeReviewId)

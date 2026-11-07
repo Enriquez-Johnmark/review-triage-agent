@@ -22,6 +22,7 @@ async function approved() {
 /** Posts through the stand-in, then crashes before its caller hears back. */
 class CrashAfterPosting implements Poster {
   readonly name = "stub"
+  accepts = () => true
   calls: PostRequest[] = []
   constructor(private readonly inner: Poster) {}
   async post(request: PostRequest): Promise<void> {

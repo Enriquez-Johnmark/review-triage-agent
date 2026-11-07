@@ -11,6 +11,10 @@ export class StubPoster implements Poster {
     private readonly clock: Clock,
   ) {}
 
+  accepts(): boolean {
+    return true
+  }
+
   post(request: PostRequest): Promise<void> {
     this.db
       .prepare(
