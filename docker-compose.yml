@@ -1,0 +1,29 @@
+# The daily-summary demo: n8n runs the committed workflow each morning and
+# emails the summary to Mailpit (http://localhost:8025). The agent itself runs
+# on this computer: `SUMMARY_TOKEN=... pnpm cli serve` (see n8n/README.md).
+services:
+  n8n:
+    image: n8nio/n8n:2.46.3
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      GENERIC_TIMEZONE: Asia/Manila
+      TZ: Asia/Manila
+      # Some Docker setups have no IPv6, where n8n's default (::) fails.
+      N8N_LISTEN_ADDRESS: 0.0.0.0
+    extra_hosts:
+      # Lets n8n reach the agent's summary on this computer (Linux needs it;
+      # Docker Desktop has it already).
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - ./n8n:/workflows:ro
+
+  mailpit:
+    image: axllent/mailpit:v1.27.11
+    ports:
+      - "127.0.0.1:8025:8025"
+      - "127.0.0.1:1025:1025"
+
+volumes:
+  n8n-data:

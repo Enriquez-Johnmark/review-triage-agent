@@ -1,0 +1,146 @@
+{
+  "name": "Review Triage Agent: daily summary",
+  "nodes": [
+    {
+      "id": "b9f1c2d0-0001-4a7e-9c3b-000000000001",
+      "name": "Every morning at 8",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "b9f1c2d0-0005-4a7e-9c3b-000000000005",
+      "name": "Run it now",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 200],
+      "parameters": {}
+    },
+    {
+      "id": "b9f1c2d0-0002-4a7e-9c3b-000000000002",
+      "name": "Fetch and sort new reviews",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0],
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:4318/fetch",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 600000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "review-triage-agent-token",
+          "name": "Review Triage Agent token"
+        }
+      }
+    },
+    {
+      "id": "b9f1c2d0-0003-4a7e-9c3b-000000000003",
+      "name": "Get the summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 0],
+      "parameters": {
+        "method": "GET",
+        "url": "http://host.docker.internal:4318/summary",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "review-triage-agent-token",
+          "name": "Review Triage Agent token"
+        }
+      }
+    },
+    {
+      "id": "b9f1c2d0-0004-4a7e-9c3b-000000000004",
+      "name": "Email the summary",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [720, 0],
+      "parameters": {
+        "fromEmail": "review-triage-agent@example.test",
+        "toEmail": "you@example.test",
+        "subject": "=Reviews this morning: {{ $json.newReviews }} new, {{ $json.moneyWaiting.count }} money complaints waiting",
+        "emailFormat": "text",
+        "text": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "smtp": {
+          "id": "mailpit",
+          "name": "Mailpit"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every morning at 8": {
+      "main": [
+        [
+          {
+            "node": "Fetch and sort new reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch and sort new reviews": {
+      "main": [
+        [
+          {
+            "node": "Get the summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get the summary": {
+      "main": [
+        [
+          {
+            "node": "Email the summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run it now": {
+      "main": [
+        [
+          {
+            "node": "Fetch and sort new reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Manila"
+  },
+  "active": false
+}
