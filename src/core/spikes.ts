@@ -4,7 +4,7 @@ import { CRASH_CAUSE } from "./causes.ts"
  *  functions of stored labels; nothing here reads the clock. */
 
 const DAY = 86_400_000
-const WEEK = 7 * DAY
+export const WEEK = 7 * DAY
 /** Manila is UTC+8 all year (no daylight saving). */
 const MANILA = 8 * 60 * 60 * 1000
 
@@ -24,7 +24,7 @@ export function weekOf(at: string): string {
 }
 
 /** Midnight Manila on that Monday, shifted into UTC digits: only its date is used. */
-function weekStart(ms: number): number {
+export function weekStart(ms: number): number {
   const manilaDays = Math.floor((ms + MANILA) / DAY)
   // 1970-01-01 was a Thursday: day 0 is three days after a Monday.
   const sinceMonday = (manilaDays + 3) % 7
@@ -70,7 +70,7 @@ export function weeklySpikes(events: readonly CauseEvent[]): WeeklySpike[] {
   )
 }
 
-const weekOfStart = (start: number) => new Date(start).toISOString().slice(0, 10)
+export const weekOfStart = (start: number) => new Date(start).toISOString().slice(0, 10)
 
 /** One sorted review with the app version it was written about. */
 export interface VersionEvent {
