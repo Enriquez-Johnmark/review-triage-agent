@@ -15,7 +15,9 @@ export function SettingsPage() {
   const settings = useSettings()
   if (settings.error) return <LoadError error={settings.error} />
   if (!settings.data) return null
-  return <SettingsForm key={JSON.stringify(settings.data)} settings={settings.data} />
+  // The form starts from the stored settings once; after a save it already
+  // shows them, and keeps saying "Saved."
+  return <SettingsForm settings={settings.data} />
 }
 
 function SettingsForm({ settings }: { settings: SettingsAnswer }) {

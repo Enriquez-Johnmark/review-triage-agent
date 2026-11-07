@@ -2,10 +2,12 @@ import { readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { describe, expect, it } from "vitest"
 
 import { NOT_AFFILIATED } from "@/components/footer"
 import { SettingsPage } from "@/features/settings/settings-page"
+import { setYourName } from "@/lib/your-name"
 import { fakeApi, renderPage } from "@/test/render"
 import { settings } from "@/test/data"
 
@@ -30,6 +32,22 @@ describe("G1", () => {
       .filter((file) => !file.endsWith(".test.tsx"))
       .filter((file) => /<img\b|\.(png|jpe?g|webp|gif)\b/i.test(readFileSync(file, "utf8")))
     expect(withImages).toEqual([])
+  })
+})
+
+describe("the settings page", () => {
+  it("saves the settings in the name typed at the top, and says so", async () => {
+    setYourName("ana")
+    const calls = fakeApi({ "GET /api/settings": settings, "PUT /api/settings": settings })
+    renderPage(<SettingsPage />, "/settings")
+
+    await userEvent.click(await screen.findByRole("button", { name: "Save" }))
+
+    expect(await screen.findByText("Saved.")).toBeInTheDocument()
+    expect(calls.find((call) => call.method === "PUT")?.body).toMatchObject({
+      by: "ana",
+      threshold: 0.6,
+    })
   })
 })
 
