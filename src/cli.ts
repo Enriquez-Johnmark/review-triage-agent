@@ -1,8 +1,9 @@
-// The commands:
+// The commands (the app's store IDs, support channel and threshold come from
+// the settings page unless given with --play, --apple, --support, --threshold):
 //   pnpm cli fetch --play com.example.app --apple 123456789   new reviews of an app
 //   pnpm cli load-sample                                       the made-up reviews, for the demo
 //   pnpm cli load-demo                                         120 made-up reviews, sorted, with spikes (no key needed)
-//   pnpm cli sort --app com.example.app                        sort new reviews with Claude (needs the API key)
+//   pnpm cli sort                                              sort new reviews with Claude (needs the API key)
 //   pnpm cli summary --play com.example.app --apple 123456789  this week's numbers and the spikes
 //   pnpm cli draft --play com.example.app                      draft replies for the queue (needs the API key)
 //   pnpm cli drafts --play com.example.app                     the replies and their rule checks
@@ -41,6 +42,7 @@ import { sampleReviews } from "./samples.ts"
 import { openDb } from "./store/db.ts"
 import { listDrafts } from "./store/drafts.ts"
 import { saveReviews } from "./store/reviews.ts"
+import { loadSettings } from "./store/settings.ts"
 
 const { positionals, values } = parseArgs({
   allowPositionals: true,
@@ -50,7 +52,7 @@ const { positionals, values } = parseArgs({
     apple: { type: "string" },
     app: { type: "string" },
     record: { type: "boolean", default: false },
-    threshold: { type: "string", default: "0.6" },
+    threshold: { type: "string" },
     limit: { type: "string", default: "10" },
     draft: { type: "string" },
     review: { type: "string" },
@@ -82,11 +84,38 @@ function fail(message: string): never {
   process.exit(1)
 }
 
-/** The support channel every reply ends with: `--support`, or SUPPORT_CHANNEL in .env. */
+// Each setting comes from its flag when given, else from what the settings
+// page saved, so the commands and the dashboard agree.
+
+/** The support channel every reply ends with: `--support`, SUPPORT_CHANNEL
+ *  in .env, or the settings page's. */
 function replySettings(): ReplySettings {
-  const supportChannel = (values.support ?? process.env.SUPPORT_CHANNEL ?? "").trim()
-  if (supportChannel === "") fail("set the support channel: --support or SUPPORT_CHANNEL in .env")
+  const supportChannel = (
+    values.support ??
+    process.env.SUPPORT_CHANNEL ??
+    loadSettings(db).supportChannel
+  ).trim()
+  if (supportChannel === "") fail("set the support channel on the settings page, or give --support")
   return { causes: FINANCE_CAUSES, supportChannel }
+}
+
+/** Below it, a review goes to a person: `--threshold`, or the settings page's. */
+function threshold(): number {
+  if (values.threshold === undefined) return loadSettings(db).threshold
+  try {
+    return parseThreshold(values.threshold)
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error))
+  }
+}
+
+/** The app's store IDs: `--play` and `--apple`, or the settings page's. */
+function storeApp(): { googlePlay?: string; appStore?: string } {
+  const settings = loadSettings(db)
+  const googlePlay = values.play ?? (values.apple ? undefined : (settings.googlePlayId ?? undefined))
+  const appStore = values.apple ?? (values.play ? undefined : (settings.appStoreId ?? undefined))
+  if (!googlePlay && !appStore) fail("choose the app on the settings page, or give --play and/or --apple")
+  return { ...(googlePlay ? { googlePlay } : {}), ...(appStore ? { appStore } : {}) }
 }
 
 function draftId(): number {
@@ -96,16 +125,8 @@ function draftId(): number {
 }
 
 function storeIds(): string[] {
-  const ids = [values.play, values.apple].filter((id) => id !== undefined)
-  if (ids.length === 0) fail("give --play and/or --apple with the app's store IDs")
-  return ids
-}
-
-let threshold: number
-try {
-  threshold = parseThreshold(values.threshold)
-} catch (error) {
-  fail(error instanceof Error ? error.message : String(error))
+  const app = storeApp()
+  return [app.googlePlay, app.appStore].filter((id) => id !== undefined)
 }
 
 const COMMANDS = [
@@ -136,16 +157,10 @@ const db = openDb(values.db)
 try {
   switch (command) {
     case "fetch": {
-      if (!values.play && !values.apple) fail("give --play and/or --apple with the app's store ID")
-      const saved = await fetchNew(
-        db,
-        systemClock,
-        {
-          ...(values.play ? { googlePlay: values.play } : {}),
-          ...(values.apple ? { appStore: values.apple } : {}),
-        },
-        { googlePlay: (id) => fetchGooglePlay(id), appStore: (id) => fetchAppStore(id) },
-      )
+      const saved = await fetchNew(db, systemClock, storeApp(), {
+        googlePlay: (id) => fetchGooglePlay(id),
+        appStore: (id) => fetchAppStore(id),
+      })
       console.log(
         `${String(saved.added)} new reviews, ${String(saved.alreadyThere)} already there, ${String(saved.skipped)} unreadable`,
       )
@@ -154,12 +169,21 @@ try {
       break
     }
     case "sort": {
-      if (!values.app) fail("give --app with the app's ID")
-      const report = await sortPending(db, systemClock, claude(), {
-        appId: values.app,
-        causes: FINANCE_CAUSES,
-        threshold,
-      })
+      const sorter = claude()
+      const reports = []
+      for (const appId of values.app ? [values.app] : storeIds())
+        reports.push(
+          await sortPending(db, systemClock, sorter, {
+            appId,
+            causes: FINANCE_CAUSES,
+            threshold: threshold(),
+          }),
+        )
+      const report = {
+        sorted: reports.reduce((total, one) => total + one.sorted, 0),
+        needsPerson: reports.reduce((total, one) => total + one.needsPerson, 0),
+        failed: reports.reduce((total, one) => total + one.failed, 0),
+      }
       console.log(
         `${String(report.sorted)} sorted, ${String(report.needsPerson)} for a person, ${String(report.failed)} failed (tried again next run)`,
       )
@@ -251,7 +275,12 @@ try {
         ? new RecordingSorter(claude(), RECORDINGS)
         : recordings && new RecordedSorter(recordings, sortQuestion)
       if (!sorter) fail("no recorded answers yet: run `pnpm cli eval --record` with your API key in .env")
-      const report = await evaluate(loadLabelled("samples/labelled.json"), sorter, FINANCE_CAUSES, threshold)
+      const report = await evaluate(
+        loadLabelled("samples/labelled.json"),
+        sorter,
+        FINANCE_CAUSES,
+        threshold(),
+      )
       console.log(formatReport(report))
       break
     }
