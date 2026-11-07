@@ -33,6 +33,12 @@ describe("C2", () => {
     ])
   })
 
+  it("c2_versions_spelled_differently_have_a_fixed_order", () => {
+    expect(compareVersions("4.2", "4.2.0")).toBeLessThan(0)
+    expect(compareVersions("4.2.0", "4.2")).toBeGreaterThan(0)
+    expect(compareVersions("4.2.0", "4.2.0")).toBe(0)
+  })
+
   it("c2_a_version_with_fewer_than_5_crash_reviews_is_not_a_spike", () => {
     // 3 of 3 is a share of 100%, but three reviews are too few to call.
     expect(versionSpikes([...reviews("4.1.9", 1, 9), ...reviews("4.2.0", 3, 0)])).toEqual([])

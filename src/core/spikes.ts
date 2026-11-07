@@ -87,7 +87,8 @@ export interface VersionSpike {
 }
 
 /** Orders app versions by their numbers ("4.10.0" after "4.9.2"); text that
- *  isn't a number is compared as text. */
+ *  isn't a number is compared as text. Versions equal by number but spelled
+ *  differently ("4.2", "4.2.0") still get a fixed order, by their text. */
 export function compareVersions(a: string, b: string): number {
   const parts = (version: string) => version.split(/[.\-+ ]/)
   const [left, right] = [parts(a), parts(b)]
@@ -98,7 +99,7 @@ export function compareVersions(a: string, b: string): number {
       Number.isInteger(nx) && Number.isInteger(ny) ? nx - ny : x.localeCompare(y, "en", { numeric: true })
     if (order !== 0) return order
   }
-  return 0
+  return a < b ? -1 : a > b ? 1 : 0
 }
 
 /** A version is a spike when its share of `crashCause` reviews is at least
