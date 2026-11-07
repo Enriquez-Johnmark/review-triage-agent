@@ -1,6 +1,7 @@
 import type { Clock } from "../clock.ts"
 import type { Cause } from "../core/causes.ts"
-import { type VersionSpike, type WeeklySpike } from "../core/spikes.ts"
+import { counted } from "../core/overview.ts"
+import { type VersionSpike, weekOf, type WeeklySpike } from "../core/spikes.ts"
 import type { Db } from "../store/db.ts"
 import { listDrafts } from "../store/drafts.ts"
 import { replyQueue } from "../store/queue.ts"
@@ -23,11 +24,12 @@ export interface MoneyWaiting {
 export interface DailySummary {
   /** Reviews fetched in the last 24 hours. */
   newReviews: number
-  /** This week's share answered; `null` when the stores don't say. */
+  /** The last seven days' share answered; `null` when the stores don't say. */
   shareAnswered: number | null
-  /** This week's three most common causes. */
+  /** The last seven days' three most common causes. */
   topCauses: { cause: string; label: string; count: number }[]
-  /** This week's spikes, and the latest version's crash spike if it has one. */
+  /** Spikes this week and last (so Monday's email has the week just ended),
+   *  and the latest version's crash spike if it has one. */
   spikes: { weekly: WeeklySpike[]; versions: VersionSpike[] }
   /** Money complaints with no posted reply: how many, and the newest five. */
   moneyWaiting: { count: number; newest: MoneyWaiting[] }
@@ -42,7 +44,13 @@ export function dailySummary(
 ): DailySummary {
   const now = clock.now()
   const rows = summaryRows(db, appIds)
-  const { overview, weeklySpikes, versionSpikes } = summariseRows(rows, now, causes)
+  const { weeklySpikes, versionSpikes } = summariseRows(rows, now, causes)
+  const since = new Date(now.getTime() - 7 * DAY).toISOString()
+  const lastWeek = counted(
+    rows.filter((row) => row.at >= since),
+    causes,
+  )
+  const fromWeek = weekOf(since)
   const newReviews = (
     db
       .prepare(
@@ -63,10 +71,10 @@ export function dailySummary(
   const name = (id: string) => causes.find((cause) => cause.id === id)?.label ?? id
   return {
     newReviews,
-    shareAnswered: overview.shareAnswered,
-    topCauses: overview.topCauses.map((top) => ({ ...top, label: name(top.cause) })),
+    shareAnswered: lastWeek.shareAnswered,
+    topCauses: lastWeek.topCauses.map((top) => ({ ...top, label: name(top.cause) })),
     spikes: {
-      weekly: weeklySpikes.filter((spike) => spike.week === overview.week),
+      weekly: weeklySpikes.filter((spike) => spike.week >= fromWeek),
       versions: versionSpikes.slice(0, 1),
     },
     moneyWaiting: {
@@ -99,13 +107,13 @@ export function formatDaily(summary: DailySummary, causes: readonly Cause[]): st
   const { weekly, versions } = summary.spikes
   return [
     `New reviews since yesterday: ${String(summary.newReviews)}`,
-    `Answered this week: ${summary.shareAnswered === null ? "the stores don't say" : percent(summary.shareAnswered)}`,
-    `Top causes this week: ${summary.topCauses.map((top) => `${top.label} (${String(top.count)})`).join(", ") || "none yet"}`,
+    `Answered in the last 7 days: ${summary.shareAnswered === null ? "the stores don't say" : percent(summary.shareAnswered)}`,
+    `Top causes in the last 7 days: ${summary.topCauses.map((top) => `${top.label} (${String(top.count)})`).join(", ") || "none yet"}`,
     `Spikes: ${
       [
         ...weekly.map(
           (spike) =>
-            `${name(spike.cause)}, ${String(spike.count)} this week against ${spike.previousAverage.toFixed(1)} a week before`,
+            `${name(spike.cause)}, ${String(spike.count)} in the week of ${spike.week} against ${spike.previousAverage.toFixed(1)} a week before`,
         ),
         ...versions.map(
           (spike) =>

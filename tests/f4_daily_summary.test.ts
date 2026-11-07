@@ -39,12 +39,23 @@ describe("F4", () => {
     const text = formatDaily(summary, FINANCE_CAUSES)
     for (const part of [
       "New reviews since yesterday: 120",
-      "Answered this week: 0%",
-      "Top causes this week: Crash or won't open (6)",
-      "Spikes: Crash or won't open, 6 this week",
+      "Answered in the last 7 days: 0%",
+      "Top causes in the last 7 days: Crash or won't open (6)",
+      "Spikes: Crash or won't open, 6 in the week of 2026-11-02",
       `Money complaints still waiting for a reply: ${String(summary.moneyWaiting.count)}`,
     ])
       expect(text).toContain(part)
+  })
+
+  it("f4_mondays_summary_covers_the_week_that_just_ended", () => {
+    const { db, ids } = demo()
+    // Monday 2026-11-09, 8:00 Manila: the demo's spike week has just ended.
+    const monday = new FixedClock(new Date("2026-11-09T00:00:00Z"))
+
+    const summary = dailySummary(db, monday, ids, FINANCE_CAUSES)
+
+    expect(summary.spikes.weekly.map((spike) => [spike.cause, spike.week])).toEqual([["crash", "2026-11-02"]])
+    expect(summary.topCauses[0]).toMatchObject({ cause: "crash", count: 6 })
   })
 
   it("f4_new_reviews_count_only_the_last_day_and_posted_money_replies_stop_waiting", async () => {

@@ -33,11 +33,22 @@ export interface Overview {
 /** The overview's numbers, counted from the stored reviews (F1). */
 export function overview(rows: readonly OverviewRow[], now: Date, causes: readonly Cause[]): Overview {
   const week = weekOf(now.toISOString())
-  const thisWeek = rows.filter((row) => weekOf(row.at) === week)
-  const known = thisWeek.filter((row) => row.companyReplied !== null)
+  return {
+    week,
+    ...counted(
+      rows.filter((row) => weekOf(row.at) === week),
+      causes,
+    ),
+  }
+}
+
+/** The same numbers for any set of reviews (the daily summary counts the
+ *  last seven days). */
+export function counted(rows: readonly OverviewRow[], causes: readonly Cause[]): Omit<Overview, "week"> {
+  const known = rows.filter((row) => row.companyReplied !== null)
   const answered = known.filter((row) => row.companyReplied === true).length
   const counts = new Map<string, number>()
-  for (const row of thisWeek) if (row.cause !== null) counts.set(row.cause, (counts.get(row.cause) ?? 0) + 1)
+  for (const row of rows) if (row.cause !== null) counts.set(row.cause, (counts.get(row.cause) ?? 0) + 1)
   const order = (cause: string) => {
     const index = causes.findIndex((known) => known.id === cause)
     return index === -1 ? causes.length : index
@@ -47,13 +58,12 @@ export function overview(rows: readonly OverviewRow[], now: Date, causes: readon
     .sort((a, b) => b.count - a.count || order(a.cause) - order(b.cause))
     .slice(0, 3)
   return {
-    week,
-    reviews: thisWeek.length,
+    reviews: rows.length,
     answered,
     replyKnown: known.length,
     shareAnswered: known.length === 0 ? null : answered / known.length,
     topCauses,
-    needsPerson: thisWeek.filter((row) => row.needsPerson).length,
-    unsorted: thisWeek.filter((row) => row.cause === null && !row.needsPerson).length,
+    needsPerson: rows.filter((row) => row.needsPerson).length,
+    unsorted: rows.filter((row) => row.cause === null && !row.needsPerson).length,
   }
 }
