@@ -7,6 +7,7 @@ import { auditLog } from "../src/store/audit.ts"
 import { draftFor } from "../src/store/drafts.ts"
 import { mcp } from "./fixtures/mcp.ts"
 import { writeReply } from "../src/commands/replies.ts"
+import { saveReviews } from "../src/store/reviews.ts"
 import { withSupport } from "../src/core/reply-rules.ts"
 import { FakeDrafter, GOOD, KEY, settings, SUPPORT } from "./fixtures/replies.ts"
 
@@ -104,5 +105,18 @@ describe("F3", () => {
       "no such review: google_play nope",
     )
     expect((await call("draft_reply", { store: "google_play", id: "x" })).text).toContain("API key")
+  })
+})
+
+describe("dates in the tools", () => {
+  it("are Manila days, like the weeks", async () => {
+    const { call, db, clock, review } = await mcp()
+    // 7:00 on Nov 10 in Manila is still Nov 9 in UTC.
+    saveReviews(db, clock, [{ ...review, storeReviewId: "early", at: "2026-11-09T23:00:00.000Z" }])
+
+    const found = (await call("search_reviews", { from: "2026-11-10", to: "2026-11-10" })).json() as {
+      reviews: { id: string }[]
+    }
+    expect(found.reviews.map((entry) => entry.id)).toEqual(["early"])
   })
 })

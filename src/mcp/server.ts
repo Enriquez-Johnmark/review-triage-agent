@@ -73,7 +73,7 @@ export function buildMcpServer(deps: McpDeps): McpServer {
         }).filter(
           ({ review }) =>
             (input.stars === undefined || review.stars === input.stars) &&
-            (input.from === undefined || review.at >= input.from) &&
+            (input.from === undefined || review.at >= startOfDay(input.from)) &&
             (input.to === undefined || review.at < endOfDay(input.to)) &&
             (words === undefined || review.text.toLowerCase().includes(words)),
         )
@@ -91,11 +91,11 @@ export function buildMcpServer(deps: McpDeps): McpServer {
     },
     (input) =>
       answer(() => {
-        const to = input.to ?? clock.now().toISOString().slice(0, 10)
+        const to = input.to ?? manilaDate(clock.now())
         const from = input.from ?? new Date(Date.parse(to) - 6 * DAY).toISOString().slice(0, 10)
         if (from > to) throw new Error("`from` must be on or before `to`")
         const rows = summaryRows(db, ids())
-        const inPeriod = rows.filter((row) => row.at >= from && row.at < endOfDay(to))
+        const inPeriod = rows.filter((row) => row.at >= startOfDay(from) && row.at < endOfDay(to))
         const counts = new Map<string, number>()
         for (const row of inPeriod) if (row.cause) counts.set(row.cause, (counts.get(row.cause) ?? 0) + 1)
         const { weeklySpikes, versionSpikes } = summariseRows(rows, clock.now(), causes)
@@ -192,7 +192,10 @@ export function buildMcpServer(deps: McpDeps): McpServer {
 
 const label = (cause: string) => causes.find((known) => known.id === cause)?.label ?? cause
 
-const endOfDay = (date: string) => new Date(Date.parse(date) + DAY).toISOString()
+// Days are Manila days, like the weeks (UTC+8 all year).
+const startOfDay = (date: string) => new Date(`${date}T00:00:00+08:00`).toISOString()
+const endOfDay = (date: string) => new Date(Date.parse(startOfDay(date)) + DAY).toISOString()
+const manilaDate = (at: Date) => new Date(at.getTime() + 8 * 3_600_000).toISOString().slice(0, 10)
 
 /** The Monday a week before `date`, so a spike week that overlaps the period counts. */
 const weekBefore = (date: string) => new Date(Date.parse(date) - 7 * DAY).toISOString().slice(0, 10)
