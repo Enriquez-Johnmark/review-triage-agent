@@ -40,7 +40,7 @@ export function formatSummary(summary: Summary, causes: readonly Cause[]): strin
   const name = (id: string) => causes.find((cause) => cause.id === id)?.label ?? id
   const { overview: week } = summary
   return [
-    `Week of ${week.week}: ${String(week.reviews)} reviews, ${String(week.needsPerson)} waiting for a person`,
+    `Week of ${week.week}: ${String(week.reviews)} reviews, ${String(week.needsPerson)} waiting for a person, ${String(week.unsorted)} not sorted yet`,
     `Answered: ${week.shareAnswered === null ? "not known" : `${percent(week.shareAnswered)} (${String(week.answered)} of ${String(week.replyKnown)})`}`,
     `Top causes: ${week.topCauses.map((top) => `${name(top.cause)} ${String(top.count)}`).join(", ") || "none yet"}`,
     "",

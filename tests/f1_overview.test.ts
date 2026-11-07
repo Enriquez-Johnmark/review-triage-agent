@@ -66,11 +66,15 @@ describe("F1", () => {
         { cause: "fees", count: 1 },
       ],
       needsPerson: 0,
+      unsorted: 0,
     })
   })
 
-  it("f1_a_cause_set_by_hand_counts_and_unsorted_reviews_count_as_needing_a_person", async () => {
-    const { db, clock } = await world([review("2026-11-03T00:00:00.000Z", "crash", false)])
+  it("f1_a_cause_set_by_hand_counts_and_reviews_without_a_cause_are_counted_apart", async () => {
+    const { db, clock } = await world([
+      review("2026-11-03T02:00:00.000Z", "not a cause the model may give", false), // needs a person
+      review("2026-11-03T00:00:00.000Z", "crash", false),
+    ])
     setCauseByHand(
       db,
       clock,
@@ -84,8 +88,9 @@ describe("F1", () => {
     const { overview } = summarise(db, clock, [APP], FINANCE_CAUSES)
 
     expect(overview.topCauses).toEqual([{ cause: "login", count: 1 }])
-    expect(overview.reviews).toBe(2)
+    expect(overview.reviews).toBe(3)
     expect(overview.needsPerson).toBe(1)
+    expect(overview.unsorted).toBe(1)
   })
 
   it("f1_a_week_with_no_known_replies_has_no_share", async () => {
@@ -122,7 +127,7 @@ describe("the summary command", () => {
       review("2026-11-03T01:00:00.000Z", "crash", false),
     ])
     const text = formatSummary(summarise(db, clock, [APP], FINANCE_CAUSES), FINANCE_CAUSES)
-    expect(text).toContain("Week of 2026-11-02: 2 reviews, 0 waiting for a person")
+    expect(text).toContain("Week of 2026-11-02: 2 reviews, 0 waiting for a person, 0 not sorted yet")
     expect(text).toContain("Answered: 50% (1 of 2)")
     expect(text).toContain("Top causes: Crash or won't open 2")
   })

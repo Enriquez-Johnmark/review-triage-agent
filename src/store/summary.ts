@@ -5,6 +5,7 @@ export interface SummaryRow {
   at: string
   appVersion: string | null
   cause: string | null
+  needsPerson: boolean
   companyReplied: boolean | null
 }
 
@@ -13,7 +14,7 @@ export interface SummaryRow {
 export function summaryRows(db: Db, appIds: readonly string[]): SummaryRow[] {
   const rows = db
     .prepare(
-      `select r.at, r.app_version, r.company_replied, l.cause
+      `select r.at, r.app_version, r.company_replied, l.cause, l.needs_person_reason is not null as needs_person
        from reviews r
        left join labels l on l.store = r.store and l.store_review_id = r.store_review_id
        where r.app_id in (select value from json_each(?))
@@ -24,11 +25,13 @@ export function summaryRows(db: Db, appIds: readonly string[]): SummaryRow[] {
     app_version: string | null
     company_replied: number | null
     cause: string | null
+    needs_person: number
   }[]
   return rows.map((row) => ({
     at: row.at,
     appVersion: row.app_version,
     cause: row.cause,
+    needsPerson: row.needs_person === 1,
     companyReplied: row.company_replied === null ? null : row.company_replied === 1,
   }))
 }

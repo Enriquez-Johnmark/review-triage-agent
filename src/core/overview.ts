@@ -6,6 +6,8 @@ export interface OverviewRow {
   at: string
   /** `null` while it waits for a person or for sorting. */
   cause: string | null
+  /** The model couldn't sort it, so a person must (B2). */
+  needsPerson: boolean
   companyReplied: boolean | null
 }
 
@@ -22,8 +24,10 @@ export interface Overview {
   shareAnswered: number | null
   /** The three most common causes this week; ties in the order of the app's causes. */
   topCauses: { cause: string; count: number }[]
-  /** This week's reviews with no cause yet. */
+  /** This week's reviews the model left for a person to sort. */
   needsPerson: number
+  /** This week's reviews no sorting run has reached yet. */
+  unsorted: number
 }
 
 /** The overview's numbers, counted from the stored reviews (F1). */
@@ -49,6 +53,7 @@ export function overview(rows: readonly OverviewRow[], now: Date, causes: readon
     replyKnown: known.length,
     shareAnswered: known.length === 0 ? null : answered / known.length,
     topCauses,
-    needsPerson: thisWeek.filter((row) => row.cause === null).length,
+    needsPerson: thisWeek.filter((row) => row.needsPerson).length,
+    unsorted: thisWeek.filter((row) => row.cause === null && !row.needsPerson).length,
   }
 }
