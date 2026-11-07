@@ -12,7 +12,7 @@ import { type Fetchers, fetchNew } from "../commands/fetch.ts"
 import { postReply } from "../commands/post.ts"
 import { approveReply, refuseReply, writeReply } from "../commands/replies.ts"
 import { sortPending } from "../commands/sort.ts"
-import { summarise } from "../commands/summary.ts"
+import { sortedRows, summarise, summariseRows, versionRows } from "../commands/summary.ts"
 import { causesByWeek, crashShareByVersion } from "../core/charts.ts"
 import { type Cause, FINANCE_CAUSES } from "../core/causes.ts"
 import { Store } from "../core/review.ts"
@@ -104,15 +104,11 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
 
   app.get("/api/overview", (): OverviewAnswer => {
     const rows = summaryRows(db, ids())
-    const sorted = rows.flatMap((row) => (row.cause === null ? [] : [{ ...row, cause: row.cause }]))
+    const sorted = sortedRows(rows)
     return {
-      summary: summarise(db, clock, ids(), causes),
+      summary: summariseRows(rows, clock.now(), causes),
       causesByWeek: causesByWeek(sorted, clock.now()),
-      crashShareByVersion: crashShareByVersion(
-        sorted.flatMap((row) =>
-          row.appVersion === null ? [] : [{ appVersion: row.appVersion, cause: row.cause }],
-        ),
-      ),
+      crashShareByVersion: crashShareByVersion(versionRows(sorted)),
       causes: causeNames,
     }
   })

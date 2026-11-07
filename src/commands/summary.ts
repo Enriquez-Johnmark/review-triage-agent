@@ -3,7 +3,7 @@ import type { Cause } from "../core/causes.ts"
 import { type Overview, overview } from "../core/overview.ts"
 import { type VersionSpike, versionSpikes, type WeeklySpike, weeklySpikes } from "../core/spikes.ts"
 import type { Db } from "../store/db.ts"
-import { summaryRows } from "../store/summary.ts"
+import { type SummaryRow, summaryRows } from "../store/summary.ts"
 
 /** What the overview, the daily summary and the MCP tools report. */
 export interface Summary {
@@ -20,18 +20,26 @@ export function summarise(
   appIds: readonly string[],
   causes: readonly Cause[],
 ): Summary {
-  const rows = summaryRows(db, appIds)
-  const sorted = rows.flatMap((row) => (row.cause === null ? [] : [{ ...row, cause: row.cause }]))
+  return summariseRows(summaryRows(db, appIds), clock.now(), causes)
+}
+
+/** The same, from rows already read. */
+export function summariseRows(rows: readonly SummaryRow[], now: Date, causes: readonly Cause[]): Summary {
+  const sorted = sortedRows(rows)
   return {
-    overview: overview(rows, clock.now(), causes),
+    overview: overview(rows, now, causes),
     weeklySpikes: weeklySpikes(sorted),
-    versionSpikes: versionSpikes(
-      sorted.flatMap((row) =>
-        row.appVersion === null ? [] : [{ appVersion: row.appVersion, cause: row.cause }],
-      ),
-    ),
+    versionSpikes: versionSpikes(versionRows(sorted)),
   }
 }
+
+/** The rows with a cause. */
+export const sortedRows = (rows: readonly SummaryRow[]) =>
+  rows.flatMap((row) => (row.cause === null ? [] : [{ ...row, cause: row.cause }]))
+
+/** Sorted rows that say which app version they're about. */
+export const versionRows = (rows: readonly (SummaryRow & { cause: string })[]) =>
+  rows.flatMap((row) => (row.appVersion === null ? [] : [{ appVersion: row.appVersion, cause: row.cause }]))
 
 const percent = (share: number) => `${(share * 100).toFixed(0)}%`
 
