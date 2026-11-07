@@ -22,6 +22,7 @@ Every decision needing the owner's judgement is put as numbered rounds of questi
 ## Working here
 
 - **The `milestone` skill** (`.claude/skills/milestone/SKILL.md`) is the workflow for building a milestone, from the first failing test to the code review. Read it before changing `src/` or `web/`.
+- **React:** read the `vercel-react-best-practices`, `vercel-composition-patterns` and `shadcn` skills (`.claude/skills/`) before writing or reviewing the dashboard, and follow `docs/frontend.md`; where they disagree, `docs/frontend.md` wins. Third-party skills are read in full before they're added, recorded in `skills-lock.json` and `docs/frontend.md` with source, commit and licence, and may not run unpinned commands.
 - **Cloud sessions:** `scripts/cloud-session-start.sh` runs at session start (via `.claude/settings.json`): commit signing and installing the packages. On a local machine it does nothing.
 
 ## Rules
