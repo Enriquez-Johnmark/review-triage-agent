@@ -59,6 +59,16 @@ Reviewer names are dropped inside the fetcher, before anything is stored. Review
 
 As in the owner's engine, Nudgewright: an approved text gets a unique key, recorded before the poster is called; a reply already posted is never sent again. `StubPoster` records what would have been posted; `GooglePlayPoster` calls Google's Reply to Reviews API and is used only when credentials are set.
 
+## Spikes and the summary numbers
+
+How the spec's rules are counted (`src/core/spikes.ts`, `src/core/overview.ts`):
+
+- **Weeks** start on Monday at midnight, Manila time (UTC+8, no daylight saving).
+- **The first week of fetched reviews is partial** (fetching takes the newest reviews), so it never counts toward a four-week average: a week is judged only when its four weeks before all come after it.
+- **A version spike** also needs at least 5 crash reviews on that version, as a week spike needs 5 reviews, so a version with three reviews isn't called. Shares count sorted reviews only. Versions are ordered by their numbers (4.10.0 after 4.9.2).
+- **Share answered** is this week's answered reviews out of those whose reply status the store gives; Apple's public feed doesn't say, so App Store reviews are left out of it.
+- An app is summarised across both its store IDs (Google Play and App Store).
+
 ## Time
 
 Read only through an injected clock, so tests control weeks and versions.
