@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/table"
 import { causeName, percent, shortDate, stars } from "@/lib/format"
 
+export const LANGUAGE: Record<string, string> = {
+  english: "English",
+  tagalog: "Tagalog",
+  taglish: "Taglish",
+}
+
 export const DRAFT_STATUS: Record<string, string> = {
   ready: "Draft ready",
   flagged: "For a person to write",
@@ -60,6 +66,7 @@ export function ReviewTable({
                 <Badge variant={label?.cause ? "secondary" : "warning"}>
                   {label ? causeName(causes, label.cause) : "Not sorted yet"}
                 </Badge>
+                {label?.language && <Badge variant="outline">{LANGUAGE[label.language]}</Badge>}
                 {label?.moneyInvolved && <Badge variant="destructive">Money</Badge>}
                 {label?.confidence !== undefined && label.setBy === "model" && (
                   <span className="text-xs text-muted-foreground">{percent(label.confidence)}</span>

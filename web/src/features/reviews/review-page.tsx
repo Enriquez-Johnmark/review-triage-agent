@@ -5,7 +5,7 @@ import { api } from "@/api/client"
 import type { Draft, ReviewAnswer } from "@/api/types"
 import { reviewPath, useChange, useReview } from "@/app/queries"
 import { LoadError } from "@/components/load-error"
-import { DRAFT_STATUS } from "@/components/review-table"
+import { DRAFT_STATUS, LANGUAGE } from "@/components/review-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,12 +13,6 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { Textarea } from "@/components/ui/textarea"
 import { causeName, percent, shortDate, stars } from "@/lib/format"
 import { useYourName } from "@/lib/your-name"
-
-const LANGUAGE: Record<string, string> = {
-  english: "English",
-  tagalog: "Tagalog",
-  taglish: "Taglish",
-}
 
 /** One review with its reply: draft, edit, approve, refuse or post. The rules
  *  are checked by the agent; this page only shows their results. */
