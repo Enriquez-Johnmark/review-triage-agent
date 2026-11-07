@@ -82,10 +82,24 @@ const PROMISES: readonly RegExp[] = [
 ]
 
 const SECRET =
-  /\b(?:account (?:number|no\b)|acct\.? no\b|card (?:number|no\b)|m?pin|otp|one[- ]time (?:pin|password|code)|password|passcode|cvv|id (?:number|no\b)|numero ng account)/
+  /\b(?:account (?:number|no)|acct\.? no|card (?:number|no)|m?pin|otp|one[- ]time (?:pin|password|code)|password|passcode|cvv|id (?:number|no)|numero ng account)\b/
 const REQUEST =
-  /\b(?:send|give|share|provide|tell|enter|type|reply with|dm|forward|include|confirm|ibigay|bigay|ipadala|padala|i-?send|i-?share|sabihin|ilagay|i-?message|i-?pm|i-?dm|paki-?\w*)\b/
-const NEGATION = /\b(?:never|don't|do not|not|huwag|wag|hindi|kailanman)\b/
+  /\b(?:send|give|share|provide|tell|enter|type|reply with|dm|forward|include|confirm|ibigay|bigay|ipadala|padala|i-?send|i-?share|sabihin|ilagay|i-?message|i-?pm|i-?dm|paki-?\w*)\b/g
+const NEGATION = new Set(["never", "don't", "not", "huwag", "wag", "hindi", "kailanman"])
+
+/** A sentence asks for a secret when it names one and has a request verb
+ *  that isn't negated just before it ("do not share", "huwag po ninyong
+ *  ibigay"); a "not" elsewhere in the sentence ("don't worry, just share")
+ *  doesn't count. */
+function asksForSecret(sentence: string): boolean {
+  if (!SECRET.test(sentence)) return false
+  return [...sentence.matchAll(REQUEST)].some((request) => {
+    // The words just before the verb, within its own clause.
+    const clause = sentence.slice(0, request.index).split(/[,;:]/).at(-1) ?? ""
+    const before = words(clause).slice(-3)
+    return !before.some((word) => NEGATION.has(word))
+  })
+}
 
 const BLAME: readonly RegExp[] = [
   /\b(?:your|ur) (?:own )?(?:fault|mistake|error)\b/,
@@ -137,10 +151,7 @@ export function checkReply(text: string, context: ReplyContext): Broken[] {
   if (contact) broken.push({ rule: "own_contact", detail: `the reply gives ${contact} of its own` })
   const promise = PROMISES.find((pattern) => pattern.test(lower))
   if (promise) broken.push({ rule: "promise", detail: `promises a refund, an outcome or a date` })
-  const asks = sentences(lower).find(
-    (sentence) => SECRET.test(sentence) && REQUEST.test(sentence) && !NEGATION.test(sentence),
-  )
-  if (asks)
+  if (sentences(lower).some(asksForSecret))
     broken.push({ rule: "asks_for_secret", detail: "asks for an account number, PIN, OTP, password or ID" })
   if (BLAME.some((pattern) => pattern.test(lower)))
     broken.push({ rule: "blames_customer", detail: "blames the customer" })

@@ -23,6 +23,8 @@ describe("D2", () => {
     ["english", "Sorry about that. Reply with your PIN and we will look into it."],
     ["tagalog", "Pasensya na po. Pakibigay po ang inyong account number at password."],
     ["taglish", "Sorry po! Paki-send po ng OTP at ID number ninyo para ma-check namin."],
+    ["english", "Sorry! Please send us your PIN so we can check why it's not working."],
+    ["english", "Don't worry, just share your OTP with our team."],
   ] as const)(
     "d2_requests_for_account_numbers_pins_otps_passwords_or_ids_are_caught (%s: %s)",
     (language, body) => {
@@ -37,6 +39,8 @@ describe("D2", () => {
     ["english", "Thank you so much for the kind words! We're happy the app helps you every day."],
     ["tagalog", "Salamat po sa magandang review! Natutuwa kami na nakakatulong ang app sa inyo."],
     ["taglish", "Sorry po sa delay ng cash out. Tinitingnan na po ito ng team namin."],
+    ["taglish", "Sorry po! Paki-update po sa pinakabagong version ang app ninyo."],
+    ["english", "Sorry about that! Please do not share your PIN or OTP with anyone."],
   ] as const)("d2_polite_replies_and_warnings_to_keep_a_pin_safe_pass (%s: %s)", (language, body) => {
     expect(rules(body, language)).toEqual([])
   })
