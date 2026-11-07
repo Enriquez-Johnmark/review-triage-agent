@@ -18,8 +18,9 @@ export interface Broken {
 }
 
 export interface ReplyContext {
-  /** The review's language: the reply must be in it. */
-  language: Language
+  /** The review's language: the reply must be in it. `null` when the model
+   *  didn't sort it (a person did), and then the language isn't checked. */
+  language: Language | null
   /** The support channel from the settings: every reply ends with it. */
   supportChannel: string
 }
@@ -130,7 +131,7 @@ export function checkReply(text: string, context: ReplyContext): Broken[] {
     })
   if (!endsWithChannel)
     broken.push({ rule: "no_support_channel", detail: "the reply must end with the support channel" })
-  if (body !== "" && !languageFits(body, context.language))
+  if (body !== "" && context.language !== null && !languageFits(body, context.language))
     broken.push({ rule: "wrong_language", detail: `the review is in ${context.language}` })
   const contact = ownContact(body)
   if (contact) broken.push({ rule: "own_contact", detail: `the reply gives ${contact} of its own` })

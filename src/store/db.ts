@@ -47,6 +47,26 @@ const MIGRATIONS: readonly string[] = [
      begin select raise(abort, 'the audit log is append-only'); end;
    create trigger audit_log_no_delete before delete on audit_log
      begin select raise(abort, 'the audit log is append-only'); end;`,
+  // One reply per review. `status`: 'ready' passes the rules and waits for a
+  // person; 'flagged' broke a rule twice and waits for a person to write it
+  // (D3); 'approved' carries the fingerprint of the exact text approved (E2).
+  `create table drafts (
+     id integer primary key autoincrement,
+     store text not null,
+     store_review_id text not null,
+     text text not null,
+     written_by text not null,
+     status text not null check (status in ('ready', 'flagged', 'approved', 'refused', 'posted')),
+     broken text not null default '[]',
+     approved_fingerprint text,
+     approved_by text,
+     approved_at text,
+     created_at text not null,
+     updated_at text not null,
+     unique (store, store_review_id),
+     foreign key (store, store_review_id) references reviews (store, store_review_id) on delete cascade,
+     check ((status in ('approved', 'posted')) = (approved_fingerprint is not null))
+   );`,
 ]
 
 export type Db = Database.Database
