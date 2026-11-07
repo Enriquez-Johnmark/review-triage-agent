@@ -94,7 +94,7 @@ describe("F1", () => {
   })
 
   it("f1_the_summary_carries_the_spikes_from_the_stored_labels", async () => {
-    const weeks = ["2026-10-05", "2026-10-12", "2026-10-19", "2026-10-26"]
+    const weeks = ["2026-10-03", "2026-10-05", "2026-10-12", "2026-10-19", "2026-10-26"]
     const { db, clock } = await world([
       ...weeks.map((week) => review(`${week}T04:00:00.000Z`, "crash", false)),
       ...Array.from({ length: 5 }, () => review("2026-11-03T04:00:00.000Z", "crash", false)),

@@ -40,9 +40,10 @@ export interface WeeklySpike {
 }
 
 /** A cause's week is a spike when its count is at least double its average
- *  over the four weeks before and at least 5 reviews (C1). A week is judged
- *  only when the reviews reach back four full weeks before it, so the first
- *  weeks fetched aren't spikes just because nothing came before. Newest first. */
+ *  over the four weeks before and at least 5 reviews (C1). The first week of
+ *  reviews is taken as partial (fetching takes the newest reviews, so it holds
+ *  only its last days): a week is judged only when its four weeks before all
+ *  come after that one, so no week is a spike just because little came before. Newest first. */
 export function weeklySpikes(events: readonly CauseEvent[]): WeeklySpike[] {
   const counts = new Map<string, Map<number, number>>()
   let earliest = Infinity
@@ -56,7 +57,7 @@ export function weeklySpikes(events: readonly CauseEvent[]): WeeklySpike[] {
   const spikes: WeeklySpike[] = []
   for (const [cause, byWeek] of counts) {
     for (const [start, count] of byWeek) {
-      if (count < MIN_SPIKE_REVIEWS || start - 4 * WEEK < earliest) continue
+      if (count < MIN_SPIKE_REVIEWS || start - 4 * WEEK <= earliest) continue
       let before = 0
       for (let back = 1; back <= 4; back += 1) before += byWeek.get(start - back * WEEK) ?? 0
       const previousAverage = before / 4
