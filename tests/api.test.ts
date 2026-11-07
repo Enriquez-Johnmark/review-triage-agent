@@ -73,6 +73,19 @@ describe("the dashboard's API", () => {
     expect(broken.json()).toMatchObject({ status: "flagged" })
   })
 
+  it("answers only requests addressed to this computer, so a rebound domain gets nothing", async () => {
+    const { app } = await server()
+    const rebound = await app.inject({ url: "/api/queue", headers: { host: "evil.example.test:4317" } })
+    expect(rebound.statusCode).toBe(403)
+    expect(rebound.body).not.toContain("gp-crash")
+    expect((await app.inject({ url: "/api/queue", headers: { host: "127.0.0.1:4317" } })).statusCode).toBe(
+      200,
+    )
+    expect((await app.inject({ url: "/api/queue", headers: { host: "localhost:5173" } })).statusCode).toBe(
+      200,
+    )
+  })
+
   it("refuses changes sent from another site", async () => {
     const { app } = await server()
     const response = await app.inject({

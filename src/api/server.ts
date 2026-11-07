@@ -55,12 +55,16 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
   const causeNames = causes.map(({ id, label }) => ({ id, label }))
   const app = Fastify({ logger: false })
 
-  // Changes come only from this dashboard: another site open in the same
-  // browser can't post a reply through it.
   app.addHook("onRequest", async (request, reply) => {
+    // Only requests addressed to this computer are answered, so a web page
+    // whose domain is pointed at 127.0.0.1 (DNS rebinding) reads nothing.
+    if (!LOCAL_HOSTS.has(hostname(request.headers.host)))
+      return reply.code(403).send({ error: "the dashboard answers only on this computer" })
+    // Changes come only from this dashboard: another site open in the same
+    // browser can't post a reply through it.
     if (request.method === "GET" || request.method === "HEAD") return
     const origin = request.headers.origin
-    if (origin !== undefined && new URL(origin).host !== request.headers.host)
+    if (origin !== undefined && (!URL.canParse(origin) || new URL(origin).host !== request.headers.host))
       return reply.code(403).send({ error: "changes come only from this dashboard" })
   })
 
@@ -249,6 +253,14 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     })
   }
   return app
+}
+
+const LOCAL_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"])
+
+/** The name in a Host header, without its port. */
+function hostname(host: string | undefined): string {
+  if (host === undefined) return ""
+  return URL.canParse(`http://${host}`) ? new URL(`http://${host}`).hostname : ""
 }
 
 function reviewKey(params: unknown): ReviewKey {
