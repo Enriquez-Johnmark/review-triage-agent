@@ -1,2 +1,4 @@
 pnpm-lock.yaml
 data
+# The dashboard has its own checks (pnpm --dir web lint).
+web
