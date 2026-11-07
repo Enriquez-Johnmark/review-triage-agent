@@ -24,29 +24,26 @@ import {
 } from "@/components/ui/table"
 import { causeName, percent, weekLabel } from "@/lib/format"
 
-/** Seven fixed colours, in order; past seven causes fold into "Other". */
+/** Seven fixed colours, in order. */
 const SERIES = Array.from({ length: 7 }, (_, index) => `var(--series-${index + 1})`)
 const OTHER = "other causes"
 
 const axis = { fontSize: 12, fill: "var(--muted-foreground)" }
 
-/** The causes with the most reviews over the weeks shown keep their own
- *  colour, always the same one for the same cause; the rest are folded. */
+/** The app's first seven causes each own one colour, always the same, so a
+ *  cause never changes colour as others come and go; any later causes are
+ *  folded into "Other causes". */
 export function foldCauses(bars: readonly WeekBar[], causes: readonly CauseName[]) {
-  const totals = new Map<string, number>()
-  for (const bar of bars)
-    for (const [cause, count] of Object.entries(bar.counts))
-      totals.set(cause, (totals.get(cause) ?? 0) + count)
-  const order = (id: string) => causes.findIndex((cause) => cause.id === id)
-  const shown = [...totals.keys()]
-    .sort((a, b) => (totals.get(b) ?? 0) - (totals.get(a) ?? 0) || order(a) - order(b))
-    .slice(0, totals.size > SERIES.length ? SERIES.length - 1 : SERIES.length)
-    .sort((a, b) => order(a) - order(b))
-  const folded = totals.size > shown.length
+  const coloured = causes.slice(0, SERIES.length).map((cause) => cause.id)
+  const seen = new Set(bars.flatMap((bar) => Object.keys(bar.counts)))
+  const shown = coloured
+    .map((id, slot) => ({ id, colour: SERIES[slot] }))
+    .filter((cause) => seen.has(cause.id))
+  const folded = [...seen].some((id) => !coloured.includes(id))
   const rows = bars.map((bar) => {
     const row: Record<string, number | string> = { week: weekLabel(bar.week) }
     for (const [cause, count] of Object.entries(bar.counts)) {
-      const key = shown.includes(cause) ? cause : OTHER
+      const key = coloured.includes(cause) ? cause : OTHER
       row[key] = Number(row[key] ?? 0) + count
     }
     return row
@@ -58,7 +55,11 @@ export function CausesByWeekChart({ bars, causes }: { bars: WeekBar[]; causes: C
   const [asTable, setAsTable] = useState(false)
   const { shown, folded, rows } = foldCauses(bars, causes)
   const series = [
-    ...shown.map((id, index) => ({ key: id, name: causeName(causes, id), colour: SERIES[index] })),
+    ...shown.map((cause) => ({
+      key: cause.id,
+      name: causeName(causes, cause.id),
+      colour: cause.colour,
+    })),
     ...(folded ? [{ key: OTHER, name: "Other causes", colour: "var(--series-other)" }] : []),
   ]
   return (
