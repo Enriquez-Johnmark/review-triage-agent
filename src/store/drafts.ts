@@ -67,7 +67,16 @@ export function saveDraft(
   db: Db,
   clock: Clock,
   key: ReviewKey,
-  draft: { text: string; writtenBy: string; broken: readonly Broken[]; action: string; details?: object },
+  draft: {
+    text: string
+    writtenBy: string
+    broken: readonly Broken[]
+    action: string
+    details?: object
+    /** A model draft may replace a person's own text only when that person
+     *  asked for it (the dashboard's "Draft again"). */
+    mayReplacePerson?: boolean
+  },
 ): Draft {
   return db.transaction(() => {
     const before = draftFor(db, key)
@@ -75,6 +84,13 @@ export function saveDraft(
     // Only a person's edit cancels an approval; a model draft never replaces one.
     if (before?.status === "approved" && draft.writtenBy === "model")
       throw new Error(`draft ${String(before.id)} was approved meanwhile; it is kept as approved`)
+    if (
+      before &&
+      before.writtenBy !== "model" &&
+      draft.writtenBy === "model" &&
+      draft.mayReplacePerson !== true
+    )
+      throw new Error(`${before.writtenBy} wrote this reply; it is kept rather than replaced by a draft`)
     if (before && db.prepare("select 1 from posts where draft_id = ?").get(before.id))
       throw new Error(
         `draft ${String(before.id)} is being posted; post it again to finish before changing it`,

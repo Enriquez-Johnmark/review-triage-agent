@@ -69,6 +69,13 @@ describe("the dashboard's API", () => {
     expect(stubPosts(db)).toHaveLength(1)
   })
 
+  it("redrafts a person's own reply when they ask for it", async () => {
+    const { app } = await server({ drafter: new FakeDrafter([GOOD]) })
+    await app.inject({ method: "PUT", url: `${REVIEW}/reply`, payload: { text: "Mine.", by: "ana" } })
+    const redraft = await app.inject({ method: "POST", url: `${REVIEW}/draft` })
+    expect(redraft.json()).toMatchObject({ writtenBy: "model", status: "ready" })
+  })
+
   it("says plainly why an action is refused", async () => {
     const { app } = await server()
     const noKey = await app.inject({ method: "POST", url: `${REVIEW}/draft` })

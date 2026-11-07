@@ -6,7 +6,9 @@ import { describe, expect, it } from "vitest"
 import { auditLog } from "../src/store/audit.ts"
 import { draftFor } from "../src/store/drafts.ts"
 import { mcp } from "./fixtures/mcp.ts"
-import { FakeDrafter, GOOD, KEY } from "./fixtures/replies.ts"
+import { writeReply } from "../src/commands/replies.ts"
+import { withSupport } from "../src/core/reply-rules.ts"
+import { FakeDrafter, GOOD, KEY, settings, SUPPORT } from "./fixtures/replies.ts"
 
 describe("F2", () => {
   it("f2_the_mcp_server_offers_exactly_its_five_tools", async () => {
@@ -33,6 +35,20 @@ describe("F2", () => {
     })
     expect(draftFor(db, KEY)).toMatchObject({ status: "ready", approvedFingerprint: null })
     expect(auditLog(db).map((entry) => entry.action)).not.toContain("reply.approved")
+  })
+
+  it("f2_draft_reply_never_replaces_a_reply_a_person_wrote", async () => {
+    const { call, db, clock } = await mcp(new FakeDrafter([GOOD]))
+    const mine = withSupport("Sorry about the update. We are looking into it.", SUPPORT)
+    writeReply(db, clock, KEY, mine, "ana", settings)
+
+    const result = await call("draft_reply", { store: KEY.store, id: KEY.storeReviewId })
+
+    expect(result).toMatchObject({
+      isError: true,
+      text: "ana wrote this reply; it is kept rather than replaced by a draft",
+    })
+    expect(draftFor(db, KEY)?.text).toBe(mine)
   })
 
   it("f2_no_tool_can_approve_or_post_and_the_server_cant_reach_those_functions", async () => {

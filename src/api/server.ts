@@ -172,7 +172,8 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     const key = reviewKey(request.params)
     const drafter = deps.drafter
     if (!drafter) throw new Refused("set ANTHROPIC_API_KEY in .env to draft replies with Claude")
-    return act(() => draftReply(db, clock, drafter, replySettings(), key))
+    // The person clicked "Draft again": their own text may be replaced.
+    return act(() => draftReply(db, clock, drafter, replySettings(), key, { mayReplacePerson: true }))
   })
 
   app.put("/api/reviews/:store/:id/reply", (request) => {

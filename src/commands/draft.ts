@@ -27,6 +27,8 @@ export async function draftReply(
   drafter: Drafter,
   settings: ReplySettings,
   key: ReviewKey,
+  /** Set when a person asked to redraft a reply they wrote (the dashboard). */
+  options: { mayReplacePerson?: boolean } = {},
 ): Promise<Draft> {
   const row = db
     .prepare(
@@ -41,6 +43,8 @@ export async function draftReply(
   const existing = draftFor(db, key)
   if (existing && (existing.status === "approved" || existing.status === "posted"))
     throw new Error(`the reply is already ${existing.status}`)
+  if (existing && existing.writtenBy !== "model" && options.mayReplacePerson !== true)
+    throw new Error(`${existing.writtenBy} wrote this reply; it is kept rather than replaced by a draft`)
 
   const cause = settings.causes.find((known) => known.id === label.cause)?.label ?? label.cause
   const input = { text: review.text, stars: review.stars, appVersion: review.appVersion, cause }
@@ -65,6 +69,7 @@ export async function draftReply(
     broken,
     action: "reply.drafted",
     details: { model: drafter.model },
+    mayReplacePerson: options.mayReplacePerson === true,
   })
 }
 
