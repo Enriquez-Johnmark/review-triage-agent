@@ -68,3 +68,64 @@ export function weeklySpikes(events: readonly CauseEvent[]): WeeklySpike[] {
 }
 
 const weekOfStart = (start: number) => new Date(start).toISOString().slice(0, 10)
+
+/** One sorted review with the app version it was written about. */
+export interface VersionEvent {
+  appVersion: string
+  cause: string
+}
+
+export interface VersionSpike {
+  version: string
+  previousVersion: string
+  crashShare: number
+  previousCrashShare: number
+  crashes: number
+}
+
+/** Orders app versions by their numbers ("4.10.0" after "4.9.2"); text that
+ *  isn't a number is compared as text. */
+export function compareVersions(a: string, b: string): number {
+  const parts = (version: string) => version.split(/[.\-+ ]/)
+  const [left, right] = [parts(a), parts(b)]
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const [x, y] = [left[index] ?? "0", right[index] ?? "0"]
+    const [nx, ny] = [Number(x), Number(y)]
+    const order =
+      Number.isInteger(nx) && Number.isInteger(ny) ? nx - ny : x.localeCompare(y, "en", { numeric: true })
+    if (order !== 0) return order
+  }
+  return 0
+}
+
+/** A version is a spike when its share of `crashCause` reviews is at least
+ *  double the previous version's (C2), and, as with weeks, at least 5 of its
+ *  reviews are crashes, so a version with three reviews isn't called. The
+ *  first version has nothing to be compared with. Newest version first. */
+export function versionSpikes(events: readonly VersionEvent[], crashCause = "crash"): VersionSpike[] {
+  const byVersion = new Map<string, { crashes: number; total: number }>()
+  for (const event of events) {
+    const counts = byVersion.get(event.appVersion) ?? { crashes: 0, total: 0 }
+    counts.total += 1
+    if (event.cause === crashCause) counts.crashes += 1
+    byVersion.set(event.appVersion, counts)
+  }
+  const versions = [...byVersion.keys()].sort(compareVersions)
+  const spikes: VersionSpike[] = []
+  versions.forEach((version, index) => {
+    const previousVersion = versions[index - 1]
+    const now = byVersion.get(version)
+    const before = previousVersion === undefined ? undefined : byVersion.get(previousVersion)
+    if (previousVersion === undefined || !now || !before || now.crashes < MIN_SPIKE_REVIEWS) return
+    // crashes/total >= 2 × before.crashes/before.total, in whole numbers.
+    if (now.crashes * before.total < 2 * before.crashes * now.total) return
+    spikes.push({
+      version,
+      previousVersion,
+      crashShare: now.crashes / now.total,
+      previousCrashShare: before.crashes / before.total,
+      crashes: now.crashes,
+    })
+  })
+  return spikes.reverse()
+}
