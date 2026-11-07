@@ -4,6 +4,7 @@ import type { Poster } from "../post/poster.ts"
 import { audit } from "../store/audit.ts"
 import type { Db } from "../store/db.ts"
 import { type Draft, draftById, draftSubject } from "../store/drafts.ts"
+import { person } from "./replies.ts"
 
 /** What became of a post. */
 export type Posted = { kind: "posted"; key: string } | { kind: "already_posted"; key: string }
@@ -19,6 +20,7 @@ export async function postReply(
   id: number,
   by: string,
 ): Promise<Posted> {
+  const sender = person(by)
   const started = db.transaction(() => {
     const draft = draftById(db, id)
     if (!draft) throw new Error(`no such draft: ${String(id)}`)
@@ -60,7 +62,7 @@ export async function postReply(
     db.prepare("update posts set status = 'posted', posted_at = ? where key = ?").run(at, key)
     db.prepare("update drafts set status = 'posted', updated_at = ? where id = ?").run(at, id)
     audit(db, clock, {
-      actor: by,
+      actor: sender,
       action: "reply.posted",
       subject: draftSubject(id),
       details: { key, poster: poster.name, fingerprint: draft.approvedFingerprint },

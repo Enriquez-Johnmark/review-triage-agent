@@ -42,6 +42,12 @@ describe("E1", () => {
     expect(stubPosts(db)).toEqual([])
   })
 
+  it("e1_only_a_person_by_name_posts", async () => {
+    const { db, clock, draft, stub } = await approved()
+    await expect(postReply(db, clock, stub, draft.id, "model")).rejects.toThrow("only a person")
+    expect(stubPosts(db)).toEqual([])
+  })
+
   it("e1_only_the_post_command_calls_a_poster", () => {
     const files = (dir: string): string[] =>
       readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>

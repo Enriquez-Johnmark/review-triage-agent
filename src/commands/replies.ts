@@ -8,7 +8,7 @@ import { labelFor, type ReviewKey } from "../store/labels.ts"
 import type { ReplySettings } from "./draft.ts"
 
 /** Only a person approves, edits or refuses; the model's name is refused. */
-function person(by: string): string {
+export function person(by: string): string {
   const name = by.trim()
   if (name === "" || name === "model") throw new Error("only a person, by name, can do this")
   return name
