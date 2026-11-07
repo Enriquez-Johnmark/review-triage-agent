@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest"
 
 import { draftReply, draftWaiting } from "../src/commands/draft.ts"
 import { auditLog } from "../src/store/audit.ts"
-import { listDrafts } from "../src/store/drafts.ts"
+import { draftFor, listDrafts } from "../src/store/drafts.ts"
+import { approveReply } from "../src/commands/replies.ts"
 import { FakeDrafter, GOOD, KEY, PROMISE, settings, SUPPORT, world } from "./fixtures/replies.ts"
 
 describe("D3", () => {
@@ -102,5 +103,21 @@ describe("drafting the queue", () => {
       failed: 1,
     })
     expect(listDrafts(db, ["com.example.wallet"])).toEqual([])
+  })
+})
+
+describe("drafting while a person acts", () => {
+  it("a model draft that arrives after a person approved the reply doesn't replace it", async () => {
+    const { db, clock } = world()
+    const first = await draftReply(db, clock, new FakeDrafter([GOOD]), settings, KEY)
+    const slow = new FakeDrafter([`${GOOD} Thanks!`])
+    const answer = slow.draft.bind(slow)
+    slow.draft = (input, guide) => {
+      approveReply(db, clock, first.id, "ana", settings) // while the model is thinking
+      return answer(input, guide)
+    }
+
+    await expect(draftReply(db, clock, slow, settings, KEY)).rejects.toThrow("approved")
+    expect(draftFor(db, KEY)).toMatchObject({ status: "approved", text: first.text })
   })
 })

@@ -60,8 +60,9 @@ export function draftFor(db: Db, key: ReviewKey): Draft | undefined {
 
 export const draftSubject = (id: number) => `draft:${String(id)}`
 
-/** Keeps a new text for a review's reply, replacing one not yet approved or
- *  posted, and logs it (E4). Any approval is gone with the old text. */
+/** Keeps a new text for a review's reply and logs it (E4). A posted reply is
+ *  never replaced, nor an approved one by the model; a person's edit of an
+ *  approved reply cancels the approval with the old text (E2). */
 export function saveDraft(
   db: Db,
   clock: Clock,
@@ -71,6 +72,9 @@ export function saveDraft(
   return db.transaction(() => {
     const before = draftFor(db, key)
     if (before?.status === "posted") throw new Error(`draft ${String(before.id)} is already posted`)
+    // Only a person's edit cancels an approval; a model draft never replaces one.
+    if (before?.status === "approved" && draft.writtenBy === "model")
+      throw new Error(`draft ${String(before.id)} was approved meanwhile; it is kept as approved`)
     if (before && db.prepare("select 1 from posts where draft_id = ?").get(before.id))
       throw new Error(
         `draft ${String(before.id)} is being posted; post it again to finish before changing it`,
