@@ -87,6 +87,11 @@ const MIGRATIONS: readonly string[] = [
      text text not null,
      at text not null
    );`,
+  // The dashboard's settings, one row per name, the value as JSON.
+  `create table settings (
+     name text primary key,
+     value text not null
+   );`,
 ]
 
 export type Db = Database.Database
