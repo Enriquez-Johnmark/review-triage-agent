@@ -55,9 +55,16 @@ Every answer is parsed with zod; anything that doesn't match goes to needs a per
 
 Reviewer names are dropped inside the fetcher, before anything is stored. Reviews are keyed by store and store review ID, so fetching again adds nothing.
 
+## Replies
+
+- **The support channel is added by code**, after the model's reply, so every reply ends with it (D1); the model is told the room left and never writes a channel, phone number, email or link.
+- **The rule checker** (`src/core/reply-rules.ts`) uses word lists in English, Tagalog and Taglish. It errs on the strict side: a reply wrongly refused is redrafted or written by a person, while a reply wrongly passed would go public. For example, "bukas" (tomorrow, but also "open") counts as a promised date.
+- **Language** is told apart by common words of each language. A review a person sorted by hand has no language label, so its reply's language isn't checked.
+- **A person, by name,** writes, edits, approves, refuses and posts; the model's name is refused. A reply that breaks a rule can't be approved, and a model draft never replaces an approved reply.
+
 ## Posting once
 
-As in the owner's engine, Nudgewright: an approved text gets a unique key, recorded before the poster is called; a reply already posted is never sent again. `StubPoster` records what would have been posted; `GooglePlayPoster` calls Google's Reply to Reviews API and is used only when credentials are set.
+As in the owner's engine, Nudgewright: an approved text gets a unique key, recorded before the poster is called; a reply already posted is never sent again. `StubPoster` records what would have been posted; `GooglePlayPoster` calls Google's Reply to Reviews API and is used only when credentials are set (`GOOGLE_PLAY_CREDENTIALS`, the app owner's service account key). Replying again on Google replaces the reply, so finishing a post cut off by a crash can't post twice. Apple has no public reply API: App Store replies are posted by hand, and the Google poster refuses them before anything is recorded.
 
 ## Spikes and the summary numbers
 
