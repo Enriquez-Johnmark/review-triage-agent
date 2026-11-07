@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs"
 import { resolve } from "node:path"
 
+import { APIError } from "@anthropic-ai/sdk"
 import fastifyStatic from "@fastify/static"
 import Fastify, { type FastifyInstance } from "fastify"
 import { z } from "zod"
@@ -72,12 +73,20 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     if (error instanceof z.ZodError)
       return reply.code(400).send({ error: error.issues.map((issue) => issue.message).join("; ") })
     if (error instanceof Refused) return reply.code(400).send({ error: error.message })
-    // Anything else may carry what it shouldn't (an SDK's error can quote a
-    // request), so only a plain message goes out.
+    // The model client's errors can quote the request, so only their kind
+    // and status are told, here and in the log (F5).
+    if (error instanceof APIError) {
+      const status = error.status === undefined ? "no answer" : String(error.status)
+      console.error(`Claude couldn't answer: ${error.name} (${status})`)
+      return reply.code(502).send({ error: `Claude couldn't answer (${status}); see the command line` })
+    }
+    // Anything else may carry what it shouldn't too, so only a plain message
+    // goes out, and its kind to the log.
     const code = (error as { statusCode?: number }).statusCode
     if (code !== undefined && code >= 400 && code < 500)
       return reply.code(code).send({ error: "bad request" })
-    return reply.code(500).send({ error: "something went wrong; see the command line for details" })
+    console.error(`The dashboard's request failed: ${error instanceof Error ? error.name : "unknown error"}`)
+    return reply.code(500).send({ error: "something went wrong; see the command line" })
   })
 
   /** Runs one of the app's own functions. Its refusals are plain `Error`s
