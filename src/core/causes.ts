@@ -10,11 +10,15 @@ export interface Cause {
   description: string
 }
 
+/** The cause app-version spikes are measured on (C2); an app with its own
+ *  causes keeps this ID for its crash cause. */
+export const CRASH_CAUSE = "crash"
+
 /** The default causes for a finance app (spec, Round 1). Other kinds of app
  *  set their own in the settings. */
 export const FINANCE_CAUSES: readonly Cause[] = [
   {
-    id: "crash",
+    id: CRASH_CAUSE,
     label: "Crash or won't open",
     description: "the app crashes, freezes, won't open, or forces updates",
   },

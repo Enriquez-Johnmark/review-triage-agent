@@ -1,3 +1,5 @@
+import { CRASH_CAUSE } from "./causes.ts"
+
 /** Spikes: causes that jump in a week (C1) or with an app version (C2). Pure
  *  functions of stored labels; nothing here reads the clock. */
 
@@ -102,7 +104,7 @@ export function compareVersions(a: string, b: string): number {
  *  double the previous version's (C2), and, as with weeks, at least 5 of its
  *  reviews are crashes, so a version with three reviews isn't called. The
  *  first version has nothing to be compared with. Newest version first. */
-export function versionSpikes(events: readonly VersionEvent[], crashCause = "crash"): VersionSpike[] {
+export function versionSpikes(events: readonly VersionEvent[], crashCause = CRASH_CAUSE): VersionSpike[] {
   const byVersion = new Map<string, { crashes: number; total: number }>()
   for (const event of events) {
     const counts = byVersion.get(event.appVersion) ?? { crashes: 0, total: 0 }
