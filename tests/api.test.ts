@@ -4,7 +4,9 @@ import { join } from "node:path"
 
 import { describe, expect, it } from "vitest"
 
-import type { OverviewAnswer, ReviewAnswer } from "../src/api/types.ts"
+import type { OverviewAnswer, ReviewAnswer, ReviewEntry } from "../src/api/types.ts"
+import { saveModelOutcome } from "../src/store/labels.ts"
+import { saveReviews } from "../src/store/reviews.ts"
 import { stubPosts } from "../src/post/stub.ts"
 import { GOOD, FakeDrafter } from "./fixtures/replies.ts"
 import { server } from "./fixtures/server.ts"
@@ -35,6 +37,9 @@ describe("the dashboard's API", () => {
     expect(crash.json()).toHaveLength(1)
     expect(login.json()).toEqual([])
     expect((await app.inject("/api/reviews?week=last-week")).statusCode).toBe(400)
+    expect((await app.inject("/api/reviews?waiting=needs_person")).json()).toEqual([])
+    expect((await app.inject("/api/reviews?waiting=unsorted")).json()).toEqual([])
+    expect((await app.inject("/api/reviews?week=2026-11-02")).json()).toHaveLength(1)
   })
 
   it("drafts, approves and posts a reply once, through the same rules", async () => {
@@ -130,5 +135,25 @@ describe("serving the dashboard", () => {
     expect((await app.inject("/late.js")).body).toBe("built after the server started")
     expect((await app.inject("/assets/gone.js")).statusCode).toBe(404)
     expect((await app.inject("/api/nothing")).statusCode).toBe(404)
+  })
+})
+
+describe("the reviews waiting on the overview", () => {
+  it("lists those left for a person and those not sorted yet", async () => {
+    const { app, db, clock, review } = await server()
+    saveReviews(db, clock, [{ ...review, storeReviewId: "gp-new" }])
+    saveReviews(db, clock, [{ ...review, storeReviewId: "gp-unsure" }])
+    saveModelOutcome(
+      db,
+      clock,
+      { store: "google_play", storeReviewId: "gp-unsure" },
+      { kind: "needs_person", reason: "unsure" },
+      "fake",
+    )
+
+    const ids = async (url: string) =>
+      (await app.inject(url)).json<ReviewEntry[]>().map((entry) => entry.review.storeReviewId)
+    expect(await ids("/api/reviews?waiting=unsorted")).toEqual(["gp-new"])
+    expect(await ids("/api/reviews?waiting=needs_person")).toEqual(["gp-unsure"])
   })
 })

@@ -18,6 +18,8 @@ export interface ReviewFilter {
   /** A week's Monday, `YYYY-MM-DD` (Manila). */
   week?: string | undefined
   appVersion?: string | undefined
+  /** Only those the model left for a person, or that no run has sorted yet. */
+  waiting?: "needs_person" | "unsorted" | undefined
   /** One review only. */
   key?: ReviewKey | undefined
   limit: number
@@ -38,6 +40,9 @@ export function findReviews(db: Db, appIds: readonly string[] | null, filter: Re
          and (@store is null or (r.store = @store and r.store_review_id = @reviewId))
          and (@cause is null or l.cause = @cause)
          and (@version is null or r.app_version = @version)
+         and (@waiting is null
+              or (@waiting = 'needs_person' and l.needs_person_reason is not null)
+              or (@waiting = 'unsorted' and l.store is null))
        order by r.at desc, r.store, r.store_review_id`,
     )
     .all({
@@ -46,6 +51,7 @@ export function findReviews(db: Db, appIds: readonly string[] | null, filter: Re
       reviewId: filter.key?.storeReviewId ?? null,
       cause: filter.cause ?? null,
       version: filter.appVersion ?? null,
+      waiting: filter.waiting ?? null,
     }) as (ReviewRow & Partial<LabelRow> & { draft_status: DraftStatus | null })[]
   return rows
     .filter((row) => filter.week === undefined || weekOf(row.at) === filter.week)

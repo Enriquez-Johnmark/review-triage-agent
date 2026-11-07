@@ -86,8 +86,8 @@ function FetchResult({ answer }: { answer: FetchAnswer }) {
 
 function Numbers({ data }: { data: OverviewAnswer }) {
   const week = data.summary.overview
-  const tiles = [
-    { label: "Reviews this week", value: String(week.reviews) },
+  const tiles: { label: string; value: string; note?: string; to?: string }[] = [
+    { label: "Reviews this week", value: String(week.reviews), to: `/reviews?week=${week.week}` },
     {
       label: "Answered",
       value: week.shareAnswered === null ? "—" : percent(week.shareAnswered),
@@ -96,15 +96,31 @@ function Numbers({ data }: { data: OverviewAnswer }) {
           ? "the stores don't say"
           : `${week.answered} of ${week.replyKnown}`,
     },
-    { label: "Waiting for a person", value: String(week.needsPerson) },
-    { label: "Not sorted yet", value: String(week.unsorted) },
+    {
+      label: "Waiting for a person",
+      value: String(week.needsPerson),
+      to: `/reviews?week=${week.week}&waiting=needs_person`,
+    },
+    {
+      label: "Not sorted yet",
+      value: String(week.unsorted),
+      to: `/reviews?week=${week.week}&waiting=unsorted`,
+    },
   ]
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
       {tiles.map((tile) => (
         <Card key={tile.label}>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{tile.label}</p>
+            <p className="text-sm text-muted-foreground">
+              {tile.to ? (
+                <Link className="hover:underline" to={tile.to}>
+                  {tile.label}
+                </Link>
+              ) : (
+                tile.label
+              )}
+            </p>
             <p className="text-3xl font-semibold tabular-nums">{tile.value}</p>
             {tile.note && <p className="text-xs text-muted-foreground">{tile.note}</p>}
           </CardContent>

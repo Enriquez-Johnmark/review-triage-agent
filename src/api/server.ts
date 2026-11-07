@@ -132,6 +132,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
         cause: z.string().max(50).optional(),
         week: z.iso.date().optional(),
         version: z.string().max(50).optional(),
+        waiting: z.enum(["needs_person", "unsorted"]).optional(),
       })
       .strict()
       .parse(request.query)
@@ -139,6 +140,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
       cause: query.cause,
       week: query.week,
       appVersion: query.version,
+      waiting: query.waiting,
       limit: 200,
     })
   })

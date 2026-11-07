@@ -13,7 +13,10 @@ export function ReviewsPage() {
   const cause = params.get("cause")
   const week = params.get("week")
   const version = params.get("version")
+  const waiting = params.get("waiting")
   const title = [
+    waiting === "needs_person" && "waiting for a person",
+    waiting === "unsorted" && "not sorted yet",
     cause && causeName(causes, cause),
     week && `week of ${weekLabel(week)}`,
     version && `version ${version}`,
