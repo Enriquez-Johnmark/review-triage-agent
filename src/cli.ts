@@ -10,6 +10,7 @@
 //   pnpm cli refuse --draft 3 --by ana --reason "..."          refuse a reply
 //   pnpm cli post --draft 3 --by ana                           post an approved reply (the stand-in unless
 //                                                              GOOGLE_PLAY_CREDENTIALS is set)
+//   pnpm cli serve                                             the dashboard, at http://127.0.0.1:4317
 //   pnpm cli eval                                              score the recorded answers on the labelled set
 //   pnpm cli eval --record                                     ask Claude, and record its answers (needs the API key)
 
@@ -17,6 +18,7 @@ import { existsSync, mkdirSync } from "node:fs"
 import { dirname } from "node:path"
 import { parseArgs } from "node:util"
 
+import { buildServer } from "./api/server.ts"
 import { systemClock } from "./clock.ts"
 import { evaluate, formatReport, loadLabelled } from "./commands/eval.ts"
 import { fetchNew } from "./commands/fetch.ts"
@@ -115,6 +117,7 @@ const COMMANDS = [
   "approve",
   "refuse",
   "post",
+  "serve",
   "eval",
 ]
 const command = positionals[0] ?? ""
@@ -217,6 +220,25 @@ try {
         posted.kind === "posted"
           ? `posted through ${poster.name} (${posted.key})`
           : `already posted (${posted.key})`,
+      )
+      break
+    }
+    case "serve": {
+      const hasKey = Boolean(process.env.ANTHROPIC_API_KEY)
+      const app = await buildServer({
+        db,
+        clock: systemClock,
+        sorter: hasKey ? new ClaudeSorter() : undefined,
+        drafter: hasKey ? new ClaudeDrafter() : undefined,
+        poster: choosePoster(process.env, db, systemClock),
+        fetchers: { googlePlay: (id) => fetchGooglePlay(id), appStore: (id) => fetchAppStore(id) },
+        webDir: "web/dist",
+      })
+      const port = Number(process.env.PORT ?? 4317)
+      // Only this computer can reach it: it is one person's local tool.
+      await app.listen({ host: "127.0.0.1", port })
+      console.log(
+        `The dashboard is at http://127.0.0.1:${String(port)}${hasKey ? "" : " (no API key: sorting and drafting are off)"}`,
       )
       break
     }
