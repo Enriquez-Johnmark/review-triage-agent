@@ -17,3 +17,7 @@ Every decision the owner made, dated.
 - **Any app:** the agent works for any app on Google Play or the App Store; causes are a setting with a finance-app default; the public demo uses two or three popular Philippine finance apps so no single company stands out, and the repository names no app maker.
 - **Spec Round 3:** 25 acceptance criteria (A1–G1); the spec is complete.
 - **Architecture** (`docs/architecture.md`): one TypeScript package with the dashboard in `web/`; SQLite; the model behind an interface with live and recorded versions; posting once with a key recorded first; an injected clock; the official MCP SDK; n8n calling `/api/summary`; build order M1–M7.
+
+## 2026-11-07
+
+- **Real test set:** the agent's author prepares the labels in the cloud session: 149 recent public Google Play reviews of three popular Philippine finance apps (50 each, one dropped for naming a person), mixed by stars, without reviewer names, phone numbers, emails or long numbers. The file goes to the owner's `data/` folder and is never committed; the owner spot-checks 20 chosen by a fixed hash. Only the scores are published, without naming the apps.
