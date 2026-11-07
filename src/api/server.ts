@@ -238,10 +238,13 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
   }
 
   if (deps.webDir && existsSync(resolve(deps.webDir, "index.html"))) {
-    await app.register(fastifyStatic, { root: resolve(deps.webDir), wildcard: false })
-    // The dashboard's own addresses (/queue, /reviews/…) all load its page.
+    // Files are looked up when asked for, so a rebuilt dashboard is served
+    // without restarting.
+    await app.register(fastifyStatic, { root: resolve(deps.webDir) })
+    // The dashboard's own addresses (/queue, /reviews/…) all load its page;
+    // a missing API address or file is a plain 404.
     app.setNotFoundHandler((request, reply) => {
-      if (request.url.startsWith("/api/")) return reply.code(404).send({ error: "no such address" })
+      if (/^\/(api|assets)\//.test(request.url)) return reply.code(404).send({ error: "no such address" })
       return reply.sendFile("index.html")
     })
   }

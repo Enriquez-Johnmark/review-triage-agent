@@ -59,7 +59,7 @@ export function OverviewPage() {
         <Spikes data={overview.data} />
       </div>
       <Card>
-        <CardContent className="space-y-8 pt-6">
+        <CardContent className="space-y-8">
           <CausesByWeekChart bars={overview.data.causesByWeek} causes={overview.data.causes} />
           <CrashShareChart points={overview.data.crashShareByVersion} />
         </CardContent>
@@ -103,7 +103,7 @@ function Numbers({ data }: { data: OverviewAnswer }) {
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
       {tiles.map((tile) => (
         <Card key={tile.label}>
-          <CardContent className="pt-6">
+          <CardContent>
             <p className="text-sm text-muted-foreground">{tile.label}</p>
             <p className="text-3xl font-semibold tabular-nums">{tile.value}</p>
             {tile.note && <p className="text-xs text-muted-foreground">{tile.note}</p>}

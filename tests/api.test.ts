@@ -1,3 +1,7 @@
+import { mkdtempSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+
 import { describe, expect, it } from "vitest"
 
 import type { OverviewAnswer, ReviewAnswer } from "../src/api/types.ts"
@@ -98,5 +102,20 @@ describe("the dashboard's API", () => {
       (await app.inject({ method: "PUT", url: "/api/settings", payload: { threshold: 2, by: "ana" } }))
         .statusCode,
     ).toBe(400)
+  })
+})
+
+describe("serving the dashboard", () => {
+  it("serves its page at every address of its own, and a 404 for missing files and API addresses", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "web-"))
+    writeFileSync(join(dir, "index.html"), "<html>dashboard</html>")
+    const { app } = await server({ webDir: dir })
+
+    expect((await app.inject("/queue")).body).toBe("<html>dashboard</html>")
+    expect((await app.inject("/reviews/google_play/gp-1")).body).toBe("<html>dashboard</html>")
+    writeFileSync(join(dir, "late.js"), "built after the server started")
+    expect((await app.inject("/late.js")).body).toBe("built after the server started")
+    expect((await app.inject("/assets/gone.js")).statusCode).toBe(404)
+    expect((await app.inject("/api/nothing")).statusCode).toBe(404)
   })
 })

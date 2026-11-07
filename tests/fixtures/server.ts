@@ -7,7 +7,7 @@ import { StubPoster } from "../../src/post/stub.ts"
 import { saveSettings } from "../../src/store/settings.ts"
 import { SUPPORT, world } from "./replies.ts"
 
-export async function server(models: { sorter?: Sorter; drafter?: Drafter } = {}) {
+export async function server(models: { sorter?: Sorter; drafter?: Drafter; webDir?: string } = {}) {
   const w = world()
   saveSettings(w.db, w.clock, { googlePlayId: "com.example.wallet", supportChannel: SUPPORT }, "ana")
   const app = await buildServer({
@@ -20,6 +20,7 @@ export async function server(models: { sorter?: Sorter; drafter?: Drafter } = {}
       googlePlay: () => Promise.resolve({ reviews: [], skipped: 0 }),
       appStore: () => Promise.resolve({ reviews: [], skipped: 0 }),
     },
+    ...(models.webDir ? { webDir: models.webDir } : {}),
   })
   return { ...w, app }
 }

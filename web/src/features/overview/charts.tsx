@@ -84,7 +84,10 @@ export function CausesByWeekChart({ bars, causes }: { bars: WeekBar[]; causes: C
             <XAxis dataKey="week" tick={axis} tickLine={false} axisLine={false} />
             <YAxis allowDecimals={false} tick={axis} tickLine={false} axisLine={false} />
             <Tooltip cursor={{ fill: "var(--muted)" }} contentStyle={tooltipStyle} />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Legend
+              wrapperStyle={{ fontSize: 12 }}
+              formatter={(name: string) => <span className="text-foreground">{name}</span>}
+            />
             {series.map((s, index) => (
               <Bar
                 key={s.key}
@@ -96,6 +99,7 @@ export function CausesByWeekChart({ bars, causes }: { bars: WeekBar[]; causes: C
                 strokeWidth={2}
                 maxBarSize={36}
                 radius={index === series.length - 1 ? [4, 4, 0, 0] : 0}
+                isAnimationActive={false}
               />
             ))}
           </BarChart>
@@ -130,7 +134,13 @@ export function CrashShareChart({ points }: { points: VersionPoint[] }) {
         <ResponsiveContainer width="100%" height={240}>
           <LineChart data={rows} margin={{ top: 8, right: 16, bottom: 0, left: -16 }}>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
-            <XAxis dataKey="version" tick={axis} tickLine={false} axisLine={false} />
+            <XAxis
+              dataKey="version"
+              tick={axis}
+              tickLine={false}
+              axisLine={false}
+              padding={{ left: 24, right: 24 }}
+            />
             <YAxis domain={[0, 100]} unit="%" tick={axis} tickLine={false} axisLine={false} />
             <Tooltip
               contentStyle={tooltipStyle}
