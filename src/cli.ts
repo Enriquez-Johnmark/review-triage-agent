@@ -2,7 +2,7 @@
 //   pnpm cli fetch --play com.example.app --apple 123456789   new reviews of an app
 //   pnpm cli load-sample                                       the made-up reviews, for the demo
 //   pnpm cli sort --app com.example.app                        sort new reviews with Claude (needs the API key)
-//   pnpm cli summary --app com.example.app                     this week's numbers and the spikes
+//   pnpm cli summary --play com.example.app --apple 123456789  this week's numbers and the spikes
 //   pnpm cli eval                                              score the recorded answers on the labelled set
 //   pnpm cli eval --record                                     ask Claude, and record its answers (needs the API key)
 
@@ -102,8 +102,9 @@ switch (command) {
     break
   }
   case "summary": {
-    if (!values.app) fail("give --app with the app's ID")
-    console.log(formatSummary(summarise(db, systemClock, values.app, FINANCE_CAUSES), FINANCE_CAUSES))
+    const appIds = [values.play, values.apple].filter((id) => id !== undefined)
+    if (appIds.length === 0) fail("give --play and/or --apple with the app's store IDs")
+    console.log(formatSummary(summarise(db, systemClock, appIds, FINANCE_CAUSES), FINANCE_CAUSES))
     break
   }
   case "eval": {

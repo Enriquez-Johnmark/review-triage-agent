@@ -8,17 +8,18 @@ export interface SummaryRow {
   companyReplied: boolean | null
 }
 
-/** Every stored review of `appId` with its cause, oldest first. One query. */
-export function summaryRows(db: Db, appId: string): SummaryRow[] {
+/** Every stored review of an app, under any of its store IDs (`appIds`: its
+ *  Google Play and App Store IDs), with its cause, oldest first. One query. */
+export function summaryRows(db: Db, appIds: readonly string[]): SummaryRow[] {
   const rows = db
     .prepare(
       `select r.at, r.app_version, r.company_replied, l.cause
        from reviews r
        left join labels l on l.store = r.store and l.store_review_id = r.store_review_id
-       where r.app_id = ?
+       where r.app_id in (select value from json_each(?))
        order by r.at, r.store, r.store_review_id`,
     )
-    .all(appId) as {
+    .all(JSON.stringify(appIds)) as {
     at: string
     app_version: string | null
     company_replied: number | null

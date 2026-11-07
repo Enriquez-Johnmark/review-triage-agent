@@ -52,7 +52,7 @@ describe("F1", () => {
       review("2026-11-03T00:00:00.000Z", "crash", false, "com.other.app"), // another app
     ])
 
-    const { overview } = summarise(db, clock, APP, FINANCE_CAUSES)
+    const { overview } = summarise(db, clock, [APP], FINANCE_CAUSES)
 
     expect(overview).toEqual({
       week: "2026-11-02",
@@ -81,7 +81,7 @@ describe("F1", () => {
     )
     saveReviews(db, clock, [review("2026-11-03T01:00:00.000Z", "crash", false)]) // not sorted yet
 
-    const { overview } = summarise(db, clock, APP, FINANCE_CAUSES)
+    const { overview } = summarise(db, clock, [APP], FINANCE_CAUSES)
 
     expect(overview.topCauses).toEqual([{ cause: "login", count: 1 }])
     expect(overview.reviews).toBe(2)
@@ -90,7 +90,7 @@ describe("F1", () => {
 
   it("f1_a_week_with_no_known_replies_has_no_share", async () => {
     const { db, clock } = await world([review("2026-11-03T00:00:00.000Z", "crash", null)])
-    expect(summarise(db, clock, APP, FINANCE_CAUSES).overview.shareAnswered).toBeNull()
+    expect(summarise(db, clock, [APP], FINANCE_CAUSES).overview.shareAnswered).toBeNull()
   })
 
   it("f1_the_summary_carries_the_spikes_from_the_stored_labels", async () => {
@@ -99,8 +99,19 @@ describe("F1", () => {
       ...weeks.map((week) => review(`${week}T04:00:00.000Z`, "crash", false)),
       ...Array.from({ length: 5 }, () => review("2026-11-03T04:00:00.000Z", "crash", false)),
     ])
-    const { weeklySpikes } = summarise(db, clock, APP, FINANCE_CAUSES)
+    const { weeklySpikes } = summarise(db, clock, [APP], FINANCE_CAUSES)
     expect(weeklySpikes).toEqual([{ cause: "crash", week: "2026-11-02", count: 5, previousAverage: 1 }])
+  })
+})
+
+describe("F1, both stores", () => {
+  it("f1_the_overview_counts_an_apps_reviews_from_both_stores", async () => {
+    const { db, clock } = await world([review("2026-11-03T00:00:00.000Z", "crash", false)])
+    saveReviews(db, clock, [
+      { ...review("2026-11-03T01:00:00.000Z", "crash", null, "123456789"), store: "app_store" },
+    ])
+
+    expect(summarise(db, clock, [APP, "123456789"], FINANCE_CAUSES).overview.reviews).toBe(2)
   })
 })
 
@@ -110,7 +121,7 @@ describe("the summary command", () => {
       review("2026-11-03T00:00:00.000Z", "crash", true),
       review("2026-11-03T01:00:00.000Z", "crash", false),
     ])
-    const text = formatSummary(summarise(db, clock, APP, FINANCE_CAUSES), FINANCE_CAUSES)
+    const text = formatSummary(summarise(db, clock, [APP], FINANCE_CAUSES), FINANCE_CAUSES)
     expect(text).toContain("Week of 2026-11-02: 2 reviews, 0 waiting for a person")
     expect(text).toContain("Answered: 50% (1 of 2)")
     expect(text).toContain("Top causes: Crash or won't open 2")

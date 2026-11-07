@@ -12,10 +12,15 @@ export interface Summary {
   versionSpikes: VersionSpike[]
 }
 
-/** This week's numbers and the spikes for `appId`, from the stored reviews
+/** This week's numbers and the spikes for an app (`appIds`: its store IDs), from the stored reviews
  *  and their causes (C1, C2, F1). */
-export function summarise(db: Db, clock: Clock, appId: string, causes: readonly Cause[]): Summary {
-  const rows = summaryRows(db, appId)
+export function summarise(
+  db: Db,
+  clock: Clock,
+  appIds: readonly string[],
+  causes: readonly Cause[],
+): Summary {
+  const rows = summaryRows(db, appIds)
   const sorted = rows.flatMap((row) => (row.cause === null ? [] : [{ ...row, cause: row.cause }]))
   return {
     overview: overview(rows, clock.now(), causes),
