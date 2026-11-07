@@ -1,6 +1,7 @@
 // The commands:
 //   pnpm cli fetch --play com.example.app --apple 123456789   new reviews of an app
 //   pnpm cli load-sample                                       the made-up reviews, for the demo
+//   pnpm cli load-demo                                         120 made-up reviews, sorted, with spikes (no key needed)
 //   pnpm cli sort --app com.example.app                        sort new reviews with Claude (needs the API key)
 //   pnpm cli summary --play com.example.app --apple 123456789  this week's numbers and the spikes
 //   pnpm cli draft --play com.example.app                      draft replies for the queue (needs the API key)
@@ -35,6 +36,7 @@ import { ClaudeSorter, sortQuestion } from "./model/claude.ts"
 import { ClaudeDrafter } from "./model/claudeDrafter.ts"
 import { loadRecordings, RecordedSorter, RecordingSorter } from "./model/recorded.ts"
 import { choosePoster } from "./post/googlePlay.ts"
+import { loadDemo } from "./demo.ts"
 import { sampleReviews } from "./samples.ts"
 import { openDb } from "./store/db.ts"
 import { listDrafts } from "./store/drafts.ts"
@@ -109,6 +111,7 @@ try {
 const COMMANDS = [
   "fetch",
   "load-sample",
+  "load-demo",
   "sort",
   "summary",
   "draft",
@@ -250,6 +253,11 @@ try {
       if (!sorter) fail("no recorded answers yet: run `pnpm cli eval --record` with your API key in .env")
       const report = await evaluate(loadLabelled("samples/labelled.json"), sorter, FINANCE_CAUSES, threshold)
       console.log(formatReport(report))
+      break
+    }
+    case "load-demo": {
+      const added = loadDemo(db, systemClock)
+      console.log(`${String(added)} made-up reviews loaded, sorted, for app com.example.wallet`)
       break
     }
     case "load-sample": {
