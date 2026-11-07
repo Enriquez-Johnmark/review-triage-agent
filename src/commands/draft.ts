@@ -5,7 +5,7 @@ import { parseDraft } from "../model/claudeDrafter.ts"
 import type { Drafter } from "../model/drafter.ts"
 import { inPool } from "../pool.ts"
 import type { Db } from "../store/db.ts"
-import { type Draft, draftFor, saveDraft } from "../store/drafts.ts"
+import { type Draft, draftFor, listDrafts, saveDraft } from "../store/drafts.ts"
 import { labelFor, type ReviewKey } from "../store/labels.ts"
 import { replyQueue } from "../store/queue.ts"
 import { reviewFromRow, type ReviewRow } from "../store/reviews.ts"
@@ -68,6 +68,8 @@ export async function draftReply(
   })
 }
 
+const keyOf = (key: ReviewKey) => `${key.store}:${key.storeReviewId}`
+
 /** What a drafting run did. */
 export interface DraftReport {
   ready: number
@@ -87,9 +89,9 @@ export async function draftWaiting(
   limit: number,
   inParallel = 2,
 ): Promise<DraftReport> {
-  const waiting = appIds
-    .flatMap((appId) => replyQueue(db, appId))
-    .filter((entry) => entry.label?.cause && !draftFor(db, entry.review))
+  const drafted = new Set(listDrafts(db, appIds).map((draft) => keyOf(draft.review)))
+  const waiting = replyQueue(db, appIds)
+    .filter((entry) => entry.label?.cause && !drafted.has(keyOf(entry.review)))
     .slice(0, limit)
   const outcomes = await inPool(waiting, inParallel, (entry) =>
     draftReply(db, clock, drafter, settings, entry.review).then(

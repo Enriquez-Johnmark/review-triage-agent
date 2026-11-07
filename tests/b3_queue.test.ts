@@ -51,7 +51,7 @@ describe("B3", () => {
       { appId: APP, causes: FINANCE_CAUSES, threshold: 0.6 },
     )
 
-    const queue = replyQueue(db, APP)
+    const queue = replyQueue(db, [APP])
 
     expect(queue.map((entry) => entry.review.storeReviewId)).toEqual([
       "old-money",
@@ -60,6 +60,36 @@ describe("B3", () => {
       "old-crash",
     ])
     expect(queue[0]?.label).toMatchObject({ cause: "failed_transaction", moneyInvolved: true })
+  })
+
+  it("b3_money_involved_reviews_come_first_across_both_stores", async () => {
+    const db = openDb(":memory:")
+    const clock = new FixedClock(new Date("2026-11-02T01:00:00Z"))
+    saveReviews(db, clock, [
+      review("play-crash", 1, "2026-10-20T00:00:00.000Z", "crashes"),
+      {
+        ...review("apple-money", 1, "2026-10-01T00:00:00.000Z", "money deducted"),
+        store: "app_store",
+        appId: "123",
+      },
+    ])
+    for (const appId of [APP, "123"])
+      await sortPending(
+        db,
+        clock,
+        new FakeSorter((input) =>
+          confident(
+            input.text.includes("money") ? "failed_transaction" : "crash",
+            input.text.includes("money"),
+          ),
+        ),
+        { appId, causes: FINANCE_CAUSES, threshold: 0.6 },
+      )
+
+    expect(replyQueue(db, [APP, "123"]).map((entry) => entry.review.storeReviewId)).toEqual([
+      "apple-money",
+      "play-crash",
+    ])
   })
 
   it("b3_a_review_the_model_couldnt_sort_waits_in_the_queue_whatever_its_stars", async () => {
@@ -73,6 +103,6 @@ describe("B3", () => {
       { appId: APP, causes: FINANCE_CAUSES, threshold: 0.6 },
     )
 
-    expect(replyQueue(db, APP).map((entry) => entry.review.storeReviewId)).toEqual(["unsure"])
+    expect(replyQueue(db, [APP]).map((entry) => entry.review.storeReviewId)).toEqual(["unsure"])
   })
 })
