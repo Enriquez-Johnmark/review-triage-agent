@@ -16,6 +16,7 @@
 //   pnpm cli mcp                                               the MCP server, over stdio, for Claude
 //   pnpm cli eval                                              score the recorded answers on the labelled set
 //   pnpm cli eval --record                                     ask Claude, and record its answers (needs the API key)
+//   pnpm cli eval --set data/real-labelled.json --record       the same for a real labelled set, kept in data/
 
 import { existsSync, mkdirSync } from "node:fs"
 import { dirname } from "node:path"
@@ -57,6 +58,7 @@ const { positionals, values } = parseArgs({
     apple: { type: "string" },
     app: { type: "string" },
     record: { type: "boolean", default: false },
+    set: { type: "string" },
     threshold: { type: "string" },
     limit: { type: "string", default: "10" },
     draft: { type: "string" },
@@ -71,7 +73,15 @@ const { positionals, values } = parseArgs({
 // The owner's API key, kept out of git in `.env` (never a Claude subscription).
 if (existsSync(".env")) process.loadEnvFile(".env")
 
-const RECORDINGS = "samples/recorded-labels.json"
+/** The labelled set `eval` scores, and where its recorded answers are kept:
+ *  the made-up set and its committed recordings, or with `--set`, a real set
+ *  in the ignored data/ folder with its recordings beside it (never committed). */
+function evalFiles(): { set: string; recordings: string } {
+  if (values.set === undefined)
+    return { set: "samples/labelled.json", recordings: "samples/recorded-labels.json" }
+  if (!values.set.startsWith("data/")) fail("a real labelled set lives in data/, which git ignores")
+  return { set: values.set, recordings: values.set.replace(/\.json$/, "") + ".recorded.json" }
+}
 
 /** Claude through the owner's API key only: no other credential is used. */
 function claude(): ClaudeSorter {
@@ -301,17 +311,16 @@ try {
       break
     }
     case "eval": {
-      const recordings = loadRecordings(RECORDINGS)
+      const files = evalFiles()
+      const recordings = loadRecordings(files.recordings)
       const sorter = values.record
-        ? new RecordingSorter(claude(), RECORDINGS)
+        ? new RecordingSorter(claude(), files.recordings)
         : recordings && new RecordedSorter(recordings, sortQuestion)
-      if (!sorter) fail("no recorded answers yet: run `pnpm cli eval --record` with your API key in .env")
-      const report = await evaluate(
-        loadLabelled("samples/labelled.json"),
-        sorter,
-        FINANCE_CAUSES,
-        threshold(),
-      )
+      if (!sorter)
+        fail(
+          `no recorded answers yet: run \`pnpm cli eval${values.set ? ` --set ${values.set}` : ""} --record\` with your API key in .env`,
+        )
+      const report = await evaluate(loadLabelled(files.set), sorter, FINANCE_CAUSES, threshold())
       console.log(formatReport(report))
       break
     }
