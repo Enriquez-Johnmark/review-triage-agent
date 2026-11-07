@@ -80,6 +80,15 @@ How the spec's rules are counted (`src/core/spikes.ts`, `src/core/overview.ts`):
 
 Read only through an injected clock, so tests control weeks and versions.
 
+## The dashboard
+
+- **Local only:** `pnpm cli serve` listens on 127.0.0.1 and answers only requests addressed to this computer (127.0.0.1 or localhost), so a web page can't reach it by DNS rebinding; changes must come from its own pages (the Origin header).
+- **Who:** there are no accounts. The person types their name at the top; it goes with every approval, edit and post, and is kept in that browser only.
+- **The API key** stays in `.env`: the settings page says only whether it is set. A failed Claude call is reported by its status only, in the answer and in the log (F5).
+- **Settings** (the app's store IDs, the support channel, the threshold) are saved in the database and used by the commands too, unless a flag is given.
+- **Charts** use a validated categorical palette: the app's first seven causes have one colour each, always the same; later causes are folded into "Other causes". Each chart can be shown as a table.
+- **The demo:** `pnpm cli load-demo` loads the 120 made-up labelled reviews, dated over the last nine weeks, with a crash spike in version 4.2.0 this week, for the browser test and a first look without a key.
+
 ## MCP
 
 The official `@modelcontextprotocol/sdk` over stdio, using the same `src/core/` and store. Its tool list is fixed in code to the five tools; no approve or post function is reachable from it.

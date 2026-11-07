@@ -6,12 +6,12 @@
 
 Each gate needs the owner's explicit "yes"; an approval for one phase never carries into the next.
 
-| Phase                         | Status                                                                                                                                                          |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Brief                      | done, approved 2026-11-06 (`docs/product/brief.md`)                                                                                                             |
-| 2. Spec & acceptance criteria | done, approved 2026-11-06 (`docs/product/spec.md`, 25 criteria)                                                                                                 |
-| 3. Architecture               | done, approved 2026-11-06 (`docs/architecture.md`)                                                                                                              |
-| 4. Build                      | **in progress**: M1 (fetching, database, sample), M2 (sorting), M3 (spikes, summary) and M4 (replies, approval, posting) done; M5 next (`docs/architecture.md`) |
+| Phase                         | Status                                                                                                                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1. Brief                      | done, approved 2026-11-06 (`docs/product/brief.md`)                                                                                                                            |
+| 2. Spec & acceptance criteria | done, approved 2026-11-06 (`docs/product/spec.md`, 25 criteria)                                                                                                                |
+| 3. Architecture               | done, approved 2026-11-06 (`docs/architecture.md`)                                                                                                                             |
+| 4. Build                      | **in progress**: M1 (fetching, database, sample), M2 (sorting), M3 (spikes, summary) M4 (replies, approval, posting) and M5 (dashboard) done; M6 next (`docs/architecture.md`) |
 
 Code follows the build order in `docs/architecture.md`, one milestone at a time; each ends with a code review.
 
