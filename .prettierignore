@@ -2,3 +2,7 @@ pnpm-lock.yaml
 data
 # The dashboard has its own checks (pnpm --dir web lint).
 web
+# Third-party skills, kept exactly as installed (skills-lock.json hashes them).
+.claude/skills/shadcn
+.claude/skills/vercel-composition-patterns
+.claude/skills/vercel-react-best-practices

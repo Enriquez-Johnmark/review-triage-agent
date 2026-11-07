@@ -2,7 +2,8 @@ import js from "@eslint/js"
 import tseslint from "typescript-eslint"
 
 export default tseslint.config(
-  { ignores: ["node_modules", "data", "web"] },
+  // Third-party skills are kept exactly as installed (skills-lock.json).
+  { ignores: ["node_modules", "data", "web", ".claude/skills"] },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
