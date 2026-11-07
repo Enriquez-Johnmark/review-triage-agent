@@ -121,7 +121,7 @@ export function listDrafts(db: Db, appIds: readonly string[]): Draft[] {
         .join(", ")}
        from drafts d join reviews r on r.store = d.store and r.store_review_id = d.store_review_id
        where r.app_id in (select value from json_each(?))
-       order by d.updated_at desc, d.id desc`,
+       order by updated_at desc, id desc`,
     )
     .all(JSON.stringify(appIds)) as DraftRow[]
   return rows.map(fromRow)
