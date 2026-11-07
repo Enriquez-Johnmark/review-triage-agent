@@ -39,18 +39,24 @@ export function loadSettings(db: Db): Settings {
 }
 
 /** Saves the settings a person changed, and logs the change. */
-export function saveSettings(db: Db, clock: Clock, change: Partial<Settings>, by: string): Settings {
-  const next = Settings.parse({ ...loadSettings(db), ...change })
+export function saveSettings(
+  db: Db,
+  clock: Clock,
+  change: { [Name in keyof Settings]?: Settings[Name] | undefined },
+  by: string,
+): Settings {
+  const changed = Object.fromEntries(Object.entries(change).filter(([, value]) => value !== undefined))
+  const next = Settings.parse({ ...loadSettings(db), ...changed })
   db.transaction(() => {
     const save = db.prepare(
       "insert into settings (name, value) values (?, ?) on conflict (name) do update set value = excluded.value",
     )
-    for (const name of Object.keys(change) as (keyof Settings)[]) save.run(name, JSON.stringify(next[name]))
+    for (const name of Object.keys(changed) as (keyof Settings)[]) save.run(name, JSON.stringify(next[name]))
     audit(db, clock, {
       actor: by,
       action: "settings.changed",
       subject: "settings",
-      details: { changed: Object.keys(change) },
+      details: { changed: Object.keys(changed) },
     })
   })()
   return next

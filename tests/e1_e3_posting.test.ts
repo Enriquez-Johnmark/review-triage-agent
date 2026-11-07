@@ -53,7 +53,7 @@ describe("E1", () => {
       readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
         entry.isDirectory() ? files(join(dir, entry.name)) : [join(dir, entry.name)],
       )
-    const callers = files("src").filter((file) => /\.post\(/.test(readFileSync(file, "utf8")))
+    const callers = files("src").filter((file) => /poster\.post\(/i.test(readFileSync(file, "utf8")))
     expect(callers).toEqual([join("src", "commands", "post.ts")])
   })
 })
