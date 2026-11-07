@@ -7,13 +7,16 @@ import { vi } from "vitest"
 import { Shell } from "@/app/shell"
 
 /** Answers the dashboard's API calls with made-up data: `answers` maps a
- *  method and path ("GET /api/settings") to its JSON. Returns the calls made. */
+ *  method and path ("GET /api/settings") to its JSON, or to a function of the
+ *  request's body giving it. Returns the calls made. */
 export function fakeApi(answers: Record<string, unknown>) {
   const calls: { method: string; path: string; body: unknown }[] = []
   vi.stubGlobal("fetch", (path: string, init: RequestInit = {}) => {
     const method = init.method ?? "GET"
-    calls.push({ method, path, body: init.body ? JSON.parse(String(init.body)) : undefined })
-    const answer = answers[`${method} ${path}`]
+    const body: unknown = init.body ? JSON.parse(String(init.body)) : undefined
+    calls.push({ method, path, body })
+    const given = answers[`${method} ${path}`]
+    const answer = typeof given === "function" ? (given as (body: unknown) => unknown)(body) : given
     return Promise.resolve(
       answer === undefined
         ? new Response(JSON.stringify({ error: "no such address" }), { status: 404 })

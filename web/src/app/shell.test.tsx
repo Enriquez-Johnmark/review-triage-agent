@@ -38,10 +38,15 @@ describe("G1", () => {
 describe("the settings page", () => {
   it("saves the settings in the name typed at the top, and says so", async () => {
     setYourName("ana")
-    const calls = fakeApi({ "GET /api/settings": settings, "PUT /api/settings": settings })
+    let stored = settings
+    const calls = fakeApi({
+      "GET /api/settings": () => stored,
+      "PUT /api/settings": (body: unknown) => (stored = { ...stored, ...(body as object) }),
+    })
     renderPage(<SettingsPage />, "/settings")
 
-    await userEvent.click(await screen.findByRole("button", { name: "Save" }))
+    await userEvent.type(await screen.findByLabelText("Support channel"), " Salamat!")
+    await userEvent.click(screen.getByRole("button", { name: "Save" }))
 
     expect(await screen.findByText("Saved.")).toBeInTheDocument()
     expect(calls.find((call) => call.method === "PUT")?.body).toMatchObject({
