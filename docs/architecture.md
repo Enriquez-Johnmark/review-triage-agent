@@ -91,11 +91,14 @@ Read only through an injected clock, so tests control weeks and versions.
 
 ## MCP
 
-The official `@modelcontextprotocol/sdk` over stdio, using the same `src/core/` and store. Its tool list is fixed in code to the five tools; no approve or post function is reachable from it.
+The official `@modelcontextprotocol/sdk` over stdio (`pnpm cli mcp`), using the same `src/core/` and store. Its tool list is fixed in code to the five tools; `src/mcp/` doesn't import the approve, edit or post functions, and a test checks it. Inputs are strict zod schemas: an unknown field or bad value is refused, saying what is wrong. Dates are Manila days. `draft_reply` never replaces a reply a person wrote.
 
 ## n8n
 
-A committed workflow calls `GET /api/summary` each morning and emails the result. Docker Compose runs n8n and Mailpit for the demo.
+A committed workflow (`n8n/daily-summary.json`) runs each morning at 8, Manila time: it asks the agent to fetch and sort, gets the daily summary and emails it. Docker Compose runs n8n and Mailpit for the demo.
+
+- **Where n8n calls:** n8n runs in Docker, which can't reach the dashboard on 127.0.0.1. With `SUMMARY_TOKEN` set, `pnpm cli serve` also opens a second listener (port 4318) with only `GET /summary` and `POST /fetch`, behind that token; the dashboard stays local. The dashboard's own `GET /api/summary` gives the same summary.
+- **The summary** counts the last seven days (so Monday's email covers the week just ended): new reviews since yesterday, share answered, the top three causes, spikes this week and last plus the latest version's crash spike, and money complaints still waiting for a posted reply.
 
 ## CI
 

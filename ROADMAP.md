@@ -4,7 +4,7 @@ Where the Review Triage Agent stands and what comes next, in one page. The miles
 
 ## Where we are
 
-**M1 to M5 done; M6 next.** The brief, the spec (25 acceptance criteria) and the architecture are approved.
+**M1 to M6 done; M7 next.** The brief, the spec (25 acceptance criteria) and the architecture are approved.
 
 | Milestone | Delivers                                                                                                    | Criteria     | Status                           |
 | --------- | ----------------------------------------------------------------------------------------------------------- | ------------ | -------------------------------- |
@@ -13,8 +13,8 @@ Where the Review Triage Agent stands and what comes next, in one page. The miles
 | M3        | Spikes by week and app version; the summary numbers                                                         | C1–C2, F1    | Done (2026-11-07), code-reviewed |
 | M4        | Reply drafts, the rule checker, approval, posting once, the audit log                                       | D1–D4, E1–E5 | Done (2026-11-07), code-reviewed |
 | M5        | The dashboard                                                                                               | F5, G1       | Done (2026-11-07), code-reviewed |
-| M6        | The MCP server and the n8n daily summary                                                                    | F2–F4        | **Next**                         |
-| M7        | Accuracy on real reviews, README, screenshots, walkthrough video                                            | —            |                                  |
+| M6        | The MCP server and the n8n daily summary                                                                    | F2–F4        | Done (2026-11-07), code-reviewed |
+| M7        | Accuracy on real reviews, README, screenshots, walkthrough video                                            | —            | **Next**                         |
 
 Each milestone ends with a code review, with its findings fixed.
 
