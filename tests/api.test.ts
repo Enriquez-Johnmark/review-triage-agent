@@ -22,6 +22,10 @@ describe("the dashboard's API", () => {
     expect(overview.causesByWeek).toHaveLength(12)
     expect(overview.crashShareByVersion).toEqual([{ version: "4.2.0", reviews: 1, crashes: 1, share: 1 }])
 
+    const daily = (await app.inject("/api/summary")).json<{ newReviews: number; text: string }>()
+    expect(daily.newReviews).toBe(1)
+    expect(daily.text).toContain("New reviews since yesterday: 1")
+
     const queue = (await app.inject("/api/queue")).json<{ draftStatus: string | null }[]>()
     expect(queue).toHaveLength(1)
 

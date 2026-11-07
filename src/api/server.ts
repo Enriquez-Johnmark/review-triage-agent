@@ -7,12 +7,13 @@ import Fastify, { type FastifyInstance } from "fastify"
 import { z } from "zod"
 
 import type { Clock } from "../clock.ts"
+import { dailySummary, formatDaily } from "../commands/daily.ts"
 import { draftReply } from "../commands/draft.ts"
 import { type Fetchers, fetchNew } from "../commands/fetch.ts"
 import { postReply } from "../commands/post.ts"
 import { approveReply, refuseReply, writeReply } from "../commands/replies.ts"
 import { sortPending } from "../commands/sort.ts"
-import { sortedRows, summarise, summariseRows, versionRows } from "../commands/summary.ts"
+import { sortedRows, summariseRows, versionRows } from "../commands/summary.ts"
 import { causesByWeek, crashShareByVersion } from "../core/charts.ts"
 import { type Cause, FINANCE_CAUSES } from "../core/causes.ts"
 import { Store } from "../core/review.ts"
@@ -113,7 +114,11 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     }
   })
 
-  app.get("/api/summary", () => summarise(db, clock, ids(), causes))
+  // The daily summary, for n8n's morning email (F4).
+  app.get("/api/summary", () => {
+    const summary = dailySummary(db, clock, ids(), causes)
+    return { ...summary, text: formatDaily(summary, causes) }
+  })
 
   app.get("/api/queue", () =>
     replyQueue(db, ids()).map((entry) => ({
