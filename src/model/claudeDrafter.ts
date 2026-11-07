@@ -58,7 +58,9 @@ export class ClaudeDrafter implements Drafter {
     const question = replyQuestion(input, guide)
     const response = await this.client.messages.parse({
       model: question.model,
-      max_tokens: 4096,
+      // Sonnet thinks before it answers, and thinking counts toward this: room
+      // enough that a reply of 350 characters is never cut off after it.
+      max_tokens: 16_000,
       output_config: { effort: "medium", format: zodOutputFormat(DraftAnswer) },
       system: question.system,
       messages: [{ role: "user", content: question.user }],
