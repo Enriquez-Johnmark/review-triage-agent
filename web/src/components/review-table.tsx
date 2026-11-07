@@ -52,7 +52,9 @@ export function ReviewTable({
               {entry.review.text || "(no text)"}
             </Link>
             <Labels entry={entry} causes={causes} />
-            <p className="mt-2 text-xs text-muted-foreground">{replyStatus(entry)}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {replyStatus(entry, "No reply yet")}
+            </p>
           </li>
         ))}
       </ul>
@@ -95,8 +97,10 @@ export function ReviewTable({
 const reviewLink = ({ review }: Pick<ReviewEntry, "review">) =>
   `/reviews/${review.store}/${encodeURIComponent(review.storeReviewId)}`
 
-const replyStatus = ({ review, draftStatus }: Pick<ReviewEntry, "review" | "draftStatus">) =>
-  draftStatus ? DRAFT_STATUS[draftStatus] : review.companyReplied ? "Answered" : "—"
+const replyStatus = (
+  { review, draftStatus }: Pick<ReviewEntry, "review" | "draftStatus">,
+  none = "—"
+) => (draftStatus ? DRAFT_STATUS[draftStatus] : review.companyReplied ? "Answered" : none)
 
 /** A review's cause, language, money flag and confidence. */
 function Labels({
