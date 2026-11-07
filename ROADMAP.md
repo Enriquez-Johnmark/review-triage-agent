@@ -4,7 +4,7 @@ Where the Review Triage Agent stands and what comes next, in one page. The miles
 
 ## Where we are
 
-**M1 to M6 done; M7 next.** The brief, the spec (25 acceptance criteria) and the architecture are approved.
+**M1 to M6 done; M7 in progress.** The brief, the spec (25 acceptance criteria) and the architecture are approved.
 
 | Milestone | Delivers                                                                                                    | Criteria     | Status                           |
 | --------- | ----------------------------------------------------------------------------------------------------------- | ------------ | -------------------------------- |
@@ -14,14 +14,19 @@ Where the Review Triage Agent stands and what comes next, in one page. The miles
 | M4        | Reply drafts, the rule checker, approval, posting once, the audit log                                       | D1–D4, E1–E5 | Done (2026-11-07), code-reviewed |
 | M5        | The dashboard                                                                                               | F5, G1       | Done (2026-11-07), code-reviewed |
 | M6        | The MCP server and the n8n daily summary                                                                    | F2–F4        | Done (2026-11-07), code-reviewed |
-| M7        | Accuracy on real reviews, README, screenshots, walkthrough video                                            | —            | **Next**                         |
+| M7        | Accuracy on real reviews, README, screenshots, walkthrough video                                            | —            | **In progress**                  |
 
 Each milestone ends with a code review, with its findings fixed.
 
 ## What needs the owner
 
-- **M2 (still open):** run the accuracy test once on the owner's machine with the Anthropic API key in `.env` (`pnpm cli eval --record`); it records the model's answers on the made-up set, so CI can check them without a key.
-- **M7:** fetch and label real reviews on the owner's machine for the real-data scores and the demo; nothing real is committed.
+**M7, done:** the README, screenshots and a walkthrough video of the made-up demo (`docs/showcase/`, made by `pnpm --dir web showcase`), and `eval --set` for a real labelled set kept in `data/`.
+
+**M7, waiting on the owner's machine** (the API key and real reviews never come here):
+
+1. `pnpm cli eval --record` with the API key in `.env`: records the model's answers on the 120 made-up reviews, so the accuracy test (B4) runs in CI. Commit `samples/recorded-labels.json`; the score goes in the README.
+2. Fetch real reviews of two or three popular Philippine finance apps into `data/`, and label about 150 (`data/real-labelled.json`, the same shape as `samples/labelled.json`); the owner spot-checks 20. Then `pnpm cli eval --set data/real-labelled.json --record`; only the scores go in the README.
+3. Re-record the video with the key set, so Claude drafts the reply on screen.
 
 ## Limits that never move
 
