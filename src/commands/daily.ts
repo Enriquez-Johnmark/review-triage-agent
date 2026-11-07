@@ -1,7 +1,7 @@
 import type { Clock } from "../clock.ts"
 import type { Cause } from "../core/causes.ts"
 import { counted } from "../core/overview.ts"
-import { type VersionSpike, weekOf, type WeeklySpike } from "../core/spikes.ts"
+import { compareVersions, type VersionSpike, weekOf, type WeeklySpike } from "../core/spikes.ts"
 import type { Db } from "../store/db.ts"
 import { listDrafts } from "../store/drafts.ts"
 import { replyQueue } from "../store/queue.ts"
@@ -75,7 +75,8 @@ export function dailySummary(
     topCauses: lastWeek.topCauses.map((top) => ({ ...top, label: name(top.cause) })),
     spikes: {
       weekly: weeklySpikes.filter((spike) => spike.week >= fromWeek),
-      versions: versionSpikes.slice(0, 1),
+      // Only the latest version's: a spike a later version fixed is news no more.
+      versions: versionSpikes.filter((spike) => spike.version === latestVersion(rows)),
     },
     moneyWaiting: {
       count: money.length,
@@ -91,6 +92,12 @@ export function dailySummary(
         })),
     },
   }
+}
+
+/** The newest app version any review names. */
+function latestVersion(rows: readonly { appVersion: string | null }[]): string | undefined {
+  const versions = rows.flatMap((row) => (row.appVersion === null ? [] : [row.appVersion]))
+  return versions.sort(compareVersions).at(-1)
 }
 
 const excerpt = (text: string) => {

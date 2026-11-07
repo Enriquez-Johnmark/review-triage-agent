@@ -11,6 +11,8 @@ import { StubPoster } from "../src/post/stub.ts"
 import { openDb } from "../src/store/db.ts"
 import { appIds, loadSettings } from "../src/store/settings.ts"
 import { labelFor } from "../src/store/labels.ts"
+import { saveReviews } from "../src/store/reviews.ts"
+import { sampleReviews } from "../src/samples.ts"
 import { GOOD } from "./fixtures/replies.ts"
 
 const TAGALOG = "Pasensya na po sa abala. Tinitingnan na po ng aming team ang inyong transaksyon."
@@ -56,6 +58,15 @@ describe("F4", () => {
 
     expect(summary.spikes.weekly.map((spike) => [spike.cause, spike.week])).toEqual([["crash", "2026-11-02"]])
     expect(summary.topCauses[0]).toMatchObject({ cause: "crash", count: 6 })
+  })
+
+  it("f4_a_version_spike_stops_being_reported_once_a_later_version_is_out", () => {
+    const { db, clock, ids } = demo()
+    const [sample] = sampleReviews()
+    if (!sample) throw new Error("the samples are there")
+    saveReviews(db, clock, [{ ...sample, storeReviewId: "newer", appVersion: "4.3.0" }])
+
+    expect(dailySummary(db, clock, ids, FINANCE_CAUSES).spikes.versions).toEqual([])
   })
 
   it("f4_new_reviews_count_only_the_last_day_and_posted_money_replies_stop_waiting", async () => {
