@@ -13,9 +13,9 @@ describe("the queue", () => {
     fakeApi({ "GET /api/queue": [{ review, label, draftStatus }] })
     renderPage(<QueuePage />, "/queue")
 
-    expect(await screen.findByText("crash")).toBeInTheDocument()
-    expect(screen.getByText("Taglish")).toBeInTheDocument()
-    expect(screen.getByText("Money")).toBeInTheDocument()
-    expect(screen.getByText("92%")).toBeInTheDocument()
+    // Each shows twice: as a card for phones and a table row for wider screens.
+    expect(await screen.findAllByText("crash")).toHaveLength(2)
+    for (const text of ["Taglish", "Money", "92%"])
+      expect(screen.getAllByText(text)).toHaveLength(2)
   })
 })

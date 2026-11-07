@@ -124,7 +124,11 @@ function ReplyCard({ answer, path }: { answer: ReviewAnswer; path: string }) {
         <CardTitle className="flex items-center gap-2">
           Reply
           {draft && (
-            <Badge variant={posted ? "success" : "outline"}>{DRAFT_STATUS[draft.status]}</Badge>
+            <Badge variant={posted ? "success" : "outline"}>
+              {draft.status === "flagged" && draft.writtenBy === "model"
+                ? "For a person to write"
+                : DRAFT_STATUS[draft.status]}
+            </Badge>
           )}
         </CardTitle>
       </CardHeader>
