@@ -37,7 +37,7 @@ pnpm cli serve         # the dashboard, at http://127.0.0.1:4317
 
 Type your name at the top, open the queue, write a reply (try promising a refund), fix it, approve it and post it. Posting goes to a stand-in that only records it: nothing reaches a real app.
 
-With your own Anthropic API key in `.env` (`cp .env.example .env`), "Draft with Claude" and "Fetch new reviews" work live: choose an app on the settings page by its store IDs.
+With your own Anthropic API key in `.env` (`cp .env.example .env`), "Draft with Claude" and "Fetch new reviews" work live: choose an app on the settings page by its store IDs. In a Claude Code cloud session, set the key as the environment variable `OWNER_ANTHROPIC_API_KEY` instead, since Claude Code itself reads `ANTHROPIC_API_KEY`.
 
 The same from the command line:
 

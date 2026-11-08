@@ -49,6 +49,7 @@ import { openDb } from "./store/db.ts"
 import { listDrafts } from "./store/drafts.ts"
 import { saveReviews } from "./store/reviews.ts"
 import { loadSettings } from "./store/settings.ts"
+import { useOwnerKey } from "./env.ts"
 
 const { positionals, values } = parseArgs({
   allowPositionals: true,
@@ -72,6 +73,7 @@ const { positionals, values } = parseArgs({
 
 // The owner's API key, kept out of git in `.env` (never a Claude subscription).
 if (existsSync(".env")) process.loadEnvFile(".env")
+useOwnerKey(process.env)
 
 /** The labelled set `eval` scores, and where its recorded answers are kept:
  *  the made-up set and its committed recordings, or with `--set`, a real set
@@ -85,12 +87,18 @@ function evalFiles(): { set: string; recordings: string } {
 
 /** Claude through the owner's API key only: no other credential is used. */
 function claude(): ClaudeSorter {
-  if (!process.env.ANTHROPIC_API_KEY) fail("put your Anthropic API key in .env as ANTHROPIC_API_KEY")
+  if (!process.env.ANTHROPIC_API_KEY)
+    fail(
+      "put your Anthropic API key in .env as ANTHROPIC_API_KEY (in a cloud session: an environment variable, OWNER_ANTHROPIC_API_KEY)",
+    )
   return new ClaudeSorter()
 }
 
 function drafter(): ClaudeDrafter {
-  if (!process.env.ANTHROPIC_API_KEY) fail("put your Anthropic API key in .env as ANTHROPIC_API_KEY")
+  if (!process.env.ANTHROPIC_API_KEY)
+    fail(
+      "put your Anthropic API key in .env as ANTHROPIC_API_KEY (in a cloud session: an environment variable, OWNER_ANTHROPIC_API_KEY)",
+    )
   return new ClaudeDrafter()
 }
 
