@@ -16,7 +16,7 @@ It works for any app on Google Play or the App Store. It uses public reviews onl
 
 ![The overview of a made-up demo app: this week's numbers, top causes, spikes, and causes by week](docs/showcase/desktop-1-overview.png)
 
-**See it working:** a [walkthrough video](docs/showcase/walkthrough.mp4) (about a minute and a half) and more screenshots in [`docs/showcase/`](docs/showcase/), all of made-up reviews.
+**See it working:** a [walkthrough video](docs/showcase/walkthrough.mp4) (under two minutes), where Claude drafts the replies live, and more screenshots in [`docs/showcase/`](docs/showcase/), all of made-up reviews.
 
 |                                                                                               |                                                                                                 |
 | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -27,7 +27,7 @@ It works for any app on Google Play or the App Store. It uses public reviews onl
 
 ## Try it
 
-The demo needs no API key: 120 made-up reviews of a fictional finance app, already sorted, with a crash spike this week.
+The demo needs no API key: 120 made-up reviews of a fictional finance app, sorted by Claude (its recorded answers, mistakes included), with a crash spike this week.
 
 ```sh
 pnpm install && pnpm --dir web install && pnpm --dir web build
@@ -68,13 +68,13 @@ An n8n workflow fetches and sorts new reviews each morning and emails a summary:
 
 ## Results
 
-| Measure                                                                  | Result                                                                    |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| Sorting accuracy on the 120 made-up test reviews (target: 85%)           | Not measured yet: it needs the owner's API key (`pnpm cli eval --record`) |
-| Sorting accuracy on real reviews of two or three Philippine finance apps | Not measured yet                                                          |
-| Replies checked by the rules                                             | Every draft and every person's edit, before approval                      |
+| Measure                                                                  | Result                                                                                                                       |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Sorting accuracy on the 120 made-up test reviews (target: 85%)           | **98.3%** right cause (Claude Haiku, recorded 2026-11-08); 0% sent to a person; 91.7% right language, 83.3% right money flag |
+| Sorting accuracy on real reviews of two or three Philippine finance apps | Not measured yet                                                                                                             |
+| Replies checked by the rules                                             | Every draft and every person's edit, before approval                                                                         |
 
-Scores are added here once measured; until then they stay blank rather than estimated.
+Claude missed two causes: a long cash-out queue at a branch, and praise that asked for dark mode, both sorted as "other". The recorded answers are committed (`samples/recorded-labels.json`), so CI checks the target on every push without a key. Real-review scores are added once measured; until then they stay blank rather than estimated.
 
 ## How it's built
 

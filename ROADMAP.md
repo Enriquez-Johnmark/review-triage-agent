@@ -22,11 +22,11 @@ Each milestone ends with a code review, with its findings fixed.
 
 **M7, done:** the README, screenshots and a walkthrough video of the made-up demo (`docs/showcase/`, made by `pnpm --dir web showcase`), and `eval --set` for a real labelled set kept in `data/`.
 
-**M7, waiting on the owner's machine** (the API key and real reviews never come here):
+**M7, done with the owner's key (2026-11-08):** Claude's sorting of the 120 made-up reviews is recorded (`samples/recorded-labels.json`): **98.3%** right cause, against the 85% target, checked in CI (B4). The demo shows those recorded answers, and the screenshots and video were made again with Claude drafting the replies live.
 
-1. `pnpm cli eval --record` with the API key in `.env`: records the model's answers on the 120 made-up reviews, so the accuracy test (B4) runs in CI. Commit `samples/recorded-labels.json`; the score goes in the README.
-2. Fetch real reviews of two or three popular Philippine finance apps into `data/`, and label about 150 (`data/real-labelled.json`, the same shape as `samples/labelled.json`); the owner spot-checks 20. Then `pnpm cli eval --set data/real-labelled.json --record`; only the scores go in the README.
-3. Re-record the video with the key set, so Claude drafts the reply on screen.
+**M7, waiting on the owner's machine** (real reviews never come here):
+
+1. Fetch real reviews of two or three popular Philippine finance apps into `data/`, and label about 150 (`data/real-labelled.json`, the same shape as `samples/labelled.json`); the owner spot-checks 20. Then `pnpm cli eval --set data/real-labelled.json --record`; only the scores go in the README.
 
 ## Limits that never move
 
