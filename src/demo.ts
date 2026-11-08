@@ -3,6 +3,7 @@ import { loadLabelled } from "./commands/eval.ts"
 import { sortInput } from "./commands/sort.ts"
 import { FINANCE_CAUSES } from "./core/causes.ts"
 import { type Outcome, parseLabel } from "./core/label.ts"
+import { weekStart } from "./core/spikes.ts"
 import { sortQuestion } from "./model/claude.ts"
 import { recordingKey, type loadRecordings } from "./model/recorded.ts"
 import type { Db } from "./store/db.ts"
@@ -12,6 +13,8 @@ import { loadSettings, saveSettings } from "./store/settings.ts"
 
 const WEEK = 7 * 86_400_000
 const HOUR = 3_600_000
+// Manila is UTC+8 all year.
+const MANILA_OFFSET = 8 * HOUR
 export const DEMO_MODEL = "made-up demo labels"
 
 /** Loads the 120 made-up labelled reviews as a demo that needs no API key:
@@ -28,6 +31,8 @@ export function loadDemo(
   recordings?: NonNullable<ReturnType<typeof loadRecordings>>,
 ): number {
   const now = clock.now().getTime()
+  // When this Manila week started, in real UTC time.
+  const thisWeek = weekStart(now) - MANILA_OFFSET
   const labelled = loadLabelled(file)
   const causeIds = FINANCE_CAUSES.map((cause) => cause.id)
   const threshold = loadSettings(db).threshold
@@ -42,7 +47,14 @@ export function loadDemo(
   const reviews = labelled.map(({ review, expected }, index) => {
     const spike = expected.cause === "crash" && review.appVersion === "4.2.0"
     const weeksAgo = spike ? 0 : (index % 8) + 1
-    const at = new Date(now - weeksAgo * WEEK - ((index % 5) + 1) * HOUR).toISOString()
+    const hoursBack = ((index % 5) + 1) * HOUR
+    // This week's stay inside this Manila week, however soon after Monday
+    // midnight the demo is loaded; the others are whole weeks before now.
+    const at = new Date(
+      weeksAgo === 0
+        ? now - Math.min(hoursBack, ((now - thisWeek) * ((index % 5) + 1)) / 6)
+        : now - weeksAgo * WEEK - hoursBack,
+    ).toISOString()
     // Half of 4.2.0's other reviews move to 4.1.9, so 4.2.0's crash share stands out.
     const move = !spike && review.appVersion === "4.2.0" && (moved += 1) % 2 === 0
     const appVersion = move ? "4.1.9" : review.appVersion

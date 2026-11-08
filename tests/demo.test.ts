@@ -24,6 +24,19 @@ describe("the demo", () => {
     expect(summary.versionSpikes.map((spike) => spike.version)).toEqual(["4.2.0"])
   })
 
+  it("keeps this week's crash spike when loaded just after the week starts", () => {
+    const db = openDb(":memory:")
+    // 01:19 on Monday 9 November in Manila: the week is an hour old.
+    const clock = new FixedClock(new Date("2026-11-08T17:19:00Z"))
+    loadDemo(db, clock, "samples/labelled.json", loadRecordings("samples/recorded-labels.json"))
+
+    const summary = summarise(db, clock, appIds(loadSettings(db)), FINANCE_CAUSES)
+    expect(summary.overview.topCauses[0]).toEqual({ cause: "crash", count: 6 })
+    expect(summary.weeklySpikes).toContainEqual(
+      expect.objectContaining({ cause: "crash", week: "2026-11-09" }),
+    )
+  })
+
   it("shows Claude's recorded sorting, mistakes included, where an answer is recorded", () => {
     const db = openDb(":memory:")
     const recordings = loadRecordings("samples/recorded-labels.json")
