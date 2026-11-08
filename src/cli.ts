@@ -333,8 +333,12 @@ try {
       break
     }
     case "load-demo": {
-      const added = loadDemo(db, systemClock)
-      console.log(`${String(added)} made-up reviews loaded, sorted, for app com.example.wallet`)
+      // Claude's recorded sorting of the made-up reviews, where it is recorded.
+      const recordings = loadRecordings("samples/recorded-labels.json")
+      const added = loadDemo(db, systemClock, "samples/labelled.json", recordings)
+      console.log(
+        `${String(added)} made-up reviews loaded, sorted${recordings ? " by Claude (recorded)" : ""}, for app com.example.wallet`,
+      )
       break
     }
     case "load-sample": {

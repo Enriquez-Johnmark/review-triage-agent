@@ -1,5 +1,10 @@
 import type { Clock } from "./clock.ts"
 import { loadLabelled } from "./commands/eval.ts"
+import { sortInput } from "./commands/sort.ts"
+import { FINANCE_CAUSES } from "./core/causes.ts"
+import { type Outcome, parseLabel } from "./core/label.ts"
+import { sortQuestion } from "./model/claude.ts"
+import { recordingKey, type loadRecordings } from "./model/recorded.ts"
 import type { Db } from "./store/db.ts"
 import { saveModelOutcome } from "./store/labels.ts"
 import { saveReviews } from "./store/reviews.ts"
@@ -11,11 +16,28 @@ export const DEMO_MODEL = "made-up demo labels"
 
 /** Loads the 120 made-up labelled reviews as a demo that needs no API key:
  *  dated over the last nine weeks up to `clock`'s time, with version 4.2.0's
- *  crash reviews all this week and its crash share doubled (spikes), and their correct labels stored as
- *  if sorted, one in fifteen left for a person. Running it again adds nothing. */
-export function loadDemo(db: Db, clock: Clock, file = "samples/labelled.json"): number {
+ *  crash reviews all this week and its crash share doubled (spikes). Each
+ *  review gets Claude's recorded answer from `recordings`, checked as live
+ *  sorting checks it, mistakes included; a review with no recorded answer
+ *  gets its correct label as if sorted, one in fifteen left for a person.
+ *  Running it again adds nothing. */
+export function loadDemo(
+  db: Db,
+  clock: Clock,
+  file = "samples/labelled.json",
+  recordings?: NonNullable<ReturnType<typeof loadRecordings>>,
+): number {
   const now = clock.now().getTime()
   const labelled = loadLabelled(file)
+  const causeIds = FINANCE_CAUSES.map((cause) => cause.id)
+  const threshold = loadSettings(db).threshold
+  // Looked up by the review as it was recorded, before the demo moves its date or version.
+  const recorded = new Map(
+    labelled.map(({ review }) => [
+      review.storeReviewId,
+      recordings?.answers[recordingKey(sortQuestion(sortInput(review), FINANCE_CAUSES))],
+    ]),
+  )
   let moved = 0
   const reviews = labelled.map(({ review, expected }, index) => {
     const spike = expected.cause === "crash" && review.appVersion === "4.2.0"
@@ -33,15 +55,16 @@ export function loadDemo(db: Db, clock: Clock, file = "samples/labelled.json"): 
   )
   for (const { review, expected, index } of reviews) {
     const key = { store: review.store, storeReviewId: review.storeReviewId }
-    saveModelOutcome(
-      db,
-      clock,
-      key,
+    const raw = recorded.get(review.storeReviewId)
+    if (raw !== undefined && recordings) {
+      saveModelOutcome(db, clock, key, parseLabel(raw, causeIds, threshold), recordings.model)
+      continue
+    }
+    const madeUp: Outcome =
       index % 15 === 14
         ? { kind: "needs_person", reason: "the demo leaves some for a person" }
-        : { kind: "sorted", label: { ...expected, confidence: 0.9 } },
-      DEMO_MODEL,
-    )
+        : { kind: "sorted", label: { ...expected, confidence: 0.9 } }
+    saveModelOutcome(db, clock, key, madeUp, DEMO_MODEL)
   }
   const settings = loadSettings(db)
   if (!settings.googlePlayId)
