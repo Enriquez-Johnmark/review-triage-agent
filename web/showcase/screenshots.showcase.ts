@@ -42,12 +42,9 @@ test("desktop", async ({ browser }, testInfo) => {
   await page.getByText(/promises a refund/).waitFor()
   await shot(page, "desktop-4-rule-caught")
 
-  await page
-    .getByLabel("Reply text")
-    .fill(
-      `Pasensya na po sa abala. Tinitingnan na po ng aming team ang inyong transaksyon.\n${SUPPORT}`
-    )
-  await page.getByRole("button", { name: /^Save/ }).click()
+  // Claude drafts the reply that is approved (needs the API key).
+  await page.getByRole("button", { name: "Draft again with Claude" }).click()
+  await page.getByText("✓ Keeps every rule").waitFor({ timeout: 60_000 })
   await page.getByRole("button", { name: "Approve this text" }).click()
   await page.getByRole("button", { name: "Post" }).waitFor()
   await shot(page, "desktop-5-approved")
