@@ -1,8 +1,14 @@
+import { execFileSync, spawn } from "node:child_process"
+import { resolve } from "node:path"
+
 import { type Page, test } from "@playwright/test"
 
 import { addOverlay, OUT, pointAt, press, record, say } from "./support.ts"
 
 const size = { width: 1280, height: 720 }
+const ROOT = resolve(import.meta.dirname, "../..")
+/** The demo database the showcase server uses (playwright.config.ts). */
+const DB = "data/showcase.db"
 
 /** Waits for Claude's draft; the video needs one that keeps every rule (the
  *  server already redrafts once), so anything else stops the recording. */
@@ -15,7 +21,7 @@ async function claudeDraftKeepsEveryRule(page: Page) {
     throw new Error("Claude's draft broke a rule; record again")
 }
 
-/** About two minutes with the agent, with captions; saved as
+/** About two and a quarter minutes with the agent, with captions; saved as
  *  docs/showcase/walkthrough.mp4. Claude drafts the replies live, so it needs
  *  the API key. It posts a reply (to the stand-in), so it runs after the
  *  screenshots, on the same fresh demo. */
@@ -92,9 +98,35 @@ test("walkthrough", async ({ browser }, testInfo) => {
   await press(page, page.getByRole("link", { name: "Settings" }))
   await page.getByText("Anthropic API key").waitFor()
   await say(page, "Settings: the app to watch, the support channel, the confidence threshold.")
+  await pointAt(page, page.getByLabel("Google Play ID"))
+  await say(
+    page,
+    "For a real app, its store IDs go here, and pnpm cli fetch reads its new public reviews from Google Play and the App Store."
+  )
+  await say(
+    page,
+    "Reviewer names are dropped as reviews are read; the demo uses made-up ones.",
+    4500
+  )
   await pointAt(page, page.getByText("Set", { exact: true }))
   await say(page, "The API key stays on this computer and is never shown.", 4500)
-  await say(page, "Claude can also use it through MCP, and n8n emails a summary each morning.")
+
+  // Claude through MCP: a real session with `pnpm cli mcp` on this demo.
+  // (The morning summary is run now too, so no scene waits on it.)
+  const summary = execFileSync("pnpm", ["-s", "cli", "summary", "--db", DB], {
+    cwd: ROOT,
+    encoding: "utf8",
+  })
+  const mcp = await mcpSession(["list_spikes"])
+  await showTerminal(page, "Claude's tools, over MCP (pnpm cli mcp)", mcp)
+  await say(page, "Claude can use the agent through MCP: search, summarise, list spikes and draft.")
+  await say(page, "No tool can approve or post a reply: that stays with a person.", 4500)
+  await hideTerminal(page)
+
+  // The morning summary n8n emails: the same command, run now.
+  await showTerminal(page, "$ pnpm cli summary", summary)
+  await say(page, "Each morning an n8n workflow fetches, sorts and emails this summary.")
+  await hideTerminal(page)
   await page.goto("/")
   await page.getByText("Causes by week").waitFor()
   await say(page, "Public reviews only, and not affiliated with any app's maker.", 4500)
@@ -102,3 +134,83 @@ test("walkthrough", async ({ browser }, testInfo) => {
   await stop(`${OUT}/walkthrough.mp4`)
   await context.close()
 })
+
+/** A real MCP session with the agent (`pnpm cli mcp`) on the demo: it lists
+ *  the tools, then calls each of `calls`, and returns the exchange as text. */
+async function mcpSession(calls: string[]) {
+  const child = spawn("pnpm", ["-s", "cli", "mcp", "--db", DB], {
+    cwd: ROOT,
+    stdio: ["pipe", "pipe", "inherit"],
+  })
+  const answers = new Map<number, unknown>()
+  let buffered = ""
+  child.stdout.setEncoding("utf8")
+  child.stdout.on("data", (chunk: string) => {
+    buffered += chunk
+    let end = buffered.indexOf("\n")
+    while (end >= 0) {
+      const message = JSON.parse(buffered.slice(0, end)) as { id?: number; result?: unknown }
+      if (message.id !== undefined) answers.set(message.id, message.result)
+      buffered = buffered.slice(end + 1)
+      end = buffered.indexOf("\n")
+    }
+  })
+  let next = 0
+  const ask = async (method: string, params: object) => {
+    const id = ++next
+    child.stdin.write(JSON.stringify({ jsonrpc: "2.0", id, method, params }) + "\n")
+    for (let waited = 0; waited < 300 && !answers.has(id); waited++)
+      await new Promise((done) => setTimeout(done, 100))
+    if (!answers.has(id)) throw new Error(`the MCP server didn't answer ${method}`)
+    return answers.get(id)
+  }
+  await ask("initialize", {
+    protocolVersion: "2025-06-18",
+    capabilities: {},
+    clientInfo: { name: "showcase", version: "1" },
+  })
+  child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n")
+  const { tools } = (await ask("tools/list", {})) as { tools: { name: string; title?: string }[] }
+  const lines = [
+    "→ tools/list",
+    ...tools.map((tool) => `   ${tool.name.padEnd(18)} ${tool.title ?? ""}`),
+  ]
+  for (const name of calls) {
+    const result = (await ask("tools/call", { name, arguments: {} })) as {
+      content: { type: string; text: string }[]
+    }
+    const text = result.content.map((part) => part.text).join("\n")
+    lines.push("", `→ tools/call ${name}`, JSON.stringify(JSON.parse(text), null, 2))
+  }
+  child.kill()
+  return lines.join("\n")
+}
+
+/** Shows a terminal's text over the page. */
+async function showTerminal(page: Page, title: string, text: string) {
+  await page.evaluate(
+    ({ title, text }) => {
+      const sheet = document.createElement("div")
+      sheet.id = "showcase-terminal"
+      sheet.style.cssText =
+        "position:fixed;top:24px;left:24px;right:24px;max-height:calc(100% - 144px);z-index:2147483646;" +
+        "background:#0f172a;color:#e2e8f0;" +
+        "border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden"
+      const bar = document.createElement("div")
+      bar.textContent = title
+      bar.style.cssText =
+        "padding:10px 16px;font:600 13px ui-monospace,monospace;background:#1e293b;color:#cbd5e1"
+      const body = document.createElement("pre")
+      body.textContent = text
+      body.style.cssText =
+        "margin:0;padding:14px 16px;font:13px/1.55 ui-monospace,monospace;overflow:hidden;white-space:pre"
+      sheet.append(bar, body)
+      document.body.append(sheet)
+    },
+    { title, text }
+  )
+}
+
+async function hideTerminal(page: Page) {
+  await page.evaluate(() => document.getElementById("showcase-terminal")?.remove())
+}

@@ -16,7 +16,7 @@ It works for any app on Google Play or the App Store. It uses public reviews onl
 
 ![The overview of a made-up demo app: this week's numbers, top causes, spikes, and causes by week](docs/showcase/desktop-1-overview.png)
 
-**See it working:** a [walkthrough video](docs/showcase/walkthrough.mp4) (under two minutes), where Claude drafts the replies live, and more screenshots in [`docs/showcase/`](docs/showcase/), all of made-up reviews.
+**See it working:** a [walkthrough video](docs/showcase/walkthrough.mp4) (about two and a quarter minutes), where Claude drafts the replies live and uses the agent over MCP, and more screenshots in [`docs/showcase/`](docs/showcase/), all of made-up reviews.
 
 |                                                                                               |                                                                                                 |
 | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
