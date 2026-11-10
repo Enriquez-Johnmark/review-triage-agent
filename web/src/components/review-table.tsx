@@ -64,7 +64,7 @@ export function ReviewTable({
             <TableHead>Date</TableHead>
             <TableHead>Stars</TableHead>
             <TableHead className="w-1/2">Review</TableHead>
-            <TableHead>Cause</TableHead>
+            <TableHead className="min-w-52">Cause</TableHead>
             <TableHead>Reply</TableHead>
           </TableRow>
         </TableHeader>
@@ -102,7 +102,8 @@ const replyStatus = (
   none = "—"
 ) => (draftStatus ? DRAFT_STATUS[draftStatus] : review.companyReplied ? "Answered" : none)
 
-/** A review's cause, language, money flag and confidence. */
+/** A review's cause on its own line, then its money flag, language and the
+ *  model's confidence, quieter, so a row reads cause first. */
 function Labels({
   entry: { label },
   causes,
@@ -110,16 +111,23 @@ function Labels({
   entry: ReviewEntry
   causes: readonly CauseName[]
 }) {
+  const details = [
+    label?.language ? LANGUAGE[label.language] : undefined,
+    label?.confidence !== undefined && label.setBy === "model"
+      ? `${percent(label.confidence)} confident`
+      : undefined,
+  ].filter(Boolean)
   return (
-    <div className="flex flex-wrap items-center gap-1">
+    <div className="flex flex-col items-start gap-1">
       <Badge variant={label?.cause ? "secondary" : "warning"}>
         {label ? causeName(causes, label.cause) : "Not sorted yet"}
       </Badge>
-      {label?.language && <Badge variant="outline">{LANGUAGE[label.language]}</Badge>}
-      {label?.moneyInvolved && <Badge variant="destructive">Money</Badge>}
-      {label?.confidence !== undefined && label.setBy === "model" && (
-        <span className="text-xs text-muted-foreground">{percent(label.confidence)}</span>
-      )}
+      {label?.moneyInvolved || details.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+          {label?.moneyInvolved && <Badge variant="destructive">Money</Badge>}
+          <span>{details.join(" · ")}</span>
+        </div>
+      ) : null}
     </div>
   )
 }

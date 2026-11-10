@@ -15,7 +15,7 @@ describe("the queue", () => {
 
     // Each shows twice: as a card for phones and a table row for wider screens.
     expect(await screen.findAllByText("crash")).toHaveLength(2)
-    for (const text of ["Taglish", "Money", "92%"])
+    for (const text of ["Taglish · 92% confident", "Money"])
       expect(screen.getAllByText(text)).toHaveLength(2)
   })
 })
