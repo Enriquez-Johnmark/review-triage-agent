@@ -18,6 +18,18 @@
       "sourceType": "github",
       "skillPath": "skills/shadcn/SKILL.md",
       "computedHash": "82e2e2888ed0c39556a77963f809e01d3c6c7879e36942792dadd16c5e418d87"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/web-interface-guidelines",
+      "sourceType": "github",
+      "skillPath": "command.md",
+      "computedHash": "ae6cdb7511706724b53620548b2f2a891b96eee9b17d104dbaa7f20aa215ebe3"
     }
   }
 }
