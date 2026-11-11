@@ -40,5 +40,9 @@ jobs:
       - run: pnpm --dir web test
       - run: pnpm --dir web build
       # The browser test: the main journey against the real server and the demo.
-      - run: pnpm --dir web exec playwright install --with-deps chromium
+      # The runner image already has Chromium's libraries; the extra system
+      # packages come from Ubuntu's mirror, which can be unreachable, so they
+      # are tried for two minutes at most.
+      - run: timeout 120 pnpm --dir web exec playwright install-deps chromium || echo "::warning::couldn't install Chromium's extra system packages; trying without them"
+      - run: pnpm --dir web exec playwright install chromium
       - run: pnpm --dir web e2e
