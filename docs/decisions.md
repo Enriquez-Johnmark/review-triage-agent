@@ -25,3 +25,7 @@ Every decision the owner made, dated.
 ## 2026-11-10
 
 - **UI polish with `ui-taste`:** Uizze's `ui-taste` skill (v0.3.0, Apache-2.0) is added, pinned and recorded, without the paid Uizze MCP. Every product gets an audit (look only, with real desktop and phone screenshots), then a polish pass that keeps its current look, one product at a time: Lab Report Assistant, Kompleto, Balanse, Review Triage Agent, Help Assistant, then the portfolio; each product's screenshots, video and portfolio page are remade before the next starts. Every rule that protects an acceptance criterion stays in code, and every test must still pass (owner: "yes to all").
+
+## 2026-11-11
+
+- **Real test set, done:** 148 recent public Google Play reviews of three popular Philippine finance apps (50 each, mixed by stars), labelled in the cloud session as decided on 2026-11-07; one review in Cebuano (not one of the three languages) and one naming someone were dropped. Claude Haiku sorted 77.0% to the labelled cause, below the 85% target; the score is published as measured, and labels are not changed to raise it. The owner's spot-check of 20 (`data/spot-check.md`) is open.

@@ -68,13 +68,13 @@ An n8n workflow fetches and sorts new reviews each morning and emails a summary:
 
 ## Results
 
-| Measure                                                                  | Result                                                                                                                       |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Sorting accuracy on the 120 made-up test reviews (target: 85%)           | **98.3%** right cause (Claude Haiku, recorded 2026-11-08); 0% sent to a person; 91.7% right language, 83.3% right money flag |
-| Sorting accuracy on real reviews of two or three Philippine finance apps | Not measured yet                                                                                                             |
-| Replies checked by the rules                                             | Every draft and every person's edit, before approval                                                                         |
+| Measure                                                                             | Result                                                                                                                                                                               |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Sorting accuracy on the 120 made-up test reviews (target: 85%)                      | **98.3%** right cause (Claude Haiku, recorded 2026-11-08); 0% sent to a person; 91.7% right language, 83.3% right money flag                                                         |
+| Sorting accuracy on 148 real reviews of three Philippine finance apps (target: 85%) | **77.0%** right cause (Claude Haiku, 2026-11-11), **below the target**; 7.4% sent to a person (83% right among those it sorted itself); 91.2% right language, 92.7% right money flag |
+| Replies checked by the rules                                                        | Every draft and every person's edit, before approval                                                                                                                                 |
 
-Claude missed two causes: a long cash-out queue at a branch, and praise that asked for dark mode, both sorted as "other". The recorded answers are committed (`samples/recorded-labels.json`), so CI checks the target on every push without a key. Real-review scores are added once measured; until then they stay blank rather than estimated.
+Claude missed two causes: a long cash-out queue at a branch, and praise that asked for dark mode, both sorted as "other". The recorded answers are committed (`samples/recorded-labels.json`), so CI checks the target on every push without a key. On real reviews it falls short of the target. The 148 are recent public Google Play reviews, 50 from each of three popular Philippine finance apps, mixed by stars, without reviewer names, emails, phone numbers or long numbers; one written in Cebuano and one naming someone were dropped. They were labelled in a cloud session by Claude Code, the agent that built this, which is also Claude, so the labels may favour Claude's reading; the owner's spot-check of 20, chosen by a fixed hash, is still to come. Most disagreements are on reviews that fit two causes or none: unpaid promo cashback, which the labels call "other" and Claude mostly a failed transaction or delay, and short or vague reviews Claude sends to a person instead of guessing. The reviews, labels and Claude's answers stay out of the repository, and the apps aren't named; only these scores are published.
 
 ## How it's built
 
